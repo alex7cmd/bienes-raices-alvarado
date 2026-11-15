@@ -181,17 +181,26 @@ body { overflow-x: hidden; }
 .smart-feature strong { display: block; font-size: 15px; color: var(--text); }
 .smart-feature span { font-size: 13px; color: var(--muted); }
 
-/* FINANCING LOGOS SECTION */
-.financing-section { padding: 24px 24px 48px; }
+/* FINANCING LOGOS SECTION (MARQUEE LOOP) */
+.financing-section { padding: 24px 24px 52px; }
 .financing-inner { max-width: var(--container-max); margin: 0 auto; text-align: center; }
 .financing-inner h2 { font-size: 28px; font-weight: 700; margin: 6px 0 28px; }
-.financing-logos {
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
-  gap: 28px 48px; padding: 24px; border-radius: 16px;
+.financing-marquee {
+  overflow: hidden; padding: 28px 0; border-radius: 16px;
   background: var(--surface); border: 1px solid var(--border);
+  mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
 }
-.fin-logo { display: flex; align-items: center; justify-content: center; transition: transform var(--transition); }
-.fin-logo:hover { transform: scale(1.05); }
+.financing-track {
+  display: flex; align-items: center; width: max-content; gap: 64px;
+  animation: financingLoop 24s linear infinite;
+}
+.financing-marquee:hover .financing-track { animation-play-state: paused; }
+.fin-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 12px; }
+@keyframes financingLoop {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
 
 /* CONTACT FORM + MAP SECTION */
 .contact-section { padding-top: 20px; padding-bottom: 72px; }
