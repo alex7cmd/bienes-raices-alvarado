@@ -143,6 +143,38 @@ body { overflow-x: hidden; }
 }
 .pill.active { background: var(--text); color: #fff; border-color: var(--text); }
 
+.section-helper { font-size: 13.5px; color: var(--muted); }
+.dev-accordion-list { display: flex; flex-direction: column; gap: 14px; }
+.dev-pill-item {
+  border: 1px solid var(--border); border-radius: 20px; background: #fff;
+  overflow: hidden; transition: box-shadow var(--transition), border-color var(--transition);
+}
+.dev-pill-item.open { border-color: var(--text); box-shadow: var(--shadow); }
+.dev-pill-trigger {
+  width: 100%; border: none; background: #fff; padding: 18px 24px; cursor: pointer;
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; text-align: left;
+  font-family: inherit; transition: background var(--transition);
+}
+.dev-pill-trigger:hover { background: var(--surface); }
+.dev-pill-left { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.dev-pill-title { font-size: 18px; font-weight: 700; color: var(--text); }
+.dev-pill-meta {
+  font-size: 12px; font-weight: 600; color: var(--muted); background: var(--surface);
+  padding: 5px 12px; border-radius: var(--radius-pill); border: 1px solid var(--border);
+}
+.dev-pill-right { display: flex; align-items: center; gap: 14px; }
+.dev-pill-price { font-size: 13px; font-weight: 600; color: var(--accent); }
+.dev-pill-arrow {
+  width: 34px; height: 34px; border-radius: 50%; background: var(--surface);
+  display: grid; place-items: center; font-size: 14px; color: var(--text);
+  transition: transform 0.25s ease, background var(--transition);
+}
+.dev-pill-item.open .dev-pill-arrow { transform: rotate(180deg); background: var(--text); color: #fff; }
+.dev-pill-body { padding: 4px 24px 24px; border-top: 1px solid var(--border); background: #fff; }
+.dev-pill-tagline { font-size: 13.5px; color: var(--muted); margin: 16px 0 18px; }
+.proto-features-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.proto-chip { font-size: 11px; background: var(--surface); color: var(--muted); padding: 4px 9px; border-radius: 999px; border: 1px solid var(--border); }
+
 .prototypes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 24px; }
 .proto-card {
   border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;

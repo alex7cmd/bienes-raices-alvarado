@@ -4,136 +4,181 @@ const path = require('path');
 const DB_PATH = path.join(__dirname, 'db.json');
 
 function buildInitialData() {
+  const commonFeatures = [
+    'Acceso controlado',
+    'Áreas verdes',
+    'Canchas de usos múltiples',
+    'Ciclovía',
+    'Comunidad familiar',
+    'Juegos infantiles',
+    'Parque canino',
+    'Salón de eventos',
+    'Servicio de vigilancia 24/7'
+  ];
+
   const prototypes = [
     {
       id: 'areni',
+      propertyId: '20021',
       name: 'Areni',
       price: 1382000,
       bedrooms: 2,
       bathrooms: 1,
       area: 90,
       parking: 2,
+      developments: ['oporto', 'vittoria'],
       description: 'Diseño funcional y luminoso ideal para parejas o familias jóvenes, con excelente distribución en terreno de 90 m².',
+      features: commonFeatures,
       image: '/assets/images/casa-2.jpg',
       video: ''
     },
     {
       id: 'arveto',
+      propertyId: '20022',
       name: 'Arveto',
       price: 1660000,
       bedrooms: 2,
       bathrooms: 1.5,
       area: 90,
       parking: 2,
+      developments: ['montalese', 'vittoria'],
       description: 'Residencia contemporánea de 2 recámaras y 1.5 baños con espacios integrados y acabados de primera.',
+      features: commonFeatures,
       image: '/assets/images/casa-3.jpg',
       video: ''
     },
     {
       id: 'brachetto',
+      propertyId: '20023',
       name: 'Brachetto',
       price: 1847000,
       bedrooms: 3,
       bathrooms: 1.5,
       area: 78,
       parking: 2,
+      developments: ['montalese', 'vittoria'],
       description: 'Tres recámaras optimizadas en un proyecto inteligente con iluminación natural y 2 cajones de estacionamiento.',
+      features: commonFeatures,
       image: '/assets/images/casa-4.jpg',
       video: ''
     },
     {
       id: 'belat',
+      propertyId: '20024',
       name: 'Belat',
       price: 1865000,
       bedrooms: 2,
       bathrooms: 1.5,
       area: 80,
       parking: 2,
+      developments: ['montalese', 'vittoria'],
       description: 'Estilo minimalista con sala-comedor amplia, cocina equipada y patio trasero privado.',
+      features: commonFeatures,
       image: '/assets/images/casa-5.png',
       video: ''
     },
     {
       id: 'moscatel',
+      propertyId: '20025',
       name: 'Moscatel',
       price: 1905000,
       bedrooms: 3,
       bathrooms: 1.5,
       area: 105,
       parking: 2,
+      developments: ['ardenza', 'oporto', 'vittoria'],
       description: 'Terreno de 105 m² con 3 recámaras, ideal para crecer en familia dentro de privada con amenidades.',
+      features: commonFeatures,
       image: '/assets/images/casa-3.jpg',
       video: ''
     },
     {
       id: 'carlina',
+      propertyId: '20026',
       name: 'Carlina',
       price: 1970000,
       bedrooms: 3,
       bathrooms: 2.5,
       area: 105,
       parking: 2,
+      developments: ['ardenza', 'oporto', 'torres-qavalta', 'vittoria'],
       description: 'Tres recámaras y 2.5 baños con recámara principal amplia, vestidor y excelente orientación.',
+      features: commonFeatures,
       image: '/assets/images/casa-1.jpg',
       video: ''
     },
     {
       id: 'belora',
+      propertyId: '20027',
       name: 'Belora',
       price: 2320000,
       bedrooms: 3,
       bathrooms: 2,
       area: 113,
       parking: 2,
+      developments: ['oporto'],
       description: 'Amplitud en cada nivel sobre 113 m² de terreno, pensada para confort y privacidad familiar.',
+      features: commonFeatures,
       image: '/assets/images/casa-2.jpg',
       video: ''
     },
     {
       id: 'ruche',
+      propertyId: '20028',
       name: 'Ruche',
       price: 2600000,
       bedrooms: 3,
       bathrooms: 2.5,
       area: 105,
       parking: 2,
+      developments: ['ardenza', 'sorento', 'vittoria'],
       description: 'Arquitectura moderna con doble altura parcial, 3 recámaras y 2.5 baños.',
+      features: commonFeatures,
       image: '/assets/images/casa-4.jpg',
       video: ''
     },
     {
       id: 'loureira',
+      propertyId: '20029',
       name: 'Loureira',
       price: 2920000,
       bedrooms: 3,
       bathrooms: 3.5,
       area: 123,
       parking: 2,
+      developments: ['sorento', 'torres-qavalta'],
       description: 'Cada recámara con baño completo más medio baño de visitas, acabados residenciales premium.',
+      features: commonFeatures,
       image: '/assets/images/casa-1.jpg',
       video: ''
     },
     {
       id: 'gracciano',
+      propertyId: '20030',
       name: 'Gracciano',
       price: 3345000,
       bedrooms: 3,
       bathrooms: 3.5,
       area: 140,
       parking: 2,
+      developments: ['sorento'],
       description: 'Amplia residencia en terreno de 140 m² con jardín interior, roof garden opcional y 3.5 baños.',
+      features: commonFeatures,
       image: '/assets/images/casa-5.png',
       video: ''
     },
     {
       id: 'malvasia',
+      propertyId: '20031',
       name: 'Malvasia',
       price: 4500000,
       bedrooms: 4,
       bathrooms: 5,
       area: 242,
       parking: 2,
+      developments: ['sorento', 'vittoria'],
       description: 'Nuestra residencia insignia de 4 recámaras, 5 baños y 242 m² de terreno con espacios de lujo.',
+      features: commonFeatures,
       image: '/assets/images/casa-1.jpg',
       video: ''
     }
@@ -344,12 +389,11 @@ function ensureDatabase() {
     const raw = fs.readFileSync(DB_PATH, 'utf8');
     const parsed = JSON.parse(raw);
     // Si es versión anterior (sin lots con angle o menos de 300 lotes o versión previa antes del ajuste de calles)
-    if (!parsed.lots || parsed.lots.length < 300 || !parsed.mapVersion || parsed.mapVersion < 2) {
+    if (!parsed.lots || parsed.lots.length < 300 || !parsed.mapVersion || parsed.mapVersion < 3) {
       const fresh = buildInitialData();
-      fresh.mapVersion = 2;
+      fresh.mapVersion = 3;
       fresh.site = parsed.site || fresh.site;
       fresh.developments = parsed.developments || fresh.developments;
-      fresh.prototypes = parsed.prototypes || fresh.prototypes;
       fs.writeFileSync(DB_PATH, JSON.stringify(fresh, null, 2), 'utf8');
     } else if (raw.includes('bienesraicesalvarado.com.mx/wp-content/')) {
       const migrated = raw

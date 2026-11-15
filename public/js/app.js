@@ -83,7 +83,7 @@ function renderPublicSite() {
     </div>
   `).join('');
 
-  renderPrototypesGrid('all');
+  renderDevelopmentAccordion('oporto');
 
   const latest = [prototypes.find(p => p.id === 'moscatel'), prototypes.find(p => p.id === 'belat')].filter(Boolean);
   const latestEl = $('footerLatestProps');
@@ -100,33 +100,56 @@ function renderPublicSite() {
   }
 }
 
-function renderPrototypesGrid(bedFilter) {
-  const filtered = state.prototypes.filter(p => {
-    if (bedFilter === '2') return p.bedrooms === 2;
-    if (bedFilter === '3') return p.bedrooms >= 3;
-    return true;
-  });
+function renderDevelopmentAccordion(openDevId = 'oporto') {
+  const container = $('developmentAccordion');
+  if (!container) return;
 
-  $('prototypesGrid').innerHTML = filtered.map(p => `
-    <article class="proto-card" data-proto="${p.id}">
-      <div class="proto-img-wrap">
-        <img src="${p.image}" alt="${p.name}" loading="lazy" />
-      </div>
-      <div class="proto-body">
-        <div class="proto-top">
-          <h3>${p.name}</h3>
-          <span class="proto-price">${mxn.format(p.price)}</span>
+  container.innerHTML = state.developments.map(dev => {
+    const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(dev.id));
+    const isOpen = dev.id === openDevId;
+    return `
+      <div class="dev-pill-item ${isOpen ? 'open' : ''}" data-dev-pill="${dev.id}">
+        <button type="button" class="dev-pill-trigger" aria-expanded="${isOpen}">
+          <div class="dev-pill-left">
+            <span class="dev-pill-title">${dev.name}</span>
+            <span class="dev-pill-meta">${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}</span>
+          </div>
+          <div class="dev-pill-right">
+            <span class="dev-pill-price">Desde ${mxn.format(dev.startingPrice)}</span>
+            <span class="dev-pill-arrow">▾</span>
+          </div>
+        </button>
+        <div class="dev-pill-body ${isOpen ? '' : 'hidden'}">
+          <p class="dev-pill-tagline">${dev.tagline} · Qavalta Residencial</p>
+          <div class="prototypes-grid">
+            ${devProtos.map(p => `
+              <article class="proto-card" data-proto="${p.id}">
+                <div class="proto-img-wrap">
+                  <img src="${p.image}" alt="${p.name}" loading="lazy" />
+                </div>
+                <div class="proto-body">
+                  <div class="proto-top">
+                    <h3>${p.name}</h3>
+                    <span class="proto-price">${mxn.format(p.price)}</span>
+                  </div>
+                  <p class="proto-desc">${p.description}</p>
+                  <div class="proto-specs">
+                    <span>🛏️ ${p.bedrooms} Rec</span>
+                    <span>🚿 ${p.bathrooms} Baños</span>
+                    <span>📐 ${p.area} m²</span>
+                    <span>🚗 ${p.parking}</span>
+                  </div>
+                  <div class="proto-features-chips">
+                    ${(p.features || []).slice(0, 4).map(f => `<span class="proto-chip">✓ ${f}</span>`).join('')}
+                  </div>
+                </div>
+              </article>
+            `).join('')}
+          </div>
         </div>
-        <p class="proto-desc">${p.description}</p>
-        <div class="proto-specs">
-          <span>🛏️ ${p.bedrooms} Rec</span>
-          <span>🚿 ${p.bathrooms} Baños</span>
-          <span>📐 ${p.area} m²</span>
-          <span>🚗 ${p.parking}</span>
-        </div>
       </div>
-    </article>
-  `).join('');
+    `;
+  }).join('');
 }
 
 function openPrototypeModal(protoId) {
@@ -146,6 +169,9 @@ function openPrototypeModal(protoId) {
       <div class="lot-spec-box"><small>Recámaras</small><strong>${p.bedrooms}</strong></div>
       <div class="lot-spec-box"><small>Baños</small><strong>${p.bathrooms}</strong></div>
       <div class="lot-spec-box"><small>Estac.</small><strong>${p.parking}</strong></div>
+    </div>
+    <div class="proto-features-chips" style="margin-bottom:16px;">
+      ${(p.features || []).map(f => `<span class="proto-chip">✓ ${f}</span>`).join('')}
     </div>
     <a href="https://wa.me/${state.site.whatsapp}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:8px;">Solicitar información por WhatsApp →</a>
   `;
@@ -554,18 +580,27 @@ function bindEvents() {
   $('logoutBtn').addEventListener('click', handleLogout);
   $('cmsLogoutBtn').addEventListener('click', handleLogout);
 
-  // Public prototype filters & cards
-  $('publicProtoFilters').addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-filter]');
-    if (!btn) return;
-    $('publicProtoFilters').querySelectorAll('.pill').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    renderPrototypesGrid(btn.dataset.filter);
-  });
-
-  $('prototypesGrid').addEventListener('click', (e) => {
+  // Expandable development pills + prototype cards
+  $('developmentAccordion').addEventListener('click', (e) => {
     const card = e.target.closest('.proto-card');
-    if (card) openPrototypeModal(card.dataset.proto);
+    if (card) {
+      openPrototypeModal(card.dataset.proto);
+      return;
+    }
+    const trigger = e.target.closest('.dev-pill-trigger');
+    if (!trigger) return;
+    const item = trigger.closest('.dev-pill-item');
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.dev-pill-item').forEach(el => {
+      el.classList.remove('open');
+      el.querySelector('.dev-pill-body').classList.add('hidden');
+      el.querySelector('.dev-pill-trigger').setAttribute('aria-expanded', 'false');
+    });
+    if (!wasOpen) {
+      item.classList.add('open');
+      item.querySelector('.dev-pill-body').classList.remove('hidden');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
   });
 
   if ($('footerLatestProps')) {
