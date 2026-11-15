@@ -14,7 +14,7 @@ function buildInitialData() {
       area: 90,
       parking: 2,
       description: 'Diseño funcional y luminoso ideal para parejas o familias jóvenes, con excelente distribución en terreno de 90 m².',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114215-525x328.jpg',
+      image: '/assets/images/casa-2.jpg',
       video: ''
     },
     {
@@ -26,7 +26,7 @@ function buildInitialData() {
       area: 90,
       parking: 2,
       description: 'Residencia contemporánea de 2 recámaras y 1.5 baños con espacios integrados y acabados de primera.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Moscatell-525x328.jpg',
+      image: '/assets/images/casa-3.jpg',
       video: ''
     },
     {
@@ -38,7 +38,7 @@ function buildInitialData() {
       area: 78,
       parking: 2,
       description: 'Tres recámaras optimizadas en un proyecto inteligente con iluminación natural y 2 cajones de estacionamiento.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-525x328.jpg',
+      image: '/assets/images/casa-4.jpg',
       video: ''
     },
     {
@@ -50,7 +50,7 @@ function buildInitialData() {
       area: 80,
       parking: 2,
       description: 'Estilo minimalista con sala-comedor amplia, cocina equipada y patio trasero privado.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3-525x328.png',
+      image: '/assets/images/casa-5.png',
       video: ''
     },
     {
@@ -62,7 +62,7 @@ function buildInitialData() {
       area: 105,
       parking: 2,
       description: 'Terreno de 105 m² con 3 recámaras, ideal para crecer en familia dentro de privada con amenidades.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Moscatell-525x328.jpg',
+      image: '/assets/images/casa-3.jpg',
       video: ''
     },
     {
@@ -74,7 +74,7 @@ function buildInitialData() {
       area: 105,
       parking: 2,
       description: 'Tres recámaras y 2.5 baños con recámara principal amplia, vestidor y excelente orientación.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-525x328.jpg',
+      image: '/assets/images/casa-1.jpg',
       video: ''
     },
     {
@@ -86,7 +86,7 @@ function buildInitialData() {
       area: 113,
       parking: 2,
       description: 'Amplitud en cada nivel sobre 113 m² de terreno, pensada para confort y privacidad familiar.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114215-525x328.jpg',
+      image: '/assets/images/casa-2.jpg',
       video: ''
     },
     {
@@ -98,7 +98,7 @@ function buildInitialData() {
       area: 105,
       parking: 2,
       description: 'Arquitectura moderna con doble altura parcial, 3 recámaras y 2.5 baños.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-525x328.jpg',
+      image: '/assets/images/casa-4.jpg',
       video: ''
     },
     {
@@ -110,7 +110,7 @@ function buildInitialData() {
       area: 123,
       parking: 2,
       description: 'Cada recámara con baño completo más medio baño de visitas, acabados residenciales premium.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-525x328.jpg',
+      image: '/assets/images/casa-1.jpg',
       video: ''
     },
     {
@@ -122,7 +122,7 @@ function buildInitialData() {
       area: 140,
       parking: 2,
       description: 'Amplia residencia en terreno de 140 m² con jardín interior, roof garden opcional y 3.5 baños.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3-525x328.png',
+      image: '/assets/images/casa-5.png',
       video: ''
     },
     {
@@ -134,7 +134,7 @@ function buildInitialData() {
       area: 242,
       parking: 2,
       description: 'Nuestra residencia insignia de 4 recámaras, 5 baños y 242 m² de terreno con espacios de lujo.',
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-525x328.jpg',
+      image: '/assets/images/casa-1.jpg',
       video: ''
     }
   ];
@@ -145,42 +145,42 @@ function buildInitialData() {
       name: 'Sorento',
       tagline: 'Privada residencial con casa club y alberca',
       startingPrice: 1660000,
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-525x328.jpg'
+      image: '/assets/images/casa-1.jpg'
     },
     {
       id: 'oporto',
       name: 'Oporto',
       tagline: 'Canchas deportivas y amplias áreas verdes',
       startingPrice: 1382000,
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114215-525x328.jpg'
+      image: '/assets/images/casa-2.jpg'
     },
     {
       id: 'ardenza',
       name: 'Ardenza',
       tagline: 'Acceso controlado y arquitectura contemporánea',
       startingPrice: 1905000,
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Moscatell-525x328.jpg'
+      image: '/assets/images/casa-3.jpg'
     },
     {
       id: 'montalese',
       name: 'Montalese',
       tagline: 'Diseño familiar con calles tranquilas',
       startingPrice: 1847000,
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-525x328.jpg'
+      image: '/assets/images/casa-4.jpg'
     },
     {
       id: 'torres-qavalta',
       name: 'Torres Qavalta',
       tagline: 'Departamentos modernos con vista panorámica',
       startingPrice: 1970000,
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3-525x328.png'
+      image: '/assets/images/casa-5.png'
     },
     {
       id: 'vittoria',
       name: 'Vittoria',
       tagline: 'Privada estrella con parque central y glorieta',
       startingPrice: 1550000,
-      image: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-525x328.jpg'
+      image: '/assets/images/casa-1.jpg'
     }
   ];
 
@@ -333,7 +333,7 @@ function buildInitialData() {
       eyebrow: 'DESARROLLOS RESIDENCIALES · PACHUCA',
       heroTitle: 'Encuentra el hogar que lo tiene todo.',
       heroSubtitle: 'Descubre el desarrollo perfecto para ti y tu familia.',
-      heroImage: 'https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-1920x790.jpg',
+      heroImage: '/assets/images/hero.jpg',
       whatsapp: '525537560931',
       phoneDisplay: '+52 55 3756 0931'
     },
@@ -347,6 +347,19 @@ function ensureDatabase() {
   if (!fs.existsSync(DB_PATH)) {
     const initial = buildInitialData();
     fs.writeFileSync(DB_PATH, JSON.stringify(initial, null, 2), 'utf8');
+  } else {
+    // Migrar URLs externas bloqueadas por hotlinking a rutas locales
+    const raw = fs.readFileSync(DB_PATH, 'utf8');
+    if (raw.includes('bienesraicesalvarado.com.mx/wp-content/')) {
+      const migrated = raw
+        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-1920x790.jpg', '/assets/images/hero.jpg')
+        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-525x328.jpg', '/assets/images/casa-1.jpg')
+        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114215-525x328.jpg', '/assets/images/casa-2.jpg')
+        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Moscatell-525x328.jpg', '/assets/images/casa-3.jpg')
+        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-525x328.jpg', '/assets/images/casa-4.jpg')
+        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3-525x328.png', '/assets/images/casa-5.png');
+      fs.writeFileSync(DB_PATH, migrated, 'utf8');
+    }
   }
   return DB_PATH;
 }
