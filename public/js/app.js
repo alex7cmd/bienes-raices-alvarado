@@ -84,6 +84,20 @@ function renderPublicSite() {
   `).join('');
 
   renderPrototypesGrid('all');
+
+  const latest = [prototypes.find(p => p.id === 'moscatel'), prototypes.find(p => p.id === 'belat')].filter(Boolean);
+  const latestEl = $('footerLatestProps');
+  if (latestEl) {
+    latestEl.innerHTML = latest.map(p => `
+      <div class="footer-mini-prop" data-proto="${p.id}">
+        <img src="${p.image}" alt="${p.name}" loading="lazy" />
+        <div>
+          <strong>${p.name}</strong>
+          <span>${mxn.format(p.price)}</span>
+        </div>
+      </div>
+    `).join('');
+  }
 }
 
 function renderPrototypesGrid(bedFilter) {
@@ -550,6 +564,13 @@ function bindEvents() {
     const card = e.target.closest('.proto-card');
     if (card) openPrototypeModal(card.dataset.proto);
   });
+
+  if ($('footerLatestProps')) {
+    $('footerLatestProps').addEventListener('click', (e) => {
+      const item = e.target.closest('.footer-mini-prop');
+      if (item) openPrototypeModal(item.dataset.proto);
+    });
+  }
 
   $('developmentsGrid').addEventListener('click', (e) => {
     const card = e.target.closest('.dev-card');
