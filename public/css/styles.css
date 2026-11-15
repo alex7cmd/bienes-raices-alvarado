@@ -454,21 +454,53 @@ body { overflow-x: hidden; }
   font-size: 13px; font-weight: 500; box-shadow: var(--shadow);
 }
 
-/* WHATSAPP FLOATING STACK (SIEMPRE VISIBLE) */
-.wa-floating-stack {
-  position: fixed; bottom: 24px; right: 24px; z-index: 850;
+/* FLOATING STACK SIEMPRE VISIBLE (INFO/TOUR + WHATSAPP) */
+.floating-stack {
+  position: fixed; bottom: 24px; right: 24px; z-index: 950;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
+}
+.floating-stack.on-map { right: auto; left: 24px; }
+.stack-btn {
   display: inline-flex; align-items: center; gap: 10px;
-  background: #16a34a; color: #fff; text-decoration: none;
-  padding: 13px 20px; border-radius: var(--radius-pill);
-  font-size: 14px; font-weight: 600;
+  padding: 12px 18px; border-radius: var(--radius-pill);
+  font-size: 13.5px; font-weight: 600; cursor: pointer; border: none;
+  text-decoration: none; font-family: inherit;
+  transition: transform var(--transition), box-shadow var(--transition), background var(--transition);
+}
+.stack-btn:hover { transform: translateY(-2px); }
+.stack-inquiry {
+  background: var(--text); color: #fff;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.25);
+}
+.wa-floating-stack {
+  background: #16a34a; color: #fff;
   box-shadow: 0 12px 28px rgba(22, 163, 74, 0.35);
-  transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
 }
-.wa-floating-stack:hover {
-  background: #15803d;
-  transform: translateY(-2px);
-  box-shadow: 0 16px 34px rgba(22, 163, 74, 0.45);
+.wa-floating-stack:hover { background: #15803d; box-shadow: 0 16px 34px rgba(22, 163, 74, 0.45); }
+
+/* MODAL REQUEST INFO & SCHEDULE A TOUR */
+.inquiry-modal-card { max-width: 460px; }
+.inquiry-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--surface); padding: 4px; border-radius: 12px; margin-bottom: 14px; }
+.inquiry-tab {
+  border: none; background: transparent; padding: 9px; border-radius: 9px;
+  font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer;
 }
+.inquiry-tab.active { background: #fff; color: var(--text); box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+.advisors-row { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.advisor-pill { font-size: 12px; font-weight: 600; background: var(--surface); padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); }
+.inquiry-form { display: flex; flex-direction: column; gap: 10px; }
+.inquiry-form input, .inquiry-form textarea, .inquiry-form select {
+  width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+  font-size: 13.5px; font-family: inherit; background: #fff;
+}
+.tour-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tour-fields label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); }
+.inquiry-quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.btn-outline-action {
+  text-align: center; padding: 9px; border-radius: 10px; border: 1px solid var(--border);
+  text-decoration: none; font-size: 13px; font-weight: 600; color: var(--text);
+}
+.btn-outline-action.wa { border-color: #bbf7d0; color: #15803d; background: #f0fdf4; }
 
 /* BREAKPOINTS RESPONSIVE */
 @media (max-width: 1200px) {

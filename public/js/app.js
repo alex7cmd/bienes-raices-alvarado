@@ -159,6 +159,9 @@ function showOnlyView(viewName) {
   $('mapView').classList.toggle('hidden', viewName !== 'map');
   $('adminView').classList.toggle('hidden', viewName !== 'admin');
   $('adminDropdown').classList.add('hidden');
+  if ($('floatingStack')) {
+    $('floatingStack').classList.toggle('on-map', viewName === 'map');
+  }
 }
 
 async function openInteractiveMap() {
@@ -584,6 +587,52 @@ function bindEvents() {
   });
 
   $('closeProtoModal').addEventListener('click', () => $('protoModal').classList.add('hidden'));
+
+  // Floating Request Info / Schedule a Tour Modal
+  let inquiryMode = 'info';
+  $('openInquiryBtn').addEventListener('click', () => {
+    $('inqStatus').classList.add('hidden');
+    $('inquiryModal').classList.remove('hidden');
+  });
+  $('closeInquiryModal').addEventListener('click', () => $('inquiryModal').classList.add('hidden'));
+  document.querySelectorAll('.inquiry-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      document.querySelectorAll('.inquiry-tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      inquiryMode = tab.dataset.itab;
+      $('tourDateFields').classList.toggle('hidden', inquiryMode !== 'tour');
+      $('inqSubmitBtn').textContent = inquiryMode === 'tour' ? 'Agendar visita →' : 'Enviar solicitud →';
+    });
+  });
+  $('inquiryForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const status = $('inqStatus');
+    status.classList.add('hidden');
+    const prefix = inquiryMode === 'tour'
+      ? `[AGENDAR VISITA: ${$('inqDate').value || 'Por definir'} ${$('inqTime').value}] `
+      : '[SOLICITAR INFO] ';
+    try {
+      await api('/api/public/contact', {
+        method: 'POST',
+        body: JSON.stringify({
+          nombre: $('inqName').value,
+          email: $('inqEmail').value,
+          telefono: $('inqPhone').value,
+          mensaje: prefix + $('inqMessage').value
+        })
+      });
+      $('inquiryForm').reset();
+      status.textContent = inquiryMode === 'tour'
+        ? '¡Visita agendada! Nuestras asesoras confirmarán tu horario.'
+        : '¡Solicitud enviada! En breve te contactamos.';
+      status.classList.remove('hidden');
+      showToast('Solicitud registrada');
+    } catch (err) {
+      status.style.color = '#dc2626';
+      status.textContent = err.message;
+      status.classList.remove('hidden');
+    }
+  });
 
   // Public Contact Form
   const contactForm = $('contactForm');
