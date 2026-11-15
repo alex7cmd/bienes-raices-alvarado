@@ -148,6 +148,93 @@ function renderPublicSite() {
   }
 }
 
+function renderPrototypeDetailPanel(p, slideIdx = 0) {
+  if (!p) return '';
+  const gallery = getProtoGallery(p);
+  const activeIdx = Math.max(0, Math.min(slideIdx, gallery.length - 1));
+  const waMsg = encodeURIComponent(`Hola, me interesa información del prototipo ${p.name} (${mxn.format(p.price)}).`);
+  return `
+    <div class="proto-tab-panel" data-active-proto="${p.id}" data-slide-idx="${activeIdx}">
+      <div class="proto-panel-media">
+        <div class="proto-panel-stage">
+          <img class="proto-panel-main-img" src="${gallery[activeIdx]}" alt="${p.name}" loading="lazy" />
+          <button type="button" class="proto-gallery-btn" data-proto-gallery="${p.id}" aria-label="Ver galería de ${p.name}">🖼️ Ver galería</button>
+          ${gallery.length > 1 ? `
+            <span class="proto-photo-counter proto-panel-counter">${activeIdx + 1} / ${gallery.length}</span>
+            <button type="button" class="proto-photo-arrow proto-photo-prev proto-panel-prev" aria-label="Foto anterior">‹</button>
+            <button type="button" class="proto-photo-arrow proto-photo-next proto-panel-next" aria-label="Foto siguiente">›</button>
+          ` : ''}
+        </div>
+        ${gallery.length > 1 ? `
+          <div class="proto-modal-thumbs proto-panel-thumbs">
+            ${gallery.map((src, idx) => `
+              <button type="button" class="proto-modal-thumb proto-panel-thumb ${idx === activeIdx ? 'active' : ''}" data-thumb-idx="${idx}" aria-label="Ver foto ${idx + 1}">
+                <img src="${src}" alt="${p.name} vista ${idx + 1}" loading="lazy" />
+              </button>
+            `).join('')}
+          </div>
+        ` : ''}
+        ${p.video ? `<video src="${p.video}" controls style="width:100%;border-radius:12px;margin-top:12px;max-height:220px;"></video>` : ''}
+      </div>
+
+      <div class="proto-panel-info">
+        <div class="proto-panel-head">
+          <div>
+            ${p.propertyId ? `<span class="proto-panel-id">ID ${p.propertyId}</span>` : ''}
+            <h3>${p.name}</h3>
+          </div>
+          <strong class="proto-panel-price">${mxn.format(p.price)}</strong>
+        </div>
+        <p class="proto-panel-desc">${p.description}</p>
+
+        <div class="lot-specs-grid proto-panel-specs">
+          <div class="lot-spec-box"><small>📐 Terreno</small><strong>${p.area} m²</strong></div>
+          <div class="lot-spec-box"><small>🛏️ Recámaras</small><strong>${p.bedrooms}</strong></div>
+          <div class="lot-spec-box"><small>🚿 Baños</small><strong>${p.bathrooms}</strong></div>
+          <div class="lot-spec-box"><small>🚗 Estac.</small><strong>${p.parking}</strong></div>
+        </div>
+
+        <div class="proto-panel-features">
+          <span class="proto-panel-subtitle">Características y amenidades</span>
+          <div class="proto-features-chips">
+            ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
+          </div>
+        </div>
+
+        <div class="proto-panel-map">
+          <div class="proto-panel-map-head">
+            <span>📍 Ubicación · Qavalta Residencial, Pachuca</span>
+            <a href="https://maps.google.com/?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo" target="_blank" rel="noopener">Abrir en Google Maps →</a>
+          </div>
+          <iframe
+            title="Mapa ${p.name}"
+            src="https://maps.google.com/maps?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            loading="lazy"
+          ></iframe>
+        </div>
+
+        <a href="https://wa.me/${state.site.whatsapp}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa">Solicitar información por WhatsApp →</a>
+      </div>
+    </div>
+  `;
+}
+
+function setPanelSlide(panel, protoId, nextIdx) {
+  const p = state.prototypes.find(x => x.id === protoId);
+  if (!p || !panel) return;
+  const gallery = getProtoGallery(p);
+  if (!gallery.length) return;
+  const idx = ((nextIdx % gallery.length) + gallery.length) % gallery.length;
+  panel.dataset.slideIdx = String(idx);
+  const mainImg = panel.querySelector('.proto-panel-main-img');
+  if (mainImg) mainImg.src = gallery[idx];
+  const counter = panel.querySelector('.proto-panel-counter');
+  if (counter) counter.textContent = `${idx + 1} / ${gallery.length}`;
+  panel.querySelectorAll('.proto-panel-thumb').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+}
+
 function renderDevelopmentAccordion(openDevId = 'oporto') {
   const container = $('developmentAccordion');
   if (!container) return;
@@ -155,6 +242,7 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
   container.innerHTML = state.developments.map(dev => {
     const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(dev.id));
     const isOpen = dev.id === openDevId;
+    const firstProto = devProtos[0];
     return `
       <div class="dev-pill-item ${isOpen ? 'open' : ''}" data-dev-pill="${dev.id}">
         <button type="button" class="dev-pill-trigger" aria-expanded="${isOpen}">
@@ -170,51 +258,17 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
         <div class="dev-pill-body ${isOpen ? '' : 'hidden'}">
           <div class="dev-pill-subbar">
             <p class="dev-pill-tagline">${dev.tagline} · Qavalta Residencial</p>
-            ${devProtos.length > 1 ? `
-              <div class="dev-slider-nav" aria-label="Navegar prototipos de ${dev.name}">
-                <button type="button" class="dev-slider-btn" data-dir="prev" aria-label="Anterior">‹</button>
-                <button type="button" class="dev-slider-btn" data-dir="next" aria-label="Siguiente">›</button>
-              </div>
-            ` : ''}
           </div>
-          <div class="prototypes-slider" data-dev-slider="${dev.id}">
-            ${devProtos.map(p => {
-              const gallery = getProtoGallery(p);
-              return `
-              <article class="proto-card" data-proto="${p.id}">
-                <div class="proto-img-wrap" data-slide-idx="0">
-                  <div class="proto-photo-track">
-                    ${gallery.map((src, idx) => `<img src="${src}" alt="${p.name} vista ${idx + 1}" loading="lazy" />`).join('')}
-                  </div>
-                  ${gallery.length > 1 ? `
-                    <button type="button" class="proto-gallery-btn" data-proto-gallery="${p.id}" aria-label="Ver galería de ${p.name}">🖼️ Ver galería</button>
-                    <span class="proto-photo-counter">1 / ${gallery.length}</span>
-                    <button type="button" class="proto-photo-arrow proto-photo-prev" aria-label="Foto anterior">‹</button>
-                    <button type="button" class="proto-photo-arrow proto-photo-next" aria-label="Foto siguiente">›</button>
-                    <div class="proto-photo-dots">
-                      ${gallery.map((_, idx) => `<button type="button" class="proto-photo-dot ${idx === 0 ? 'active' : ''}" data-slide="${idx}" aria-label="Ver foto ${idx + 1}"></button>`).join('')}
-                    </div>
-                  ` : `<button type="button" class="proto-gallery-btn" data-proto-gallery="${p.id}">🖼️ Ver galería</button>`}
-                </div>
-                <div class="proto-body">
-                  <div class="proto-top">
-                    <h3>${p.name}</h3>
-                    <span class="proto-price">${mxn.format(p.price)}</span>
-                  </div>
-                  <p class="proto-desc">${p.description}</p>
-                  <div class="proto-specs">
-                    <span>🛏️ ${p.bedrooms} Rec</span>
-                    <span>🚿 ${p.bathrooms} Baños</span>
-                    <span>📐 ${p.area} m²</span>
-                    <span>🚗 ${p.parking}</span>
-                  </div>
-                  <div class="proto-features-chips">
-                    ${(p.features || []).slice(0, 4).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
-                  </div>
-                </div>
-              </article>
-            `;
-            }).join('')}
+          <div class="dev-proto-tabs" role="tablist" aria-label="Prototipos de ${dev.name}">
+            ${devProtos.map((p, idx) => `
+              <button type="button" role="tab" class="dev-proto-tab ${idx === 0 ? 'active' : ''}" aria-selected="${idx === 0}" data-proto-tab="${p.id}">
+                <span class="dev-proto-tab-name">${p.name}</span>
+                <span class="dev-proto-tab-price">${mxn.format(p.price)}</span>
+              </button>
+            `).join('')}
+          </div>
+          <div class="dev-proto-panel-wrap">
+            ${firstProto ? renderPrototypeDetailPanel(firstProto, 0) : '<p class="muted">Sin prototipos disponibles.</p>'}
           </div>
         </div>
       </div>
@@ -773,49 +827,54 @@ function bindEvents() {
     else if (e.key === 'ArrowRight') renderFullscreenSlide(fsGalleryState.idx + 1);
   });
 
-  // Expandable development pills + prototype cards + card/dev sliders
+  // Expandable development pills + prototype tabs + downward detail panel
   $('developmentAccordion').addEventListener('click', (e) => {
-    const devSliderBtn = e.target.closest('.dev-slider-btn');
-    if (devSliderBtn) {
-      const body = devSliderBtn.closest('.dev-pill-body');
-      const slider = body?.querySelector('.prototypes-slider');
-      if (slider) {
-        const cardWidth = slider.querySelector('.proto-card')?.offsetWidth || 320;
-        const delta = devSliderBtn.dataset.dir === 'next' ? cardWidth + 20 : -(cardWidth + 20);
-        slider.scrollBy({ left: delta, behavior: 'smooth' });
-      }
+    const tabBtn = e.target.closest('.dev-proto-tab');
+    if (tabBtn) {
+      const pill = tabBtn.closest('.dev-pill-item');
+      const protoId = tabBtn.dataset.protoTab;
+      const proto = state.prototypes.find(x => x.id === protoId);
+      if (!pill || !proto) return;
+      pill.querySelectorAll('.dev-proto-tab').forEach(btn => {
+        const active = btn === tabBtn;
+        btn.classList.toggle('active', active);
+        btn.setAttribute('aria-selected', String(active));
+      });
+      const wrap = pill.querySelector('.dev-proto-panel-wrap');
+      if (wrap) wrap.innerHTML = renderPrototypeDetailPanel(proto, 0);
       return;
     }
 
     const galleryBtn = e.target.closest('.proto-gallery-btn');
     if (galleryBtn) {
       e.stopPropagation();
-      const card = galleryBtn.closest('.proto-card');
-      const cur = Number(card?.querySelector('.proto-img-wrap')?.dataset.slideIdx || 0);
+      const panel = galleryBtn.closest('.proto-tab-panel');
+      const cur = Number(panel?.dataset.slideIdx || 0);
       openFullscreenGallery(galleryBtn.dataset.protoGallery, cur);
       return;
     }
 
-    const photoPrev = e.target.closest('.proto-photo-prev');
-    const photoNext = e.target.closest('.proto-photo-next');
-    const photoDot = e.target.closest('.proto-photo-dot');
-    if (photoPrev || photoNext || photoDot) {
-      e.stopPropagation();
-      const card = e.target.closest('.proto-card');
-      const wrap = card?.querySelector('.proto-img-wrap');
-      if (!card || !wrap) return;
-      const cur = Number(wrap.dataset.slideIdx || 0);
-      if (photoPrev) setCardSlide(card, cur - 1);
-      else if (photoNext) setCardSlide(card, cur + 1);
-      else if (photoDot) setCardSlide(card, Number(photoDot.dataset.slide || 0));
-      return;
-    }
-
-    const card = e.target.closest('.proto-card');
-    if (card) {
-      const cur = Number(card.querySelector('.proto-img-wrap')?.dataset.slideIdx || 0);
-      openPrototypeModal(card.dataset.proto, cur);
-      return;
+    const panel = e.target.closest('.proto-tab-panel');
+    if (panel) {
+      const protoId = panel.dataset.activeProto;
+      const cur = Number(panel.dataset.slideIdx || 0);
+      if (e.target.closest('.proto-panel-prev')) {
+        setPanelSlide(panel, protoId, cur - 1);
+        return;
+      }
+      if (e.target.closest('.proto-panel-next')) {
+        setPanelSlide(panel, protoId, cur + 1);
+        return;
+      }
+      const thumb = e.target.closest('.proto-panel-thumb');
+      if (thumb) {
+        setPanelSlide(panel, protoId, Number(thumb.dataset.thumbIdx || 0));
+        return;
+      }
+      if (e.target.closest('.proto-panel-main-img')) {
+        openFullscreenGallery(protoId, cur);
+        return;
+      }
     }
     const trigger = e.target.closest('.dev-pill-trigger');
     if (!trigger) return;
