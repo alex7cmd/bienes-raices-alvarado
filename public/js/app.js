@@ -33,6 +33,40 @@ function featureIcon(name) {
   return '✨';
 }
 
+const FALLBACK_GALLERY_POOL = [
+  '/assets/images/casa-1.jpg',
+  '/assets/images/casa-2.jpg',
+  '/assets/images/casa-3.jpg',
+  '/assets/images/casa-4.jpg',
+  '/assets/images/casa-5.png',
+  '/assets/images/smart-1.jpg',
+  '/assets/images/smart-2.jpg'
+];
+
+function getProtoGallery(p) {
+  if (Array.isArray(p.gallery) && p.gallery.length > 0) return p.gallery;
+  const list = [p.image].filter(Boolean);
+  for (const img of FALLBACK_GALLERY_POOL) {
+    if (!list.includes(img)) list.push(img);
+    if (list.length >= 4) break;
+  }
+  return list;
+}
+
+function setCardSlide(card, nextIdx) {
+  const wrap = card.querySelector('.proto-img-wrap');
+  const track = card.querySelector('.proto-photo-track');
+  const dots = card.querySelectorAll('.proto-photo-dot');
+  const counter = card.querySelector('.proto-photo-counter');
+  if (!wrap || !track || dots.length === 0) return;
+  const total = dots.length;
+  const idx = ((nextIdx % total) + total) % total;
+  wrap.dataset.slideIdx = String(idx);
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  dots.forEach((d, i) => d.classList.toggle('active', i === idx));
+  if (counter) counter.textContent = `${idx + 1} / ${total}`;
+}
+
 function showToast(msg) {
   const t = $('toast');
   t.textContent = msg;
@@ -134,12 +168,32 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
           </div>
         </button>
         <div class="dev-pill-body ${isOpen ? '' : 'hidden'}">
-          <p class="dev-pill-tagline">${dev.tagline} · Qavalta Residencial</p>
-          <div class="prototypes-grid">
-            ${devProtos.map(p => `
+          <div class="dev-pill-subbar">
+            <p class="dev-pill-tagline">${dev.tagline} · Qavalta Residencial</p>
+            ${devProtos.length > 1 ? `
+              <div class="dev-slider-nav" aria-label="Navegar prototipos de ${dev.name}">
+                <button type="button" class="dev-slider-btn" data-dir="prev" aria-label="Anterior">‹</button>
+                <button type="button" class="dev-slider-btn" data-dir="next" aria-label="Siguiente">›</button>
+              </div>
+            ` : ''}
+          </div>
+          <div class="prototypes-slider" data-dev-slider="${dev.id}">
+            ${devProtos.map(p => {
+              const gallery = getProtoGallery(p);
+              return `
               <article class="proto-card" data-proto="${p.id}">
-                <div class="proto-img-wrap">
-                  <img src="${p.image}" alt="${p.name}" loading="lazy" />
+                <div class="proto-img-wrap" data-slide-idx="0">
+                  <div class="proto-photo-track">
+                    ${gallery.map((src, idx) => `<img src="${src}" alt="${p.name} vista ${idx + 1}" loading="lazy" />`).join('')}
+                  </div>
+                  ${gallery.length > 1 ? `
+                    <span class="proto-photo-counter">1 / ${gallery.length}</span>
+                    <button type="button" class="proto-photo-arrow proto-photo-prev" aria-label="Foto anterior">‹</button>
+                    <button type="button" class="proto-photo-arrow proto-photo-next" aria-label="Foto siguiente">›</button>
+                    <div class="proto-photo-dots">
+                      ${gallery.map((_, idx) => `<button type="button" class="proto-photo-dot ${idx === 0 ? 'active' : ''}" data-slide="${idx}" aria-label="Ver foto ${idx + 1}"></button>`).join('')}
+                    </div>
+                  ` : ''}
                 </div>
                 <div class="proto-body">
                   <div class="proto-top">
@@ -158,7 +212,8 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
                   </div>
                 </div>
               </article>
-            `).join('')}
+            `;
+            }).join('')}
           </div>
         </div>
       </div>
@@ -166,12 +221,32 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
   }).join('');
 }
 
-function openPrototypeModal(protoId) {
+function openPrototypeModal(protoId, initialIdx = 0) {
   const p = state.prototypes.find(x => x.id === protoId);
   if (!p) return;
+  const gallery = getProtoGallery(p);
+  let activeIdx = Math.max(0, Math.min(initialIdx, gallery.length - 1));
   const waMsg = encodeURIComponent(`Hola, me interesa información del prototipo ${p.name} (${mxn.format(p.price)}).`);
   $('protoModalContent').innerHTML = `
-    <img src="${p.image}" alt="${p.name}" style="width:100%;height:240px;object-fit:cover;border-radius:12px;margin-bottom:16px;" />
+    <div class="proto-modal-gallery">
+      <div class="proto-modal-stage">
+        <img id="protoModalMainImg" src="${gallery[activeIdx]}" alt="${p.name}" />
+        ${gallery.length > 1 ? `
+          <span class="proto-photo-counter" id="protoModalCounter">${activeIdx + 1} / ${gallery.length}</span>
+          <button type="button" class="proto-photo-arrow proto-photo-prev" id="protoModalPrev" aria-label="Foto anterior">‹</button>
+          <button type="button" class="proto-photo-arrow proto-photo-next" id="protoModalNext" aria-label="Foto siguiente">›</button>
+        ` : ''}
+      </div>
+      ${gallery.length > 1 ? `
+        <div class="proto-modal-thumbs" id="protoModalThumbs">
+          ${gallery.map((src, idx) => `
+            <button type="button" class="proto-modal-thumb ${idx === activeIdx ? 'active' : ''}" data-thumb-idx="${idx}" aria-label="Miniatura ${idx + 1}">
+              <img src="${src}" alt="${p.name} ${idx + 1}" />
+            </button>
+          `).join('')}
+        </div>
+      ` : ''}
+    </div>
     ${p.video ? `<video src="${p.video}" controls style="width:100%;border-radius:12px;margin-bottom:16px;max-height:220px;"></video>` : ''}
     <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px;">
       <h2 style="font-size:24px;">${p.name}</h2>
@@ -201,6 +276,24 @@ function openPrototypeModal(protoId) {
     </div>
     <a href="https://wa.me/${state.site.whatsapp}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:4px;">Solicitar información por WhatsApp →</a>
   `;
+  if (gallery.length > 1) {
+    const updateModalSlide = (nextIdx) => {
+      activeIdx = ((nextIdx % gallery.length) + gallery.length) % gallery.length;
+      const mainImg = $('protoModalMainImg');
+      const counter = $('protoModalCounter');
+      if (mainImg) mainImg.src = gallery[activeIdx];
+      if (counter) counter.textContent = `${activeIdx + 1} / ${gallery.length}`;
+      $('protoModalThumbs')?.querySelectorAll('.proto-modal-thumb').forEach((btn, i) => {
+        btn.classList.toggle('active', i === activeIdx);
+      });
+    };
+    $('protoModalPrev')?.addEventListener('click', () => updateModalSlide(activeIdx - 1));
+    $('protoModalNext')?.addEventListener('click', () => updateModalSlide(activeIdx + 1));
+    $('protoModalThumbs')?.addEventListener('click', (e) => {
+      const thumb = e.target.closest('.proto-modal-thumb');
+      if (thumb) updateModalSlide(Number(thumb.dataset.thumbIdx));
+    });
+  }
   $('protoModal').classList.remove('hidden');
 }
 
@@ -606,11 +699,39 @@ function bindEvents() {
   $('logoutBtn').addEventListener('click', handleLogout);
   $('cmsLogoutBtn').addEventListener('click', handleLogout);
 
-  // Expandable development pills + prototype cards
+  // Expandable development pills + prototype cards + card/dev sliders
   $('developmentAccordion').addEventListener('click', (e) => {
+    const devSliderBtn = e.target.closest('.dev-slider-btn');
+    if (devSliderBtn) {
+      const body = devSliderBtn.closest('.dev-pill-body');
+      const slider = body?.querySelector('.prototypes-slider');
+      if (slider) {
+        const cardWidth = slider.querySelector('.proto-card')?.offsetWidth || 320;
+        const delta = devSliderBtn.dataset.dir === 'next' ? cardWidth + 20 : -(cardWidth + 20);
+        slider.scrollBy({ left: delta, behavior: 'smooth' });
+      }
+      return;
+    }
+
+    const photoPrev = e.target.closest('.proto-photo-prev');
+    const photoNext = e.target.closest('.proto-photo-next');
+    const photoDot = e.target.closest('.proto-photo-dot');
+    if (photoPrev || photoNext || photoDot) {
+      e.stopPropagation();
+      const card = e.target.closest('.proto-card');
+      const wrap = card?.querySelector('.proto-img-wrap');
+      if (!card || !wrap) return;
+      const cur = Number(wrap.dataset.slideIdx || 0);
+      if (photoPrev) setCardSlide(card, cur - 1);
+      else if (photoNext) setCardSlide(card, cur + 1);
+      else if (photoDot) setCardSlide(card, Number(photoDot.dataset.slide || 0));
+      return;
+    }
+
     const card = e.target.closest('.proto-card');
     if (card) {
-      openPrototypeModal(card.dataset.proto);
+      const cur = Number(card.querySelector('.proto-img-wrap')?.dataset.slideIdx || 0);
+      openPrototypeModal(card.dataset.proto, cur);
       return;
     }
     const trigger = e.target.closest('.dev-pill-trigger');
