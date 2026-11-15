@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bienes Raíces Alvarado · Qvalta Residencial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.0.1" />
+</head>
+<body>
+  <!-- HEADER -->
+  <header class="site-header" id="siteHeader">
+    <div class="header-inner">
+      <a href="#top" class="brand" aria-label="Bienes Raíces Alvarado">
+        <img src="/assets/logo-alvarado.png" alt="Bienes Raíces Alvarado" class="brand-logo" />
+      </a>
+      <nav class="main-nav">
+        <a href="#desarrollos">Desarrollos</a>
+        <a href="#prototipos">Prototipos</a>
+        <a href="#contacto">Contacto</a>
+      </nav>
+      <div class="header-actions">
+        <div class="admin-menu-wrap">
+          <button class="icon-user-btn" id="userIconBtn" title="Acceso Administrador" aria-label="Acceso Administrador">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+            <span class="admin-dot hidden" id="adminActiveDot"></span>
+          </button>
+          <div class="admin-dropdown hidden" id="adminDropdown">
+            <div class="admin-dropdown-header">
+              <span class="badge-admin">Administrador</span>
+              <small id="adminEmailLabel"></small>
+            </div>
+            <button class="dropdown-item" id="openMapBtn">
+              <span>🗺️</span> Plano Interactivo (Presentación)
+            </button>
+            <button class="dropdown-item" id="openCmsBtn">
+              <span>⚙️</span> Panel de Edición (CMS)
+            </button>
+            <hr />
+            <button class="dropdown-item danger" id="logoutBtn">
+              <span>🚪</span> Cerrar sesión
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- PUBLIC VIEW -->
+  <main id="publicView">
+    <!-- HERO + DESARROLLOS ACTIVOS (inspirado en planos.qavalta.com) -->
+    <section class="hero-section" id="top">
+      <div class="hero-bg" id="heroBg"></div>
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <p class="hero-eyebrow" id="heroEyebrow">DESARROLLOS RESIDENCIALES · PACHUCA</p>
+        <h1 class="hero-title" id="heroTitle">Encuentra el hogar que lo tiene todo.</h1>
+        <p class="hero-subtitle" id="heroSubtitle">Descubre el desarrollo perfecto para ti y tu familia.</p>
+        <a href="#prototipos" class="btn-primary-pill">Ver prototipos →</a>
+      </div>
+
+      <!-- DESARROLLOS ACTIVOS STRIP -->
+      <div class="developments-strip" id="desarrollos">
+        <div class="strip-label">• DESARROLLOS ACTIVOS</div>
+        <div class="developments-grid" id="developmentsGrid"></div>
+      </div>
+    </section>
+
+    <!-- PROTOTIPOS MINIMALISTAS -->
+    <section class="section-container" id="prototipos">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">CATÁLOGO RESIDENCIAL</span>
+          <h2>Nuestros Prototipos</h2>
+        </div>
+        <div class="filter-pills" id="publicProtoFilters">
+          <button class="pill active" data-filter="all">Todos</button>
+          <button class="pill" data-filter="2">2 Recámaras</button>
+          <button class="pill" data-filter="3">3+ Recámaras</button>
+        </div>
+      </div>
+      <div class="prototypes-grid" id="prototypesGrid"></div>
+    </section>
+
+    <!-- CONTACTO MINIMALISTA -->
+    <footer class="site-footer" id="contacto">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <img src="/assets/logo-alvarado.png" alt="Bienes Raíces Alvarado" class="footer-logo" />
+          <p>Asesoría inmobiliaria en Pachuca, Hidalgo. Casas inteligentes, privadas con amenidades y financiamiento a tu medida.</p>
+        </div>
+        <div class="footer-contact">
+          <h4>Contacto directo</h4>
+          <a id="footerPhone" href="tel:+525537560931">+52 55 3756 0931</a>
+          <a id="footerWa" href="https://wa.me/525537560931" target="_blank" rel="noopener" class="btn-wa">Enviar WhatsApp →</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Bienes Raíces Alvarado · Qvalta Residencial</span>
+      </div>
+    </footer>
+  </main>
+
+  <!-- FULLSCREEN INTERACTIVE MAP VIEW (ADMIN PRESENTATION MODE - ZERO EDIT CONTROLS) -->
+  <section class="fullscreen-map-view hidden" id="mapView">
+    <div class="map-topbar">
+      <div class="map-topbar-left">
+        <span class="map-loc-badge">📍 Qavalta · Vittoria</span>
+        <span class="map-avail-badge" id="mapAvailCount">• 0 lotes disponibles</span>
+      </div>
+      <div class="map-mode-tabs">
+        <button class="mode-tab active" data-maptab="plano">Plano interactivo</button>
+        <button class="mode-tab" data-maptab="amenidades">Amenidades</button>
+      </div>
+      <div class="map-topbar-right">
+        <div class="map-from-price">
+          <small>DESDE</small>
+          <strong id="mapStartingPrice">$1,382,000</strong>
+        </div>
+        <button class="btn-back-home" id="exitMapBtn">← Regresar al Inicio</button>
+      </div>
+    </div>
+
+    <div class="map-canvas-area" id="mapCanvasArea">
+      <div class="map-hint-pill">🖱️ Toca un lote · Arrastra para mover · Rueda o botones para zoom</div>
+
+      <!-- Zoom controls -->
+      <div class="map-zoom-controls">
+        <button id="zoomInBtn" title="Acercar">+</button>
+        <span id="zoomPercentLabel">100%</span>
+        <button id="zoomOutBtn" title="Alejar">−</button>
+        <button id="zoomResetBtn" title="Restablecer">⟲</button>
+      </div>
+
+      <!-- SVG Canvas -->
+      <div class="svg-viewport" id="svgViewport">
+        <svg id="mapSvg" viewBox="0 0 980 960" xmlns="http://www.w3.org/2000/svg"></svg>
+      </div>
+
+      <!-- Amenidades overlay (when Amenidades tab active) -->
+      <div class="amenities-overlay hidden" id="amenitiesOverlay">
+        <div class="amenities-card">
+          <h3>Amenidades del Desarrollo</h3>
+          <div class="amenities-grid">
+            <div class="amenity-item">🌳 Parque Central &amp; Áreas Verdes</div>
+            <div class="amenity-item">🏊 Casa Club con Alberca</div>
+            <div class="amenity-item">🛡️ Acceso Controlado 24/7</div>
+            <div class="amenity-item">⚽ Canchas Multideportivas</div>
+            <div class="amenity-item">🚲 Ciclovía &amp; Andadores</div>
+            <div class="amenity-item">💡 Domótica / Casas Inteligentes</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Legend -->
+      <div class="map-legend-pill">
+        <span><i class="dot disponible"></i> Disponible <strong id="countDisp">0</strong></span>
+        <span><i class="dot no_disponible"></i> No disponible <strong id="countNoDisp">0</strong></span>
+        <span><i class="dot vendido"></i> Vendido <strong id="countVend">0</strong></span>
+      </div>
+
+      <!-- Right Floating Info Panel -->
+      <aside class="map-side-panel">
+        <div class="panel-header">
+          <h2>Vittoria</h2>
+          <p class="panel-sub">PROTOTIPOS</p>
+          <div class="panel-proto-filters" id="mapProtoFilters"></div>
+        </div>
+        <div class="panel-lot-detail" id="panelLotDetail">
+          <div class="empty-lot-state">
+            <div class="empty-icon">🏠</div>
+            <h3>Toca un lote</h3>
+            <p>Selecciona cualquier casa o lote en el plano para ver su superficie, recámaras, baños y precio.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- ADMIN CMS VIEW (SEPARATE FROM PRESENTATION MAP) -->
+  <section class="admin-cms-view hidden" id="adminView">
+    <div class="cms-topbar">
+      <div class="cms-title-group">
+        <span class="badge-admin">Panel Administrador (CMS)</span>
+        <span class="cms-note">Edición de contenido, precios y disponibilidad · Diseño bloqueado</span>
+      </div>
+      <div class="cms-actions">
+        <button class="btn-secondary" id="cmsToMapBtn">🗺️ Ver Plano Interactivo</button>
+        <button class="btn-secondary" id="cmsToPublicBtn">← Volver al Sitio</button>
+        <button class="btn-danger-outline" id="cmsLogoutBtn">Cerrar sesión</button>
+      </div>
+    </div>
+
+    <div class="cms-body">
+      <div class="cms-tabs">
+        <button class="cms-tab active" data-cmstab="lots">Control de Lotes (Plano)</button>
+        <button class="cms-tab" data-cmstab="prototypes">Prototipos (Precios e Imágenes)</button>
+        <button class="cms-tab" data-cmstab="site">Portada y Desarrollos</button>
+      </div>
+
+      <!-- TAB 1: LOTS -->
+      <div class="cms-panel" id="cmsTabLots">
+        <div class="cms-stats-row" id="cmsLotStats"></div>
+        <div class="cms-toolbar">
+          <input type="text" id="lotSearchInput" placeholder="Buscar por número de casa / lote (ej. 101, 135)..." />
+          <select id="lotStatusFilter">
+            <option value="all">Todos los estados</option>
+            <option value="disponible">Disponible</option>
+            <option value="no_disponible">No disponible</option>
+            <option value="vendido">Vendido</option>
+          </select>
+        </div>
+        <div class="cms-table-wrap">
+          <table class="cms-table">
+            <thead>
+              <tr>
+                <th>Casa / Lote</th>
+                <th>Manzana</th>
+                <th>Calle</th>
+                <th>Prototipo</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="cmsLotsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- TAB 2: PROTOTYPES -->
+      <div class="cms-panel hidden" id="cmsTabPrototypes">
+        <div class="cms-cards-grid" id="cmsPrototypesGrid"></div>
+      </div>
+
+      <!-- TAB 3: SITE & DEVELOPMENTS -->
+      <div class="cms-panel hidden" id="cmsTabSite">
+        <div class="cms-form-card">
+          <h3>Portada Principal (Home)</h3>
+          <div class="form-grid">
+            <label>Texto superior (Eyebrow)<input type="text" id="editHeroEyebrow" /></label>
+            <label>Título principal<input type="text" id="editHeroTitle" /></label>
+            <label>Subtítulo<input type="text" id="editHeroSubtitle" /></label>
+            <label>Teléfono visible<input type="text" id="editPhoneDisplay" /></label>
+            <label>Imagen de fondo (URL o subir)<input type="text" id="editHeroImage" /></label>
+            <label>Subir nueva imagen de portada<input type="file" id="uploadHeroFile" accept="image/*" /></label>
+          </div>
+          <button class="btn-primary" id="saveSiteBtn">Guardar Portada</button>
+        </div>
+        <h3 class="cms-subhead">Desarrollos Activos</h3>
+        <div class="cms-cards-grid" id="cmsDevsGrid"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LOGIN MODAL -->
+  <div class="modal-backdrop hidden" id="loginModal">
+    <div class="modal-card login-card">
+      <button class="modal-close" id="closeLoginModal">✕</button>
+      <h3>Acceso Administrador</h3>
+      <p class="modal-desc">Ingresa para presentar el plano interactivo o actualizar precios, disponibilidad e imágenes.</p>
+      <form id="loginForm">
+        <label>Correo
+          <input type="email" id="loginEmail" required value="admin@bienesraicesalvarado.com.mx" />
+        </label>
+        <label>Contraseña
+          <input type="password" id="loginPassword" required placeholder="••••••••" />
+        </label>
+        <p class="demo-creds-hint">Demo: <code>admin@bienesraicesalvarado.com.mx</code> / <code>Qvalta2026!</code></p>
+        <p class="form-error hidden" id="loginError"></p>
+        <button type="submit" class="btn-primary full-width">Entrar</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- PROTOTYPE QUICK-VIEW MODAL (PUBLIC) -->
+  <div class="modal-backdrop hidden" id="protoModal">
+    <div class="modal-card proto-modal-card">
+      <button class="modal-close" id="closeProtoModal">✕</button>
+      <div id="protoModalContent"></div>
+    </div>
+  </div>
+
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="/js/app.js?v=1.0.1"></script>
+</body>
+</html>

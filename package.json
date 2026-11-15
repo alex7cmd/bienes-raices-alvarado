@@ -1,0 +1,13 @@
+{
+  "name": "bienes-raices-alvarado",
+  "version": "1.0.0",
+  "description": "Qvalta Residencial - Bienes Raices Alvarado Web, Plano Interactivo y CMS",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "multer": "^2.0.0"
+  }
+}
