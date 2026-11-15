@@ -201,66 +201,112 @@ function renderInteractiveMap() {
     vendido: '#3b82f6'
   };
 
-  // Traced architectural base (streets, central boulevard, roundabout, green park)
+  // Trazado arquitectónico fiel a la fotografía (trapezoide + curvas de C. Paseo Vittoria + Glorieta + Caseta)
+  svg.setAttribute('viewBox', '0 0 960 950');
   let markup = `
-    <rect x="0" y="0" width="980" height="960" fill="#eef2f6" />
-    <!-- Perimeter boundary -->
-    <rect x="95" y="20" width="765" height="920" rx="10" fill="#e2e8f0" stroke="#94a3b8" stroke-width="2" />
-    <!-- Central Boulevard: C. Paseo Vittoria & Park -->
-    <rect x="462" y="90" width="60" height="720" fill="#f8fafc" />
-    <rect x="466" y="245" width="54" height="360" rx="8" fill="#15803d" />
-    <!-- Roundabout (Glorieta) -->
-    <circle cx="468" cy="515" r="28" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2" />
-    <circle cx="468" cy="515" r="14" fill="#991b1b" />
-    <!-- Green strips inside blocks -->
-    <rect x="160" y="156" width="300" height="18" rx="4" fill="#22c55e" />
-    <rect x="152" y="296" width="308" height="18" rx="4" fill="#16a34a" />
-    <rect x="144" y="436" width="290" height="18" rx="4" fill="#22c55e" />
-    <rect x="136" y="576" width="290" height="18" rx="4" fill="#16a34a" />
-    <rect x="128" y="716" width="326" height="18" rx="4" fill="#15803d" />
-    <rect x="530" y="156" width="300" height="18" rx="4" fill="#22c55e" />
-    <rect x="536" y="296" width="294" height="18" rx="4" fill="#16a34a" />
-    <rect x="540" y="436" width="282" height="18" rx="4" fill="#22c55e" />
-    <rect x="540" y="576" width="276" height="18" rx="4" fill="#16a34a" />
-    <rect x="540" y="716" width="270" height="18" rx="4" fill="#15803d" />
-    <!-- Street Labels -->
-    <g font-family="Inter, sans-serif" font-size="9" font-weight="600" fill="#475569" text-anchor="middle">
-      <text x="310" y="98">C. SENIA</text>
-      <text x="680" y="98">C. SENIA</text>
-      <text x="305" y="238">C. COLOMBO</text>
-      <text x="680" y="238">C. COLOMBO</text>
-      <text x="290" y="378">C. LEOPARDI</text>
-      <text x="680" y="378">C. MILANO</text>
-      <text x="280" y="518">C. MAGENTA</text>
-      <text x="680" y="518">C. PANTI</text>
-      <text x="280" y="658">C. MARTINO</text>
-      <text x="680" y="658">C. MARMORA</text>
-      <text x="280" y="798">C. TORINO</text>
-      <text x="680" y="798">C. TORINO</text>
-      <text x="478" y="410" transform="rotate(-78 478 410)">C. PASEO VITTORIA</text>
-      <text x="112" y="450" transform="rotate(-86 112 450)">C. CAIROLI</text>
-      <text x="845" y="450" transform="rotate(86 845 450)">C. METANA</text>
+    <rect x="0" y="0" width="960" height="950" fill="#eef2f6" />
+    <!-- Perímetro trapezoidal del fraccionamiento -->
+    <polygon points="155,18 865,18 825,922 65,922" fill="#e2e8f0" stroke="#475569" stroke-width="2" />
+    <!-- Calles horizontales y laterales -->
+    <polygon points="196,24 816,24 786,912 108,912" fill="#cbd5e1" />
+
+    <!-- Bulevar curvo C. Paseo Vittoria (S-curve suave alrededor del parque y glorieta) -->
+    <path d="M 488 76 Q 496 200 482 325 Q 465 405 462 462 Q 462 525 480 610 Q 496 720 488 890"
+          fill="none" stroke="#f8fafc" stroke-width="46" stroke-linecap="round" />
+
+    <!-- Parque Central Curvo (Manzana 5) -->
+    <path d="M 498 205 Q 472 340 482 465 Q 492 590 508 725 L 558 725 L 558 205 Z"
+          fill="#22c55e" stroke="#ffffff" stroke-width="2" />
+    <path d="M 482 385 Q 486 450 492 515 L 558 515 L 558 385 Z" fill="#14532d" />
+
+    <!-- Glorieta central entre Manzanas 17 y 16 -->
+    <circle cx="458" cy="466" r="32" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" />
+    <circle cx="458" cy="466" r="18" fill="#16a34a" />
+    <circle cx="458" cy="466" r="10" fill="#991b1b" />
+
+    <!-- Caseta de acceso principal (abajo al centro) -->
+    <rect x="448" y="868" width="44" height="30" rx="4" fill="#991b1b" stroke="#fff" stroke-width="1.5" />
+    <rect x="434" y="876" width="72" height="14" rx="2" fill="#b91c1c" opacity="0.85" />
+
+    <!-- Contornos redondeados y áreas verdes centrales de las manzanas -->
+    <rect x="204" y="88" width="268" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="190" y="208" width="286" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="192" y="254" width="282" height="22" rx="4" fill="#16a34a" />
+
+    <!-- Manzana 17 y 16 con borde derecho curvo abrazando la glorieta -->
+    <path d="M 176 344 L 448 344 Q 460 390 422 444 L 170 444 Q 168 394 176 344 Z" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <path d="M 164 488 L 418 488 Q 456 540 434 588 L 158 588 Q 158 538 164 488 Z" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+
+    <rect x="138" y="612" width="336" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="140" y="658" width="332" height="22" rx="4" fill="#15803d" />
+
+    <!-- Manzanas derecha -->
+    <rect x="510" y="88" width="286" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="568" y="208" width="222" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="570" y="254" width="218" height="22" rx="4" fill="#16a34a" />
+    <rect x="568" y="344" width="214" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="566" y="488" width="208" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="562" y="612" width="204" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="564" y="658" width="200" height="22" rx="4" fill="#15803d" />
+
+    <!-- Etiquetas de calles -->
+    <g font-family="Inter, sans-serif" font-size="8.5" font-weight="700" fill="#334155" text-anchor="middle">
+      <text x="335" y="80">C. SENIA</text>
+      <text x="650" y="80">C. SENIA</text>
+      <text x="330" y="200">C. COLOMBO</text>
+      <text x="675" y="200">C. COLOMBO</text>
+      <text x="310" y="336">C. LEOPARDI</text>
+      <text x="675" y="336">C. MILANO</text>
+      <text x="295" y="470">C. MAGENTA</text>
+      <text x="670" y="470">C. PANTI</text>
+      <text x="300" y="604">C. MARTINO</text>
+      <text x="665" y="604">C. MARMORA</text>
+      <text x="290" y="744">C. TORINO</text>
+      <text x="660" y="744">C. TORINO</text>
+      <text x="480" y="320" transform="rotate(-84 480 320)">C. PASEO VITTORIA</text>
+      <text x="478" y="650" transform="rotate(-76 478 650)">C. PASEO VITTORIA</text>
+      <text x="122" y="470" transform="rotate(-84 122 470)">C. CAIROLI</text>
+      <text x="802" y="470" transform="rotate(88 802 470)">C. METANA</text>
+    </g>
+
+    <!-- Círculos numerados de Manzana (como en la foto) -->
+    <g font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">
+      <circle cx="515" cy="49" r="8" fill="#7f1d1d" /><text x="515" y="52">1</text>
+      <circle cx="338" cy="138" r="8" fill="#7f1d1d" /><text x="338" y="141">19</text>
+      <circle cx="653" cy="138" r="8" fill="#7f1d1d" /><text x="653" y="141">2</text>
+      <circle cx="355" cy="265" r="8" fill="#7f1d1d" /><text x="355" y="268">18</text>
+      <circle cx="640" cy="265" r="8" fill="#7f1d1d" /><text x="640" y="268">3</text>
+      <circle cx="315" cy="394" r="8" fill="#7f1d1d" /><text x="315" y="397">17</text>
+      <circle cx="675" cy="394" r="8" fill="#7f1d1d" /><text x="675" y="397">4</text>
+      <circle cx="520" cy="450" r="8" fill="#7f1d1d" /><text x="520" y="453">5</text>
+      <circle cx="310" cy="538" r="8" fill="#7f1d1d" /><text x="310" y="541">16</text>
+      <circle cx="670" cy="538" r="8" fill="#7f1d1d" /><text x="670" y="541">6</text>
+      <circle cx="355" cy="669" r="8" fill="#7f1d1d" /><text x="355" y="672">14</text>
+      <circle cx="640" cy="669" r="8" fill="#7f1d1d" /><text x="640" y="672">8</text>
     </g>
   `;
 
-  // Individual clickable lots
+  // Lotes individuales interactivos (con soporte de ángulo para perímetro inclinado)
   for (const lot of lots) {
     const dimmed = state.mapProtoFilter !== 'all' && lot.prototypeId !== state.mapProtoFilter;
     const isSelected = state.selectedLotId === lot.id;
     const fill = statusColor[lot.status] || '#cbd5e1';
+    const cx = lot.x + lot.w / 2;
+    const cy = lot.y + lot.h / 2;
+    const rot = lot.angle ? `transform="rotate(${lot.angle} ${cx} ${cy})"` : '';
     markup += `
-      <g class="lot-group" data-lot="${lot.id}">
+      <g class="lot-group" data-lot="${lot.id}" ${rot}>
         <rect
-          x="${lot.x}" y="${lot.y}" width="${lot.w}" height="${lot.h}" rx="3"
+          x="${lot.x}" y="${lot.y}" width="${lot.w}" height="${lot.h}" rx="2"
           fill="${fill}" fill-opacity="0.88"
-          stroke="${isSelected ? '#0f172a' : '#ffffff'}" stroke-width="${isSelected ? '2.5' : '1'}"
+          stroke="${isSelected ? '#0f172a' : '#ffffff'}" stroke-width="${isSelected ? '2.2' : '0.8'}"
           class="lot-rect ${isSelected ? 'selected' : ''} ${dimmed ? 'dimmed' : ''}"
         />
         <text
-          x="${lot.x + lot.w / 2}" y="${lot.y + lot.h / 2 + 3}"
-          font-family="Inter, sans-serif" font-size="8" font-weight="700"
+          x="${cx}" y="${cy + 2.5}"
+          font-family="Inter, sans-serif" font-size="6.5" font-weight="700"
           fill="#0f172a" text-anchor="middle" pointer-events="none"
-          opacity="${dimmed ? '0.25' : '0.95'}"
+          opacity="${dimmed ? '0.2' : '0.95'}"
         >${lot.number}</text>
       </g>
     `;

@@ -184,147 +184,140 @@ function buildInitialData() {
     }
   ];
 
-  // Generate traced blocks & lots matching the uploaded Vittoria reference photo
-  // Coordinates are in a 1000 x 1100 SVG viewBox
+  // Generación fiel a la geometría de la fotografía (viewBox 1000 x 1000)
+  // El fraccionamiento tiene forma trapezoidal: más angosto arriba y más ancho abajo,
+  // con C. Paseo Vittoria serpenteando alrededor del parque central y la glorieta.
   const lots = [];
   const protoIds = prototypes.map(p => p.id);
 
-  // Deterministic pseudo-random helper so demo looks balanced & realistic
   function seeded(n) {
     const x = Math.sin(n * 9301 + 49297) * 233280;
     return x - Math.floor(x);
   }
-
   function pickStatus(idx) {
     const r = seeded(idx);
-    if (r < 0.24) return 'disponible';
-    if (r < 0.86) return 'no_disponible';
+    if (r < 0.22) return 'disponible';
+    if (r < 0.88) return 'no_disponible';
     return 'vendido';
   }
-
   function pickProto(idx) {
-    const r = seeded(idx + 77);
-    return protoIds[Math.floor(r * protoIds.length)];
+    return protoIds[Math.floor(seeded(idx + 77) * protoIds.length)];
   }
 
-  let lotSeq = 1;
+  let seq = 1;
+  const pushLot = (id, number, manzana, street, x, y, w, h, angle = 0) => {
+    lots.push({
+      id,
+      number: String(number),
+      manzana,
+      street,
+      x: Math.round(x * 10) / 10,
+      y: Math.round(y * 10) / 10,
+      w: Math.round(w * 10) / 10,
+      h: Math.round(h * 10) / 10,
+      angle,
+      status: pickStatus(seq),
+      prototypeId: pickProto(seq++)
+    });
+  };
 
-  // Helper to add a double-row block (top row + bottom row)
-  function addBlock(blockId, streetTop, x, y, w, h, cols, startNumTop, startNumBot) {
-    const lotW = w / cols;
-    const lotH = (h - 22) / 2; // 22px central green/alley strip inside block
-    for (let c = 0; c < cols; c++) {
-      const numTop = String(startNumTop - c * 2);
-      const idTop = `M${blockId}-${numTop}`;
-      lots.push({
-        id: idTop,
-        number: numTop,
-        manzana: blockId,
-        street: streetTop,
-        x: Math.round(x + c * lotW),
-        y: Math.round(y),
-        w: Math.round(lotW - 2),
-        h: Math.round(lotH),
-        status: pickStatus(lotSeq),
-        prototypeId: pickProto(lotSeq++)
-      });
-
-      const numBot = String(startNumBot - c * 2);
-      const idBot = `M${blockId}-${numBot}`;
-      lots.push({
-        id: idBot,
-        number: numBot,
-        manzana: blockId,
-        street: streetTop,
-        x: Math.round(x + c * lotW),
-        y: Math.round(y + lotH + 22),
-        w: Math.round(lotW - 2),
-        h: Math.round(lotH),
-        status: pickStatus(lotSeq),
-        prototypeId: pickProto(lotSeq++)
-      });
+  // Helper para bloques de 2 filas (con ancho variable en cada fila para respetar curvas/diagonales)
+  function addCurvedBlock(manzana, street, xTop, wTop, xBot, wBot, y, h, colsTop, colsBot, startTop, startBot, hasGreenCenter = false) {
+    const gap = hasGreenCenter ? 28 : 10;
+    const rowH = (h - gap) / 2;
+    const stepTop = wTop / colsTop;
+    for (let i = 0; i < colsTop; i++) {
+      const num = startTop - i * 2;
+      pushLot(`M${manzana}-${num}`, num, manzana, street, xTop + i * stepTop, y, stepTop - 1.5, rowH);
+    }
+    const stepBot = wBot / colsBot;
+    for (let i = 0; i < colsBot; i++) {
+      const num = startBot - i * 2;
+      pushLot(`M${manzana}-${num}`, num, manzana, street, xBot + i * stepBot, y + rowH + gap, stepBot - 1.5, rowH);
     }
   }
 
-  // Top strip (Manzana 1)
-  for (let c = 0; c < 18; c++) {
-    const num = String(162 - c * 2);
-    lots.push({
-      id: `M1-${num}`,
-      number: num,
-      manzana: 1,
-      street: 'C. Senia Norte',
-      x: Math.round(160 + c * 38),
-      y: 34,
-      w: 36,
-      h: 44,
-      status: pickStatus(lotSeq),
-      prototypeId: pickProto(lotSeq++)
-    });
+  // 1. Tira superior (Manzana 1: 162 -> 100)
+  for (let i = 0; i < 32; i++) {
+    const num = 162 - i * 2;
+    pushLot(`M1-${num}`, num, 1, 'C. Senia Norte', 205 + i * 18.8, 30, 17.3, 38);
   }
 
-  // Left Column Blocks (Manzanas 19, 18, 17, 16, 14)
-  addBlock(19, 'C. Senia', 160, 110, 300, 110, 10, 153, 154);
-  addBlock(18, 'C. Colombo', 152, 250, 308, 110, 10, 147, 126);
-  addBlock(17, 'C. Leopardi', 144, 390, 290, 110, 9, 123, 120);
-  addBlock(16, 'C. Magenta', 136, 530, 290, 110, 9, 121, 124);
-  addBlock(14, 'C. Martino', 128, 670, 326, 110, 10, 131, 146);
-
-  // Right Column Blocks (Manzanas 2, 3, 4, 6, 8)
-  addBlock(2, 'C. Senia', 530, 110, 300, 110, 10, 129, 128);
-  addBlock(3, 'C. Colombo', 536, 250, 294, 110, 10, 119, 120);
-  addBlock(4, 'C. Milano', 540, 390, 282, 110, 9, 117, 116);
-  addBlock(6, 'C. Panti', 540, 530, 276, 110, 9, 115, 116);
-  addBlock(8, 'C. Marmora', 540, 670, 270, 110, 9, 117, 114);
-
-  // Central Park Flanking Lots (Paseo Vittoria)
-  for (let r = 0; r < 6; r++) {
-    const numTop = String(135 - r * 2);
-    lots.push({
-      id: `MC-${numTop}`,
-      number: numTop,
-      manzana: 5,
-      street: 'C. Paseo Vittoria',
-      x: 492,
-      y: 252 + r * 26,
-      w: 30,
-      h: 24,
-      status: pickStatus(lotSeq),
-      prototypeId: pickProto(lotSeq++)
-    });
-  }
-  for (let r = 0; r < 6; r++) {
-    const numBot = String(117 - r * 2);
-    lots.push({
-      id: `MC-${numBot}`,
-      number: numBot,
-      manzana: 5,
-      street: 'C. Paseo Vittoria',
-      x: 492,
-      y: 620 + r * 26,
-      w: 30,
-      h: 24,
-      status: pickStatus(lotSeq),
-      prototypeId: pickProto(lotSeq++)
-    });
+  // 2. Perímetro Izquierdo inclinado (C. Cairoli: 101 -> 173)
+  for (let i = 0; i < 36; i++) {
+    const t = i / 35;
+    const y = 32 + t * 862;
+    const x = 166 - t * 88; // Pendiente fiel de C. Cairoli
+    const num = 101 + i * 2;
+    pushLot(`PI-${num}`, num, 15, 'C. Cairoli', x, y, 30, 21.5, 5.8);
   }
 
-  // Bottom Row Blocks (Manzanas 13, 12, 11, 10, 9)
+  // 3. Perímetro Derecho ligeramente inclinado (C. Metana: 101 -> 171)
+  for (let i = 0; i < 36; i++) {
+    const t = i / 35;
+    const y = 32 + t * 862;
+    const x = 826 - t * 34; // Pendiente fiel de C. Metana
+    const num = 101 + i * 2;
+    pushLot(`PD-${num}`, num, 7, 'C. Metana', x, y, 30, 21.5, 2.2);
+  }
+
+  // 4. Columna Izquierda de Manzanas (19, 18, 17, 16, 14) siguiendo la inclinación y la glorieta
+  addCurvedBlock(19, 'C. Senia', 208, 258, 204, 260, 92, 92, 12, 12, 153, 154, false);
+  addCurvedBlock(18, 'C. Colombo', 194, 276, 188, 274, 212, 108, 14, 14, 147, 126, true);
+  // Manzana 17 y 16 abrazan la glorieta (xBot más corto arriba de la glorieta y xTop más corto abajo)
+  addCurvedBlock(17, 'C. Leopardi', 180, 266, 174, 240, 348, 92, 12, 11, 123, 120, false);
+  addCurvedBlock(16, 'C. Magenta', 168, 242, 162, 266, 492, 92, 11, 12, 121, 124, false);
+  addCurvedBlock(14, 'C. Martino', 148, 304, 142, 326, 616, 108, 15, 16, 131, 146, true);
+
+  // 5. Columna Derecha de Manzanas (2, 3, 4, 6, 8)
+  addCurvedBlock(2, 'C. Senia', 514, 278, 514, 276, 92, 92, 14, 14, 129, 128, false);
+  addCurvedBlock(3, 'C. Colombo', 572, 214, 572, 212, 212, 108, 10, 10, 119, 120, true);
+  addCurvedBlock(4, 'C. Milano', 572, 206, 572, 204, 348, 92, 9, 9, 117, 116, false);
+  addCurvedBlock(6, 'C. Panti', 570, 200, 570, 198, 492, 92, 8, 8, 115, 116, false);
+  addCurvedBlock(8, 'C. Marmora', 566, 196, 566, 194, 616, 108, 9, 9, 117, 114, true);
+
+  // 6. Lotes junto al Parque Central (Manzana 5: 135..119 arriba y 117..101 abajo)
+  for (let i = 0; i < 9; i++) {
+    const num = 135 - i * 2;
+    pushLot(`M5-${num}`, num, 5, 'C. Paseo Vittoria', 528, 214 + i * 19.5, 24, 18);
+  }
+  for (let i = 0; i < 9; i++) {
+    const num = 117 - i * 2;
+    pushLot(`M5-${num}`, num, 5, 'C. Paseo Vittoria', 528, 548 + i * 19.5, 24, 18);
+  }
+
+  // 7. Fila Inferior de Manzanas (13, 12, 11, 10, 9) bajo C. Torino
+  // Manzana 13
+  for (let i = 0; i < 5; i++) {
+    const num = 133 - i * 2;
+    pushLot(`M13-${num}`, num, 13, 'C. Torino', 128 + i * 22, 756, 20.5, 36);
+  }
   for (let r = 0; r < 4; r++) {
-    const n1 = String(100 + r * 2);
-    lots.push({ id: `M13-${n1}`, number: n1, manzana: 13, street: 'C. Torino', x: 120, y: 816 + r * 30, w: 38, h: 28, status: pickStatus(lotSeq), prototypeId: pickProto(lotSeq++) });
-    const n2 = String(101 + r * 2);
-    lots.push({ id: `M13-${n2}`, number: n2, manzana: 13, street: 'C. Torino', x: 162, y: 816 + r * 30, w: 38, h: 28, status: pickStatus(lotSeq), prototypeId: pickProto(lotSeq++) });
-    const n3 = String(120 + r * 2);
-    lots.push({ id: `M12-${n3}`, number: n3, manzana: 12, street: 'C. Palestro', x: 245, y: 816 + r * 30, w: 38, h: 28, status: pickStatus(lotSeq), prototypeId: pickProto(lotSeq++) });
-    const n4 = String(121 + r * 2);
-    lots.push({ id: `M12-${n4}`, number: n4, manzana: 12, street: 'C. Palestro', x: 287, y: 816 + r * 30, w: 38, h: 28, status: pickStatus(lotSeq), prototypeId: pickProto(lotSeq++) });
-    const n5 = String(100 + r * 2);
-    lots.push({ id: `M10-${n5}`, number: n5, manzana: 10, street: 'C. Amendola', x: 540, y: 816 + r * 30, w: 38, h: 28, status: pickStatus(lotSeq), prototypeId: pickProto(lotSeq++) });
-    const n6 = String(101 + r * 2);
-    lots.push({ id: `M9-${n6}`, number: n6, manzana: 9, street: 'C. Amendola', x: 640, y: 816 + r * 30, w: 42, h: 28, status: pickStatus(lotSeq), prototypeId: pickProto(lotSeq++) });
-    const n7 = String(115 + r * 2);
-    lots.push({ id: `M9-${n7}`, number: n7, manzana: 9, street: 'C. Metana', x: 686, y: 816 + r * 30, w: 42, h: 28, status: pickStatus(lotSeq), prototypeId: pickProto(lotSeq++) });
+    pushLot(`M13-${100 + r * 2}`, 100 + r * 2, 13, 'C. Cairoli', 126, 796 + r * 23, 38, 21);
+    pushLot(`M13-${101 + r * 2}`, 101 + r * 2, 13, 'C. Palestro', 194, 796 + r * 23, 38, 21);
+  }
+  // Manzana 12
+  for (let i = 0; i < 5; i++) {
+    const num = 123 - i * 2;
+    pushLot(`M12-${num}`, num, 12, 'C. Torino', 256 + i * 22, 756, 20.5, 36);
+  }
+  for (let r = 0; r < 4; r++) {
+    pushLot(`M12-${100 + r * 2}`, 100 + r * 2, 12, 'C. Palestro', 254, 796 + r * 23, 38, 21);
+    pushLot(`M12-${101 + r * 2}`, 101 + r * 2, 12, 'C. Avenusti', 322, 796 + r * 23, 38, 21);
+  }
+  // Manzana 11 & 10 (flanqueando la caseta de acceso)
+  for (let r = 0; r < 4; r++) {
+    pushLot(`M11-${100 + r * 2}`, 100 + r * 2, 11, 'C. Avenusti', 388, 766 + r * 28, 36, 25);
+    pushLot(`M10-${100 + r * 2}`, 100 + r * 2, 10, 'C. Amendola', 520, 766 + r * 28, 36, 25);
+  }
+  // Manzana 9
+  for (let i = 0; i < 7; i++) {
+    const num = 113 - i * 2;
+    pushLot(`M9-${num}`, num, 9, 'C. Torino', 580 + i * 23, 756, 21.5, 36);
+  }
+  for (let r = 0; r < 4; r++) {
+    pushLot(`M9-${115 + r * 2}`, 115 + r * 2, 9, 'C. Amendola', 580, 796 + r * 23, 44, 21);
+    pushLot(`M9-${100 + r * 2}`, 100 + r * 2, 9, 'C. Metana', 694, 796 + r * 23, 44, 21);
   }
 
   return {
@@ -348,9 +341,16 @@ function ensureDatabase() {
     const initial = buildInitialData();
     fs.writeFileSync(DB_PATH, JSON.stringify(initial, null, 2), 'utf8');
   } else {
-    // Migrar URLs externas bloqueadas por hotlinking a rutas locales
     const raw = fs.readFileSync(DB_PATH, 'utf8');
-    if (raw.includes('bienesraicesalvarado.com.mx/wp-content/')) {
+    const parsed = JSON.parse(raw);
+    // Si es versión anterior (sin lots con angle o menos de 300 lotes), regenerar trazado fiel
+    if (!parsed.lots || parsed.lots.length < 300) {
+      const fresh = buildInitialData();
+      fresh.site = parsed.site || fresh.site;
+      fresh.developments = parsed.developments || fresh.developments;
+      fresh.prototypes = parsed.prototypes || fresh.prototypes;
+      fs.writeFileSync(DB_PATH, JSON.stringify(fresh, null, 2), 'utf8');
+    } else if (raw.includes('bienesraicesalvarado.com.mx/wp-content/')) {
       const migrated = raw
         .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-1920x790.jpg', '/assets/images/hero.jpg')
         .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-525x328.jpg', '/assets/images/casa-1.jpg')

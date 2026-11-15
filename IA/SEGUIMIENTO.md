@@ -60,7 +60,8 @@ Rediseñar y reconstruir la plataforma web de **Bienes Raíces Alvarado (Qvalta 
 - [x] **Fase 2:** Diseño UI/UX minimalista (Home inspirado en `planos.qavalta.com` + Prototipos sin duplicados).
 - [x] **Fase 3:** Plano Interactivo a pantalla completa (`100vw × 100vh`) exclusivo para Administrador en modo presentación (sin botones de edición visibles).
 - [x] **Fase 4:** Backend Node.js + CMS cerrado del Administrador (icono en esquina superior derecha, edición de disponibilidad por número de casa, precios, textos, imágenes y videos).
-- [ ] **Fase 5:** Carga de datos reales (cuando el cliente confirme modelos) y despliegue en **SiteGround (Node.js Projects)**.
+- [x] **Fase 5 (Demo):** Desplegado en **SiteGround (Node.js Projects)** con auto-deploy desde GitHub (`alex7cmd/bienes-raices-alvarado`). URL temporal `https://yurenic2.sg-host.com/` → subdominio temporal elegido: `alvarado.commandigital.biz`.
+- [ ] **Fase 6 (Producción):** Carga de datos reales (cuando el cliente confirme modelos y plano final) y conexión al dominio definitivo.
 
 ---
 
