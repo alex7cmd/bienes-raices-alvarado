@@ -173,7 +173,19 @@ function openPrototypeModal(protoId) {
     <div class="proto-features-chips" style="margin-bottom:16px;">
       ${(p.features || []).map(f => `<span class="proto-chip">✓ ${f}</span>`).join('')}
     </div>
-    <a href="https://wa.me/${state.site.whatsapp}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:8px;">Solicitar información por WhatsApp →</a>
+    <div style="margin-bottom:16px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <strong style="font-size:13px;">📍 Ubicación · Qavalta Residencial, Pachuca</strong>
+        <a href="https://maps.google.com/?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo" target="_blank" rel="noopener" style="font-size:12px;color:var(--accent);text-decoration:none;font-weight:600;">Abrir en Google Maps →</a>
+      </div>
+      <iframe
+        title="Mapa ${p.name}"
+        src="https://maps.google.com/maps?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo&t=&z=15&ie=UTF8&iwloc=&output=embed"
+        style="width:100%;height:190px;border:none;border-radius:12px;"
+        loading="lazy"
+      ></iframe>
+    </div>
+    <a href="https://wa.me/${state.site.whatsapp}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:4px;">Solicitar información por WhatsApp →</a>
   `;
   $('protoModal').classList.remove('hidden');
 }
