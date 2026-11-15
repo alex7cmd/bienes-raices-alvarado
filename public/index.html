@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.1.3" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.1.4" />
 </head>
 <body>
   <!-- HEADER -->
@@ -472,15 +472,21 @@
       </div>
       <form id="inquiryForm" class="inquiry-form">
         <div class="tour-fields hidden" id="tourDateFields">
-          <label>Fecha preferida<input type="date" id="inqDate" /></label>
-          <label>Horario
-            <select id="inqTime">
-              <option value="10:00 AM">10:00 AM</option>
-              <option value="12:00 PM">12:00 PM</option>
-              <option value="02:00 PM">02:00 PM</option>
-              <option value="04:00 PM">04:00 PM</option>
-            </select>
-          </label>
+          <div class="tour-datetime-grid">
+            <label>Fecha preferida<input type="date" id="inqDate" /></label>
+            <label>Horario
+              <select id="inqTime">
+                <option value="10:00 AM">10:00 AM</option>
+                <option value="12:00 PM">12:00 PM</option>
+                <option value="02:00 PM">02:00 PM</option>
+                <option value="04:00 PM">04:00 PM</option>
+              </select>
+            </label>
+          </div>
+          <div class="tour-modality-row" role="group" aria-label="Modalidad de visita">
+            <button type="button" class="modality-btn active" data-modality="Presencial">👤 En Persona</button>
+            <button type="button" class="modality-btn" data-modality="Video Chat">📹 Video Chat</button>
+          </div>
         </div>
         <input type="text" id="inqName" placeholder="Tu Nombre *" required />
         <input type="email" id="inqEmail" placeholder="Tu Email *" required />
@@ -522,6 +528,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.1.3"></script>
+  <script src="/js/app.js?v=1.1.4"></script>
 </body>
 </html>

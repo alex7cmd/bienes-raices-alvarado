@@ -502,8 +502,16 @@ body { overflow-x: hidden; }
   width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
   font-size: 13.5px; font-family: inherit; background: #fff;
 }
-.tour-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tour-fields { display: flex; flex-direction: column; gap: 10px; }
+.tour-datetime-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .tour-fields label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); }
+.tour-modality-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.modality-btn {
+  padding: 9px 10px; border-radius: 10px; border: 1.5px solid var(--border);
+  background: #fff; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer;
+  transition: all var(--transition);
+}
+.modality-btn.active { border-color: var(--text); color: var(--text); background: var(--surface); }
 .inquiry-quick-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
 .btn-outline-action {
   text-align: center; padding: 9px; border-radius: 10px; border: 1px solid var(--border);

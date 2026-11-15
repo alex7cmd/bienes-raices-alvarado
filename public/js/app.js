@@ -590,11 +590,19 @@ function bindEvents() {
 
   // Floating Request Info / Schedule a Tour Modal
   let inquiryMode = 'info';
+  let tourModality = 'Presencial';
   $('openInquiryBtn').addEventListener('click', () => {
     $('inqStatus').classList.add('hidden');
     $('inquiryModal').classList.remove('hidden');
   });
   $('closeInquiryModal').addEventListener('click', () => $('inquiryModal').classList.add('hidden'));
+  document.querySelectorAll('.modality-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.modality-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      tourModality = btn.dataset.modality;
+    });
+  });
   document.querySelectorAll('.inquiry-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.inquiry-tab').forEach(t => t.classList.remove('active'));
@@ -609,7 +617,7 @@ function bindEvents() {
     const status = $('inqStatus');
     status.classList.add('hidden');
     const prefix = inquiryMode === 'tour'
-      ? `[AGENDAR VISITA: ${$('inqDate').value || 'Por definir'} ${$('inqTime').value}] `
+      ? `[AGENDAR VISITA (${tourModality}): ${$('inqDate').value || 'Por definir'} ${$('inqTime').value}] `
       : '[SOLICITAR INFO] ';
     try {
       await api('/api/public/contact', {
