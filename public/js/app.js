@@ -187,13 +187,14 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
                     ${gallery.map((src, idx) => `<img src="${src}" alt="${p.name} vista ${idx + 1}" loading="lazy" />`).join('')}
                   </div>
                   ${gallery.length > 1 ? `
+                    <button type="button" class="proto-gallery-btn" data-proto-gallery="${p.id}" aria-label="Ver galería de ${p.name}">🖼️ Ver galería</button>
                     <span class="proto-photo-counter">1 / ${gallery.length}</span>
                     <button type="button" class="proto-photo-arrow proto-photo-prev" aria-label="Foto anterior">‹</button>
                     <button type="button" class="proto-photo-arrow proto-photo-next" aria-label="Foto siguiente">›</button>
                     <div class="proto-photo-dots">
                       ${gallery.map((_, idx) => `<button type="button" class="proto-photo-dot ${idx === 0 ? 'active' : ''}" data-slide="${idx}" aria-label="Ver foto ${idx + 1}"></button>`).join('')}
                     </div>
-                  ` : ''}
+                  ` : `<button type="button" class="proto-gallery-btn" data-proto-gallery="${p.id}">🖼️ Ver galería</button>`}
                 </div>
                 <div class="proto-body">
                   <div class="proto-top">
@@ -231,6 +232,7 @@ function openPrototypeModal(protoId, initialIdx = 0) {
     <div class="proto-modal-gallery">
       <div class="proto-modal-stage">
         <img id="protoModalMainImg" src="${gallery[activeIdx]}" alt="${p.name}" />
+        <button type="button" class="proto-gallery-btn" id="protoModalFullscreenBtn" aria-label="Ver galería a pantalla completa">⤢ Pantalla completa</button>
         ${gallery.length > 1 ? `
           <span class="proto-photo-counter" id="protoModalCounter">${activeIdx + 1} / ${gallery.length}</span>
           <button type="button" class="proto-photo-arrow proto-photo-prev" id="protoModalPrev" aria-label="Foto anterior">‹</button>
@@ -294,7 +296,53 @@ function openPrototypeModal(protoId, initialIdx = 0) {
       if (thumb) updateModalSlide(Number(thumb.dataset.thumbIdx));
     });
   }
+  $('protoModalFullscreenBtn')?.addEventListener('click', () => {
+    $('protoModal').classList.add('hidden');
+    openFullscreenGallery(p.id, activeIdx);
+  });
   $('protoModal').classList.remove('hidden');
+}
+
+let fsGalleryState = { protoId: null, gallery: [], idx: 0 };
+
+function renderFullscreenSlide(nextIdx) {
+  const { gallery, protoId } = fsGalleryState;
+  if (!gallery.length) return;
+  const total = gallery.length;
+  const idx = ((nextIdx % total) + total) % total;
+  fsGalleryState.idx = idx;
+  const img = $('fsGalleryMainImg');
+  if (img) {
+    img.src = gallery[idx];
+    img.alt = `${protoId} vista ${idx + 1}`;
+  }
+  const counter = $('fsGalleryCounter');
+  if (counter) counter.textContent = `${idx + 1} / ${total}`;
+  $('fsGalleryThumbs')?.querySelectorAll('.fs-gallery-thumb').forEach((btn, i) => {
+    btn.classList.toggle('active', i === idx);
+  });
+}
+
+function openFullscreenGallery(protoId, initialIdx = 0) {
+  const p = state.prototypes.find(x => x.id === protoId);
+  if (!p) return;
+  const gallery = getProtoGallery(p);
+  fsGalleryState = { protoId: p.id, gallery, idx: initialIdx };
+  $('fsGalleryTitle').textContent = p.name;
+  $('fsGalleryPrice').textContent = mxn.format(p.price);
+  $('fsGalleryThumbs').innerHTML = gallery.map((src, i) => `
+    <button type="button" class="fs-gallery-thumb ${i === initialIdx ? 'active' : ''}" data-fs-idx="${i}" aria-label="Foto ${i + 1}">
+      <img src="${src}" alt="${p.name} ${i + 1}" />
+    </button>
+  `).join('');
+  renderFullscreenSlide(initialIdx);
+  $('fullscreenGallery').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeFullscreenGallery() {
+  $('fullscreenGallery')?.classList.add('hidden');
+  document.body.style.overflow = '';
 }
 
 // --- VIEW SWITCHING ---
@@ -699,6 +747,32 @@ function bindEvents() {
   $('logoutBtn').addEventListener('click', handleLogout);
   $('cmsLogoutBtn').addEventListener('click', handleLogout);
 
+  // Fullscreen gallery listeners
+  $('fsGalleryClose')?.addEventListener('click', closeFullscreenGallery);
+  $('fsGalleryPrev')?.addEventListener('click', () => renderFullscreenSlide(fsGalleryState.idx - 1));
+  $('fsGalleryNext')?.addEventListener('click', () => renderFullscreenSlide(fsGalleryState.idx + 1));
+  $('fsGalleryThumbs')?.addEventListener('click', (e) => {
+    const thumb = e.target.closest('.fs-gallery-thumb');
+    if (thumb) renderFullscreenSlide(Number(thumb.dataset.fsIdx));
+  });
+  $('fsGalleryDetailBtn')?.addEventListener('click', () => {
+    const { protoId, idx } = fsGalleryState;
+    closeFullscreenGallery();
+    if (protoId) openPrototypeModal(protoId, idx);
+  });
+  $('fullscreenGallery')?.addEventListener('click', (e) => {
+    if (e.target === $('fullscreenGallery') || e.target.classList.contains('fs-gallery-stage')) {
+      closeFullscreenGallery();
+    }
+  });
+  document.addEventListener('keydown', (e) => {
+    const fs = $('fullscreenGallery');
+    if (!fs || fs.classList.contains('hidden')) return;
+    if (e.key === 'Escape') closeFullscreenGallery();
+    else if (e.key === 'ArrowLeft') renderFullscreenSlide(fsGalleryState.idx - 1);
+    else if (e.key === 'ArrowRight') renderFullscreenSlide(fsGalleryState.idx + 1);
+  });
+
   // Expandable development pills + prototype cards + card/dev sliders
   $('developmentAccordion').addEventListener('click', (e) => {
     const devSliderBtn = e.target.closest('.dev-slider-btn');
@@ -710,6 +784,15 @@ function bindEvents() {
         const delta = devSliderBtn.dataset.dir === 'next' ? cardWidth + 20 : -(cardWidth + 20);
         slider.scrollBy({ left: delta, behavior: 'smooth' });
       }
+      return;
+    }
+
+    const galleryBtn = e.target.closest('.proto-gallery-btn');
+    if (galleryBtn) {
+      e.stopPropagation();
+      const card = galleryBtn.closest('.proto-card');
+      const cur = Number(card?.querySelector('.proto-img-wrap')?.dataset.slideIdx || 0);
+      openFullscreenGallery(galleryBtn.dataset.protoGallery, cur);
       return;
     }
 
