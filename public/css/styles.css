@@ -381,6 +381,22 @@ body { overflow-x: hidden; }
   font-size: 13px; font-weight: 500; box-shadow: var(--shadow);
 }
 
+/* WHATSAPP FLOATING STACK (SIEMPRE VISIBLE) */
+.wa-floating-stack {
+  position: fixed; bottom: 24px; right: 24px; z-index: 850;
+  display: inline-flex; align-items: center; gap: 10px;
+  background: #16a34a; color: #fff; text-decoration: none;
+  padding: 13px 20px; border-radius: var(--radius-pill);
+  font-size: 14px; font-weight: 600;
+  box-shadow: 0 12px 28px rgba(22, 163, 74, 0.35);
+  transition: transform var(--transition), background var(--transition), box-shadow var(--transition);
+}
+.wa-floating-stack:hover {
+  background: #15803d;
+  transform: translateY(-2px);
+  box-shadow: 0 16px 34px rgba(22, 163, 74, 0.45);
+}
+
 /* BREAKPOINTS RESPONSIVE */
 @media (max-width: 1200px) {
   .developments-grid { grid-template-columns: repeat(3, 1fr); }
