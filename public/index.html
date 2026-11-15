@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.2.0" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.2.1" />
 </head>
 <body>
   <!-- HEADER -->
@@ -19,6 +19,7 @@
       <nav class="main-nav">
         <a href="#desarrollos">Desarrollos</a>
         <a href="#prototipos">Prototipos</a>
+        <a href="#transporte">Transporte</a>
         <a href="#contacto">Contacto</a>
       </nav>
       <div class="header-actions">
@@ -193,6 +194,77 @@
                 <text x="6" y="29" font-family="Georgia, serif" font-size="24" font-weight="600" fill="#475569" letter-spacing="1.8">FOVISSSTE</text>
               </svg>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRANSPORTE DIRECTO (DESPLEGABLE) -->
+    <section id="transporte" class="section-container transport-section">
+      <div class="section-header">
+        <div>
+          <span class="section-kicker">SERVICIO EJECUTIVO</span>
+          <h2>Transporte directo</h2>
+        </div>
+        <p class="section-note">Ruta directa CDMX → Qavalta Residencial, Pachuca</p>
+      </div>
+
+      <div class="dev-pill-item transport-pill" id="transportPill">
+        <button type="button" class="dev-pill-trigger" id="transportPillTrigger" aria-expanded="false">
+          <div class="dev-pill-left">
+            <span class="dev-pill-title">🚐 Transporte directo CDMX → Pachuca</span>
+            <span class="dev-pill-meta">Salidas Lun – Dom</span>
+          </div>
+          <div class="dev-pill-right">
+            <span class="dev-pill-price">Metro Deportivo 18 de Marzo</span>
+            <span class="dev-pill-arrow">▾</span>
+          </div>
+        </button>
+        <div class="dev-pill-body hidden" id="transportPillBody">
+          <div class="transport-hero-card">
+            <div class="transport-hero-text">
+              <h3>Transporte directo</h3>
+              <p>
+                En nuestra empresa, brindamos un servicio de transporte ejecutivo que garantiza comodidad y eficiencia a aquellos interesados en conocer nuestro desarrollo. Con conductores profesionales y vehículos de calidad, nos aseguramos de que cada viaje sea una experiencia placentera, permitiendo a nuestros clientes llegar a su destino de manera puntual. Nuestro compromiso con la excelencia en el servicio nos distingue, convirtiendo cada trayecto en una oportunidad para satisfacer las necesidades de quienes confían en nosotros para conocer su nuevo Hogar.
+              </p>
+            </div>
+            <div class="transport-hero-media">
+              <img src="/assets/images/transporte-van.jpg" alt="Unidad de transporte ejecutivo Bienes Raíces Alvarado" loading="lazy" />
+            </div>
+          </div>
+
+          <div class="transport-cards-grid">
+            <div class="transport-info-card">
+              <div class="transport-card-icon">🕒</div>
+              <h4>Horarios De Salidas</h4>
+              <p>Lunes a Jueves: 11 am y 3 pm<br />Sábado y domingo: 10 am y 3 pm</p>
+            </div>
+            <div class="transport-info-card">
+              <div class="transport-card-icon">🚐</div>
+              <h4>Transporte Directo</h4>
+              <p>¡Descubre la ruta directa hacia tu hogar ideal! Nuestro servicio de transporte te lleva desde la vibrante Ciudad de México hasta nuestras acogedoras oficinas en Pachuca.</p>
+            </div>
+            <div class="transport-info-card">
+              <div class="transport-card-icon">📍</div>
+              <h4>Punto De Encuentro</h4>
+              <p>En la CDMX, frente a Prepa 9, como referencia Seven Eleven, por la estación del metro Deportivo 18 de Marzo.</p>
+            </div>
+          </div>
+
+          <div class="transport-map-wrap">
+            <div class="proto-panel-map-head">
+              <span>📍 Av. Insurgentes Nte. 1420A, Magdalena de las Salinas, Gustavo A. Madero, CDMX</span>
+              <a href="https://maps.google.com/?q=Av.+Insurgentes+Nte.+1420A,+Magdalena+de+las+Salinas,+Gustavo+A.+Madero,+Ciudad+de+Mexico" target="_blank" rel="noopener">Abrir en Google Maps →</a>
+            </div>
+            <iframe
+              title="Punto de encuentro Transporte Directo CDMX"
+              src="https://maps.google.com/maps?q=Av.+Insurgentes+Nte.+1420A,+Magdalena+de+las+Salinas,+Ciudad+de+Mexico&t=&z=16&ie=UTF8&iwloc=&output=embed"
+              loading="lazy"
+            ></iframe>
+          </div>
+
+          <div style="margin-top: 16px;">
+            <a href="https://wa.me/525537560931?text=Hola%2C%20me%20gustar%C3%ADa%20reservar%20lugar%20en%20el%20transporte%20directo%20desde%20CDMX." target="_blank" rel="noopener" class="btn-wa">Reservar lugar en transporte por WhatsApp →</a>
           </div>
         </div>
       </div>
@@ -545,6 +617,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.2.0"></script>
+  <script src="/js/app.js?v=1.2.1"></script>
 </body>
 </html>

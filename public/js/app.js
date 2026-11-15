@@ -827,6 +827,17 @@ function bindEvents() {
     else if (e.key === 'ArrowRight') renderFullscreenSlide(fsGalleryState.idx + 1);
   });
 
+  // Transport direct collapsible pill
+  $('transportPillTrigger')?.addEventListener('click', () => {
+    const pill = $('transportPill');
+    const body = $('transportPillBody');
+    const trigger = $('transportPillTrigger');
+    if (!pill || !body || !trigger) return;
+    const isOpen = pill.classList.toggle('open');
+    body.classList.toggle('hidden', !isOpen);
+    trigger.setAttribute('aria-expanded', String(isOpen));
+  });
+
   // Expandable development pills + prototype tabs + downward detail panel
   $('developmentAccordion').addEventListener('click', (e) => {
     const tabBtn = e.target.closest('.dev-proto-tab');
