@@ -19,6 +19,20 @@ const state = {
 const mxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
 const $ = (id) => document.getElementById(id);
 
+function featureIcon(name) {
+  const n = (name || '').toLowerCase();
+  if (n.includes('acceso')) return '🛡️';
+  if (n.includes('verdes')) return '🌳';
+  if (n.includes('cancha')) return '⚽';
+  if (n.includes('ciclo')) return '🚲';
+  if (n.includes('familiar')) return '👨‍👩‍👧‍👦';
+  if (n.includes('juego')) return '🛝';
+  if (n.includes('canino')) return '🐾';
+  if (n.includes('salón') || n.includes('salon')) return '🎉';
+  if (n.includes('vigilancia')) return '👮';
+  return '✨';
+}
+
 function showToast(msg) {
   const t = $('toast');
   t.textContent = msg;
@@ -140,7 +154,7 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
                     <span>🚗 ${p.parking}</span>
                   </div>
                   <div class="proto-features-chips">
-                    ${(p.features || []).slice(0, 4).map(f => `<span class="proto-chip">✓ ${f}</span>`).join('')}
+                    ${(p.features || []).slice(0, 4).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
                   </div>
                 </div>
               </article>
@@ -165,13 +179,13 @@ function openPrototypeModal(protoId) {
     </div>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px;">${p.description}</p>
     <div class="lot-specs-grid" style="grid-template-columns:repeat(4,1fr);">
-      <div class="lot-spec-box"><small>Terreno</small><strong>${p.area} m²</strong></div>
-      <div class="lot-spec-box"><small>Recámaras</small><strong>${p.bedrooms}</strong></div>
-      <div class="lot-spec-box"><small>Baños</small><strong>${p.bathrooms}</strong></div>
-      <div class="lot-spec-box"><small>Estac.</small><strong>${p.parking}</strong></div>
+      <div class="lot-spec-box"><small>📐 Terreno</small><strong>${p.area} m²</strong></div>
+      <div class="lot-spec-box"><small>🛏️ Recámaras</small><strong>${p.bedrooms}</strong></div>
+      <div class="lot-spec-box"><small>🚿 Baños</small><strong>${p.bathrooms}</strong></div>
+      <div class="lot-spec-box"><small>🚗 Estac.</small><strong>${p.parking}</strong></div>
     </div>
     <div class="proto-features-chips" style="margin-bottom:16px;">
-      ${(p.features || []).map(f => `<span class="proto-chip">✓ ${f}</span>`).join('')}
+      ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
     </div>
     <div style="margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
