@@ -201,117 +201,114 @@ function renderInteractiveMap() {
     vendido: { fill: '#bfdbfe', stroke: '#2563eb', roof: '#93c5fd' }
   };
 
-  // Trazado arquitectónico fiel a la fotografía (viewBox 940 x 940 sin caja gris alrededor)
-  svg.setAttribute('viewBox', '45 10 850 925');
-  const tree = (x, y, r = 7) => `
+  // Trazado arquitectónico fiel a la fotografía (calles amplias sin encimar textos)
+  svg.setAttribute('viewBox', '30 8 880 930');
+  const tree = (x, y, r = 6) => `
     <circle cx="${x}" cy="${y}" r="${r}" fill="#15803d" opacity="0.9" />
-    <circle cx="${x - 1.5}" cy="${y - 1.5}" r="${r * 0.65}" fill="#22c55e" opacity="0.85" />
+    <circle cx="${x - 1.2}" cy="${y - 1.2}" r="${r * 0.62}" fill="#22c55e" opacity="0.85" />
   `;
 
   let markup = `
     <!-- Perímetro trapezoidal del fraccionamiento -->
-    <polygon points="155,18 865,18 825,922 65,922" fill="#cfd8e3" stroke="#64748b" stroke-width="2" />
+    <polygon points="136,16 882,16 842,924 46,924" fill="#cfd8e3" stroke="#64748b" stroke-width="2" />
     <!-- Calles pavimentadas -->
-    <polygon points="196,24 816,24 786,912 108,912" fill="#e2e8f0" />
+    <polygon points="184,22 830,22 800,914 96,914" fill="#e2e8f0" />
 
-    <!-- Líneas discontinuas de calles horizontales -->
-    <g stroke="#94a3b8" stroke-width="1" stroke-dasharray="6 6" opacity="0.7">
-      <line x1="196" y1="80" x2="812" y2="80" />
-      <line x1="184" y1="200" x2="808" y2="200" />
-      <line x1="170" y1="336" x2="804" y2="336" />
-      <line x1="158" y1="470" x2="800" y2="470" />
-      <line x1="146" y1="604" x2="794" y2="604" />
-      <line x1="132" y1="744" x2="790" y2="744" />
+    <!-- Líneas discontinuas de calles horizontales (centradas en cada calle) -->
+    <g stroke="#94a3b8" stroke-width="1" stroke-dasharray="6 6" opacity="0.65">
+      <line x1="186" y1="78" x2="826" y2="78" />
+      <line x1="174" y1="196" x2="822" y2="196" />
+      <line x1="160" y1="334" x2="818" y2="334" />
+      <line x1="148" y1="468" x2="814" y2="468" />
+      <line x1="136" y1="602" x2="810" y2="602" />
+      <line x1="122" y1="740" x2="806" y2="740" />
     </g>
 
-    <!-- Bulevar curvo C. Paseo Vittoria (S-curve suave alrededor del parque y glorieta) -->
-    <path d="M 488 76 Q 496 200 482 325 Q 465 405 462 462 Q 462 525 480 610 Q 496 720 488 890"
-          fill="none" stroke="#f8fafc" stroke-width="48" stroke-linecap="round" />
-    <path d="M 488 76 Q 496 200 482 325 Q 465 405 462 462 Q 462 525 480 610 Q 496 720 488 890"
+    <!-- Bulevar curvo C. Paseo Vittoria (corredor amplio, centrado entre bloques) -->
+    <path d="M 484 74 Q 490 196 476 320 Q 458 400 458 468 Q 458 536 474 616 Q 486 720 472 890"
+          fill="none" stroke="#f8fafc" stroke-width="44" stroke-linecap="round" />
+    <path d="M 484 74 Q 490 196 476 320 Q 458 400 458 468 Q 458 536 474 616 Q 486 720 472 890"
           fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="7 7" />
 
     <!-- Parque Central Curvo (Manzana 5) -->
-    <path d="M 498 205 Q 472 340 482 465 Q 492 590 508 725 L 558 725 L 558 205 Z"
+    <path d="M 504 210 Q 484 340 490 468 Q 498 595 512 724 L 562 724 L 562 210 Z"
           fill="#22c55e" stroke="#ffffff" stroke-width="2.5" />
-    <path d="M 482 385 Q 486 450 492 515 L 558 515 L 558 385 Z" fill="#14532d" />
-    <!-- Senderos del parque central -->
-    <path d="M 520 220 Q 505 340 515 465 Q 525 590 535 710" fill="none" stroke="#dcfce7" stroke-width="3" opacity="0.65" />
+    <path d="M 488 388 Q 492 452 498 518 L 562 518 L 562 388 Z" fill="#14532d" />
+    <path d="M 526 226 Q 512 340 520 468 Q 528 595 538 708" fill="none" stroke="#dcfce7" stroke-width="2.5" opacity="0.65" />
 
     <!-- Glorieta central entre Manzanas 17 y 16 -->
-    <circle cx="458" cy="466" r="34" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" />
-    <circle cx="458" cy="466" r="20" fill="#16a34a" />
-    <circle cx="458" cy="466" r="10" fill="#991b1b" />
+    <circle cx="458" cy="468" r="32" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" />
+    <circle cx="458" cy="468" r="19" fill="#16a34a" />
+    <circle cx="458" cy="468" r="9.5" fill="#991b1b" />
 
-    <!-- Caseta de acceso principal (abajo al centro) -->
-    <rect x="448" y="868" width="44" height="30" rx="4" fill="#991b1b" stroke="#fff" stroke-width="1.5" />
-    <rect x="434" y="876" width="72" height="14" rx="2" fill="#b91c1c" opacity="0.9" />
+    <!-- Caseta de acceso principal (alineada al bulevar inferior x=472) -->
+    <rect x="450" y="868" width="44" height="30" rx="4" fill="#991b1b" stroke="#fff" stroke-width="1.5" />
+    <rect x="436" y="876" width="72" height="14" rx="2" fill="#b91c1c" opacity="0.9" />
 
-    <!-- Contornos redondeados y áreas verdes centrales de las manzanas -->
-    <rect x="204" y="88" width="268" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="190" y="208" width="286" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="192" y="254" width="282" height="22" rx="4" fill="#16a34a" />
+    <!-- Contornos redondeados y áreas verdes centrales de las manzanas (ajustados a los lotes) -->
+    <rect x="198" y="88" width="256" height="94" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="184" y="210" width="264" height="110" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="186" y="253" width="260" height="22" rx="4" fill="#16a34a" />
 
     <!-- Manzana 17 y 16 con borde derecho curvo abrazando la glorieta -->
-    <path d="M 176 344 L 448 344 Q 460 390 422 444 L 170 444 Q 168 394 176 344 Z" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <path d="M 164 488 L 418 488 Q 456 540 434 588 L 158 588 Q 158 538 164 488 Z" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <path d="M 172 348 L 434 348 Q 444 392 406 442 L 166 442 Q 164 395 172 348 Z" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <path d="M 160 492 L 402 492 Q 440 540 422 586 L 154 586 Q 154 538 160 492 Z" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
 
-    <rect x="138" y="612" width="336" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="140" y="658" width="332" height="22" rx="4" fill="#15803d" />
+    <rect x="136" y="616" width="302" height="110" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="138" y="659" width="298" height="22" rx="4" fill="#15803d" />
 
     <!-- Manzanas derecha -->
-    <rect x="510" y="88" width="286" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="568" y="208" width="222" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="570" y="254" width="218" height="22" rx="4" fill="#16a34a" />
-    <rect x="568" y="344" width="214" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="566" y="488" width="208" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="562" y="612" width="204" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="564" y="658" width="200" height="22" rx="4" fill="#15803d" />
+    <rect x="520" y="88" width="280" height="94" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="576" y="210" width="218" height="110" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="578" y="253" width="214" height="22" rx="4" fill="#16a34a" />
+    <rect x="576" y="348" width="212" height="94" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="574" y="492" width="206" height="94" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="570" y="616" width="202" height="110" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
+    <rect x="572" y="659" width="198" height="22" rx="4" fill="#15803d" />
 
-    <!-- Vegetación / Árboles en camellones y parque -->
+    <!-- Vegetación / Árboles en parque y camellones (sin tapar textos) -->
     <g>
-      ${tree(488, 120, 6)} ${tree(488, 165, 6)} ${tree(484, 240, 7)} ${tree(476, 310, 7)}
-      ${tree(512, 260, 8)} ${tree(516, 330, 9)} ${tree(522, 430, 10)} ${tree(528, 560, 9)} ${tree(536, 670, 8)}
-      ${tree(472, 570, 7)} ${tree(482, 650, 7)} ${tree(486, 740, 6)}
-      ${tree(230, 265, 6)} ${tree(290, 265, 6)} ${tree(410, 265, 6)}
-      ${tree(200, 669, 6)} ${tree(280, 669, 6)} ${tree(420, 669, 6)}
-      ${tree(610, 265, 6)} ${tree(710, 265, 6)}
-      ${tree(605, 669, 6)} ${tree(705, 669, 6)}
+      ${tree(520, 250, 7)} ${tree(524, 330, 8)} ${tree(528, 430, 9)} ${tree(532, 560, 8)} ${tree(540, 670, 7)}
+      ${tree(225, 264, 5.5)} ${tree(285, 264, 5.5)} ${tree(395, 264, 5.5)}
+      ${tree(190, 670, 5.5)} ${tree(270, 670, 5.5)} ${tree(385, 670, 5.5)}
+      ${tree(615, 264, 5.5)} ${tree(715, 264, 5.5)}
+      ${tree(610, 670, 5.5)} ${tree(710, 670, 5.5)}
     </g>
 
-    <!-- Etiquetas de calles -->
-    <g font-family="Inter, sans-serif" font-size="8.5" font-weight="700" fill="#334155" text-anchor="middle">
-      <text x="335" y="80">C. SENIA</text>
-      <text x="650" y="80">C. SENIA</text>
-      <text x="330" y="200">C. COLOMBO</text>
-      <text x="675" y="200">C. COLOMBO</text>
-      <text x="310" y="336">C. LEOPARDI</text>
-      <text x="675" y="336">C. MILANO</text>
-      <text x="295" y="470">C. MAGENTA</text>
-      <text x="670" y="470">C. PANTI</text>
-      <text x="300" y="604">C. MARTINO</text>
-      <text x="665" y="604">C. MARMORA</text>
-      <text x="290" y="744">C. TORINO</text>
-      <text x="660" y="744">C. TORINO</text>
-      <text x="480" y="320" transform="rotate(-84 480 320)">C. PASEO VITTORIA</text>
-      <text x="478" y="650" transform="rotate(-76 478 650)">C. PASEO VITTORIA</text>
-      <text x="122" y="470" transform="rotate(-84 122 470)">C. CAIROLI</text>
-      <text x="802" y="470" transform="rotate(88 802 470)">C. METANA</text>
+    <!-- Etiquetas de calles (limpias, centradas en sus carriles) -->
+    <g font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#334155" text-anchor="middle">
+      <text x="330" y="79">C. SENIA</text>
+      <text x="655" y="79">C. SENIA</text>
+      <text x="320" y="199">C. COLOMBO</text>
+      <text x="680" y="199">C. COLOMBO</text>
+      <text x="305" y="337">C. LEOPARDI</text>
+      <text x="680" y="337">C. MILANO</text>
+      <text x="290" y="471">C. MAGENTA</text>
+      <text x="675" y="471">C. PANTI</text>
+      <text x="290" y="605">C. MARTINO</text>
+      <text x="670" y="605">C. MARMORA</text>
+      <text x="280" y="743">C. TORINO</text>
+      <text x="665" y="743">C. TORINO</text>
+      <text x="480" y="290" transform="rotate(-84 480 290)">C. PASEO VITTORIA</text>
+      <text x="476" y="660" transform="rotate(-82 476 660)">C. PASEO VITTORIA</text>
+      <text x="116" y="470" transform="rotate(-84 116 470)">C. CAIROLI</text>
+      <text x="810" y="470" transform="rotate(88 810 470)">C. METANA</text>
     </g>
 
-    <!-- Círculos numerados de Manzana (como en la foto) -->
-    <g font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">
-      <circle cx="515" cy="49" r="8" fill="#7f1d1d" /><text x="515" y="52">1</text>
-      <circle cx="338" cy="138" r="8" fill="#7f1d1d" /><text x="338" y="141">19</text>
-      <circle cx="653" cy="138" r="8" fill="#7f1d1d" /><text x="653" y="141">2</text>
-      <circle cx="355" cy="265" r="8" fill="#7f1d1d" /><text x="355" y="268">18</text>
-      <circle cx="640" cy="265" r="8" fill="#7f1d1d" /><text x="640" y="268">3</text>
-      <circle cx="315" cy="394" r="8" fill="#7f1d1d" /><text x="315" y="397">17</text>
-      <circle cx="675" cy="394" r="8" fill="#7f1d1d" /><text x="675" y="397">4</text>
-      <circle cx="520" cy="450" r="8" fill="#7f1d1d" /><text x="520" y="453">5</text>
-      <circle cx="310" cy="538" r="8" fill="#7f1d1d" /><text x="310" y="541">16</text>
-      <circle cx="670" cy="538" r="8" fill="#7f1d1d" /><text x="670" y="541">6</text>
-      <circle cx="355" cy="669" r="8" fill="#7f1d1d" /><text x="355" y="672">14</text>
-      <circle cx="640" cy="669" r="8" fill="#7f1d1d" /><text x="640" y="672">8</text>
+    <!-- Círculos numerados de Manzana -->
+    <g font-family="Inter, sans-serif" font-size="7.5" font-weight="700" fill="#fff" text-anchor="middle">
+      <circle cx="515" cy="46" r="7.5" fill="#7f1d1d" /><text x="515" y="49">1</text>
+      <circle cx="326" cy="135" r="7.5" fill="#7f1d1d" /><text x="326" y="138">19</text>
+      <circle cx="658" cy="135" r="7.5" fill="#7f1d1d" /><text x="658" y="138">2</text>
+      <circle cx="340" cy="264" r="7.5" fill="#7f1d1d" /><text x="340" y="267">18</text>
+      <circle cx="660" cy="264" r="7.5" fill="#7f1d1d" /><text x="660" y="267">3</text>
+      <circle cx="300" cy="395" r="7.5" fill="#7f1d1d" /><text x="300" y="398">17</text>
+      <circle cx="680" cy="395" r="7.5" fill="#7f1d1d" /><text x="680" y="398">4</text>
+      <circle cx="526" cy="450" r="7.5" fill="#7f1d1d" /><text x="526" y="453">5</text>
+      <circle cx="295" cy="539" r="7.5" fill="#7f1d1d" /><text x="295" y="542">16</text>
+      <circle cx="676" cy="539" r="7.5" fill="#7f1d1d" /><text x="676" y="542">6</text>
+      <circle cx="330" cy="670" r="7.5" fill="#7f1d1d" /><text x="330" y="673">14</text>
+      <circle cx="656" cy="670" r="7.5" fill="#7f1d1d" /><text x="656" y="673">8</text>
     </g>
   `;
 

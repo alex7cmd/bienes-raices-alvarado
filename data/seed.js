@@ -240,41 +240,41 @@ function buildInitialData() {
   // 1. Tira superior (Manzana 1: 162 -> 100)
   for (let i = 0; i < 32; i++) {
     const num = 162 - i * 2;
-    pushLot(`M1-${num}`, num, 1, 'C. Senia Norte', 205 + i * 18.8, 30, 17.3, 38);
+    pushLot(`M1-${num}`, num, 1, 'C. Senia Norte', 202 + i * 18.8, 28, 17.2, 36);
   }
 
-  // 2. Perímetro Izquierdo inclinado (C. Cairoli: 101 -> 173)
+  // 2. Perímetro Izquierdo inclinado (C. Cairoli: 101 -> 173) - más separado de manzanas
   for (let i = 0; i < 36; i++) {
     const t = i / 35;
-    const y = 32 + t * 862;
-    const x = 166 - t * 88; // Pendiente fiel de C. Cairoli
+    const y = 30 + t * 864;
+    const x = 148 - t * 88;
     const num = 101 + i * 2;
-    pushLot(`PI-${num}`, num, 15, 'C. Cairoli', x, y, 30, 21.5, 5.8);
+    pushLot(`PI-${num}`, num, 15, 'C. Cairoli', x, y, 28, 21, 5.8);
   }
 
-  // 3. Perímetro Derecho ligeramente inclinado (C. Metana: 101 -> 171)
+  // 3. Perímetro Derecho ligeramente inclinado (C. Metana: 101 -> 171) - más separado
   for (let i = 0; i < 36; i++) {
     const t = i / 35;
-    const y = 32 + t * 862;
-    const x = 826 - t * 34; // Pendiente fiel de C. Metana
+    const y = 30 + t * 864;
+    const x = 842 - t * 34;
     const num = 101 + i * 2;
-    pushLot(`PD-${num}`, num, 7, 'C. Metana', x, y, 30, 21.5, 2.2);
+    pushLot(`PD-${num}`, num, 7, 'C. Metana', x, y, 28, 21, 2.2);
   }
 
-  // 4. Columna Izquierda de Manzanas (19, 18, 17, 16, 14) siguiendo la inclinación y la glorieta
-  addCurvedBlock(19, 'C. Senia', 208, 258, 204, 260, 92, 92, 12, 12, 153, 154, false);
-  addCurvedBlock(18, 'C. Colombo', 194, 276, 188, 274, 212, 108, 14, 14, 147, 126, true);
-  // Manzana 17 y 16 abrazan la glorieta (xBot más corto arriba de la glorieta y xTop más corto abajo)
-  addCurvedBlock(17, 'C. Leopardi', 180, 266, 174, 240, 348, 92, 12, 11, 123, 120, false);
-  addCurvedBlock(16, 'C. Magenta', 168, 242, 162, 266, 492, 92, 11, 12, 121, 124, false);
-  addCurvedBlock(14, 'C. Martino', 148, 304, 142, 326, 616, 108, 15, 16, 131, 146, true);
+  // 4. Columna Izquierda de Manzanas (19, 18, 17, 16, 14) dejando amplio corredor para Paseo Vittoria
+  addCurvedBlock(19, 'C. Senia', 202, 246, 198, 248, 92, 86, 12, 12, 153, 154, false);
+  addCurvedBlock(18, 'C. Colombo', 190, 256, 184, 254, 214, 102, 14, 14, 147, 126, true);
+  // Manzana 17 y 16 abrazan la glorieta
+  addCurvedBlock(17, 'C. Leopardi', 176, 252, 170, 226, 352, 86, 12, 11, 123, 120, false);
+  addCurvedBlock(16, 'C. Magenta', 164, 228, 158, 252, 496, 86, 11, 12, 121, 124, false);
+  addCurvedBlock(14, 'C. Martino', 146, 282, 140, 294, 620, 102, 15, 16, 131, 146, true);
 
   // 5. Columna Derecha de Manzanas (2, 3, 4, 6, 8)
-  addCurvedBlock(2, 'C. Senia', 514, 278, 514, 276, 92, 92, 14, 14, 129, 128, false);
-  addCurvedBlock(3, 'C. Colombo', 572, 214, 572, 212, 212, 108, 10, 10, 119, 120, true);
-  addCurvedBlock(4, 'C. Milano', 572, 206, 572, 204, 348, 92, 9, 9, 117, 116, false);
-  addCurvedBlock(6, 'C. Panti', 570, 200, 570, 198, 492, 92, 8, 8, 115, 116, false);
-  addCurvedBlock(8, 'C. Marmora', 566, 196, 566, 194, 616, 108, 9, 9, 117, 114, true);
+  addCurvedBlock(2, 'C. Senia', 524, 272, 524, 270, 92, 86, 14, 14, 129, 128, false);
+  addCurvedBlock(3, 'C. Colombo', 580, 210, 580, 208, 214, 102, 10, 10, 119, 120, true);
+  addCurvedBlock(4, 'C. Milano', 580, 204, 580, 202, 352, 86, 9, 9, 117, 116, false);
+  addCurvedBlock(6, 'C. Panti', 578, 198, 578, 196, 496, 86, 8, 8, 115, 116, false);
+  addCurvedBlock(8, 'C. Marmora', 574, 194, 574, 192, 620, 102, 9, 9, 117, 114, true);
 
   // 6. Lotes junto al Parque Central (Manzana 5: 135..119 arriba y 117..101 abajo)
   for (let i = 0; i < 9; i++) {
@@ -343,9 +343,10 @@ function ensureDatabase() {
   } else {
     const raw = fs.readFileSync(DB_PATH, 'utf8');
     const parsed = JSON.parse(raw);
-    // Si es versión anterior (sin lots con angle o menos de 300 lotes), regenerar trazado fiel
-    if (!parsed.lots || parsed.lots.length < 300) {
+    // Si es versión anterior (sin lots con angle o menos de 300 lotes o versión previa antes del ajuste de calles)
+    if (!parsed.lots || parsed.lots.length < 300 || !parsed.mapVersion || parsed.mapVersion < 2) {
       const fresh = buildInitialData();
+      fresh.mapVersion = 2;
       fresh.site = parsed.site || fresh.site;
       fresh.developments = parsed.developments || fresh.developments;
       fresh.prototypes = parsed.prototypes || fresh.prototypes;
