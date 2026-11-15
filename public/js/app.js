@@ -195,38 +195,56 @@ function renderInteractiveMap() {
   ].join('');
 
   const svg = $('mapSvg');
-  const statusColor = {
-    disponible: '#4ade80',
-    no_disponible: '#f59e0b',
-    vendido: '#3b82f6'
+  const statusStyle = {
+    disponible: { fill: '#bbf7d0', stroke: '#16a34a', roof: '#86efac' },
+    no_disponible: { fill: '#fde68a', stroke: '#d97706', roof: '#fcd34d' },
+    vendido: { fill: '#bfdbfe', stroke: '#2563eb', roof: '#93c5fd' }
   };
 
-  // Trazado arquitectónico fiel a la fotografía (trapezoide + curvas de C. Paseo Vittoria + Glorieta + Caseta)
-  svg.setAttribute('viewBox', '0 0 960 950');
+  // Trazado arquitectónico fiel a la fotografía (viewBox 940 x 940 sin caja gris alrededor)
+  svg.setAttribute('viewBox', '45 10 850 925');
+  const tree = (x, y, r = 7) => `
+    <circle cx="${x}" cy="${y}" r="${r}" fill="#15803d" opacity="0.9" />
+    <circle cx="${x - 1.5}" cy="${y - 1.5}" r="${r * 0.65}" fill="#22c55e" opacity="0.85" />
+  `;
+
   let markup = `
-    <rect x="0" y="0" width="960" height="950" fill="#eef2f6" />
     <!-- Perímetro trapezoidal del fraccionamiento -->
-    <polygon points="155,18 865,18 825,922 65,922" fill="#e2e8f0" stroke="#475569" stroke-width="2" />
-    <!-- Calles horizontales y laterales -->
-    <polygon points="196,24 816,24 786,912 108,912" fill="#cbd5e1" />
+    <polygon points="155,18 865,18 825,922 65,922" fill="#cfd8e3" stroke="#64748b" stroke-width="2" />
+    <!-- Calles pavimentadas -->
+    <polygon points="196,24 816,24 786,912 108,912" fill="#e2e8f0" />
+
+    <!-- Líneas discontinuas de calles horizontales -->
+    <g stroke="#94a3b8" stroke-width="1" stroke-dasharray="6 6" opacity="0.7">
+      <line x1="196" y1="80" x2="812" y2="80" />
+      <line x1="184" y1="200" x2="808" y2="200" />
+      <line x1="170" y1="336" x2="804" y2="336" />
+      <line x1="158" y1="470" x2="800" y2="470" />
+      <line x1="146" y1="604" x2="794" y2="604" />
+      <line x1="132" y1="744" x2="790" y2="744" />
+    </g>
 
     <!-- Bulevar curvo C. Paseo Vittoria (S-curve suave alrededor del parque y glorieta) -->
     <path d="M 488 76 Q 496 200 482 325 Q 465 405 462 462 Q 462 525 480 610 Q 496 720 488 890"
-          fill="none" stroke="#f8fafc" stroke-width="46" stroke-linecap="round" />
+          fill="none" stroke="#f8fafc" stroke-width="48" stroke-linecap="round" />
+    <path d="M 488 76 Q 496 200 482 325 Q 465 405 462 462 Q 462 525 480 610 Q 496 720 488 890"
+          fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="7 7" />
 
     <!-- Parque Central Curvo (Manzana 5) -->
     <path d="M 498 205 Q 472 340 482 465 Q 492 590 508 725 L 558 725 L 558 205 Z"
-          fill="#22c55e" stroke="#ffffff" stroke-width="2" />
+          fill="#22c55e" stroke="#ffffff" stroke-width="2.5" />
     <path d="M 482 385 Q 486 450 492 515 L 558 515 L 558 385 Z" fill="#14532d" />
+    <!-- Senderos del parque central -->
+    <path d="M 520 220 Q 505 340 515 465 Q 525 590 535 710" fill="none" stroke="#dcfce7" stroke-width="3" opacity="0.65" />
 
     <!-- Glorieta central entre Manzanas 17 y 16 -->
-    <circle cx="458" cy="466" r="32" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" />
-    <circle cx="458" cy="466" r="18" fill="#16a34a" />
+    <circle cx="458" cy="466" r="34" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" />
+    <circle cx="458" cy="466" r="20" fill="#16a34a" />
     <circle cx="458" cy="466" r="10" fill="#991b1b" />
 
     <!-- Caseta de acceso principal (abajo al centro) -->
     <rect x="448" y="868" width="44" height="30" rx="4" fill="#991b1b" stroke="#fff" stroke-width="1.5" />
-    <rect x="434" y="876" width="72" height="14" rx="2" fill="#b91c1c" opacity="0.85" />
+    <rect x="434" y="876" width="72" height="14" rx="2" fill="#b91c1c" opacity="0.9" />
 
     <!-- Contornos redondeados y áreas verdes centrales de las manzanas -->
     <rect x="204" y="88" width="268" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
@@ -248,6 +266,17 @@ function renderInteractiveMap() {
     <rect x="566" y="488" width="208" height="100" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
     <rect x="562" y="612" width="204" height="116" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
     <rect x="564" y="658" width="200" height="22" rx="4" fill="#15803d" />
+
+    <!-- Vegetación / Árboles en camellones y parque -->
+    <g>
+      ${tree(488, 120, 6)} ${tree(488, 165, 6)} ${tree(484, 240, 7)} ${tree(476, 310, 7)}
+      ${tree(512, 260, 8)} ${tree(516, 330, 9)} ${tree(522, 430, 10)} ${tree(528, 560, 9)} ${tree(536, 670, 8)}
+      ${tree(472, 570, 7)} ${tree(482, 650, 7)} ${tree(486, 740, 6)}
+      ${tree(230, 265, 6)} ${tree(290, 265, 6)} ${tree(410, 265, 6)}
+      ${tree(200, 669, 6)} ${tree(280, 669, 6)} ${tree(420, 669, 6)}
+      ${tree(610, 265, 6)} ${tree(710, 265, 6)}
+      ${tree(605, 669, 6)} ${tree(705, 669, 6)}
+    </g>
 
     <!-- Etiquetas de calles -->
     <g font-family="Inter, sans-serif" font-size="8.5" font-weight="700" fill="#334155" text-anchor="middle">
@@ -286,11 +315,11 @@ function renderInteractiveMap() {
     </g>
   `;
 
-  // Lotes individuales interactivos (con soporte de ángulo para perímetro inclinado)
+  // Lotes individuales interactivos con huella arquitectónica de casa
   for (const lot of lots) {
     const dimmed = state.mapProtoFilter !== 'all' && lot.prototypeId !== state.mapProtoFilter;
     const isSelected = state.selectedLotId === lot.id;
-    const fill = statusColor[lot.status] || '#cbd5e1';
+    const st = statusStyle[lot.status] || { fill: '#e2e8f0', stroke: '#94a3b8', roof: '#cbd5e1' };
     const cx = lot.x + lot.w / 2;
     const cy = lot.y + lot.h / 2;
     const rot = lot.angle ? `transform="rotate(${lot.angle} ${cx} ${cy})"` : '';
@@ -298,9 +327,13 @@ function renderInteractiveMap() {
       <g class="lot-group" data-lot="${lot.id}" ${rot}>
         <rect
           x="${lot.x}" y="${lot.y}" width="${lot.w}" height="${lot.h}" rx="2"
-          fill="${fill}" fill-opacity="0.88"
-          stroke="${isSelected ? '#0f172a' : '#ffffff'}" stroke-width="${isSelected ? '2.2' : '0.8'}"
+          fill="${st.fill}" fill-opacity="0.92"
+          stroke="${isSelected ? '#0f172a' : st.stroke}" stroke-width="${isSelected ? '2.2' : '0.9'}"
           class="lot-rect ${isSelected ? 'selected' : ''} ${dimmed ? 'dimmed' : ''}"
+        />
+        <rect
+          x="${lot.x + 2.5}" y="${lot.y + 2.5}" width="${Math.max(4, lot.w - 5)}" height="${Math.max(4, lot.h - 5)}" rx="1"
+          fill="${st.roof}" opacity="0.45" pointer-events="none"
         />
         <text
           x="${cx}" y="${cy + 2.5}"

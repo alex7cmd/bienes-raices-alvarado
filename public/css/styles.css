@@ -181,7 +181,7 @@ body { overflow-x: hidden; }
 
 /* FULLSCREEN INTERACTIVE MAP VIEW (100vw x 100vh) */
 .fullscreen-map-view {
-  position: fixed; inset: 0; z-index: 900; background: #e8eef3;
+  position: fixed; inset: 0; z-index: 900; background: #dde4ec;
   display: flex; flex-direction: column; width: 100vw; height: 100vh; overflow: hidden;
 }
 .map-topbar {
