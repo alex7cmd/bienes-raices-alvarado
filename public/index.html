@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.0.4" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.0.5" />
 </head>
 <body>
   <!-- HEADER -->
@@ -87,8 +87,40 @@
       <div class="prototypes-grid" id="prototypesGrid"></div>
     </section>
 
+    <!-- SECCIÓN FORMULARIO DE CONTACTO + MAPA (QAVALTA PACHUCA) -->
+    <section class="section-container contact-section" id="contacto">
+      <div class="contact-card">
+        <div class="contact-form-col">
+          <span class="section-kicker">ASESORÍA PERSONALIZADA</span>
+          <h2>Adquiere la casa de tus sueños en Pachuca</h2>
+          <p class="contact-lead">
+            Póngase en contacto con nosotros; a nuestros expertos y desarrolladores les encantará contribuir con su experiencia y conocimientos para ayudarle hoy.
+          </p>
+          <form id="contactForm" class="contact-form">
+            <div class="contact-form-grid">
+              <input type="text" id="leadNombre" placeholder="Nombre *" required />
+              <input type="text" id="leadApellidos" placeholder="Apellidos" />
+              <input type="email" id="leadEmail" placeholder="Email *" required />
+              <input type="tel" id="leadTelefono" placeholder="Teléfono *" required />
+            </div>
+            <textarea id="leadMensaje" rows="4" placeholder="Mensaje (ej. prototipo de interés, horario de contacto)"></textarea>
+            <button type="submit" class="btn-primary">Enviar mensaje →</button>
+            <p class="contact-status hidden" id="contactStatus"></p>
+          </form>
+        </div>
+        <div class="contact-map-col">
+          <iframe
+            title="Unidad Estratégica Comercial Qavalta"
+            src="https://maps.google.com/maps?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+        </div>
+      </div>
+    </section>
+
     <!-- CONTACTO MINIMALISTA -->
-    <footer class="site-footer" id="contacto">
+    <footer class="site-footer">
       <div class="footer-inner">
         <div class="footer-brand">
           <img src="/assets/logo-alvarado.png" alt="Bienes Raíces Alvarado" class="footer-logo" />
@@ -97,6 +129,7 @@
         <div class="footer-contact">
           <h4>Contacto directo</h4>
           <a id="footerPhone" href="tel:+525537560931">+52 55 3756 0931</a>
+          <a href="mailto:leilani@bienesraicesalvarado.com.mx">leilani@bienesraicesalvarado.com.mx</a>
           <a id="footerWa" href="https://wa.me/525537560931" target="_blank" rel="noopener" class="btn-wa">Enviar WhatsApp →</a>
         </div>
       </div>
@@ -301,6 +334,6 @@
     <span>WhatsApp</span>
   </a>
 
-  <script src="/js/app.js?v=1.0.4"></script>
+  <script src="/js/app.js?v=1.0.5"></script>
 </body>
 </html>

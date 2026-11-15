@@ -125,6 +125,34 @@ app.get('/api/public/site', (req, res) => {
   });
 });
 
+// --- PUBLIC CONTACT FORM ---
+app.post('/api/public/contact', (req, res) => {
+  const { nombre, apellidos, email, telefono, mensaje } = req.body || {};
+  if (!nombre || !email || !telefono) {
+    return res.status(400).json({ error: 'Por favor completa nombre, correo y teléfono.' });
+  }
+  const db = readDB();
+  if (!Array.isArray(db.leads)) db.leads = [];
+  const lead = {
+    id: crypto.randomBytes(6).toString('hex'),
+    nombre: String(nombre).trim(),
+    apellidos: String(apellidos || '').trim(),
+    email: String(email).trim(),
+    telefono: String(telefono).trim(),
+    mensaje: String(mensaje || '').trim(),
+    targetEmail: db.site.contactEmail || 'leilani@bienesraicesalvarado.com.mx',
+    createdAt: new Date().toISOString()
+  };
+  db.leads.unshift(lead);
+  writeDB(db);
+  res.json({ ok: true, lead });
+});
+
+app.get('/api/admin/leads', requireAdmin, (req, res) => {
+  const db = readDB();
+  res.json({ leads: db.leads || [] });
+});
+
 // --- ADMIN-ONLY INTERACTIVE MAP DATA ---
 app.get('/api/admin/lots', requireAdmin, (req, res) => {
   const db = readDB();

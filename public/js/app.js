@@ -567,6 +567,36 @@ function bindEvents() {
 
   $('closeProtoModal').addEventListener('click', () => $('protoModal').classList.add('hidden'));
 
+  // Public Contact Form
+  const contactForm = $('contactForm');
+  if (contactForm) {
+    contactForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const status = $('contactStatus');
+      status.classList.add('hidden');
+      try {
+        await api('/api/public/contact', {
+          method: 'POST',
+          body: JSON.stringify({
+            nombre: $('leadNombre').value,
+            apellidos: $('leadApellidos').value,
+            email: $('leadEmail').value,
+            telefono: $('leadTelefono').value,
+            mensaje: $('leadMensaje').value
+          })
+        });
+        contactForm.reset();
+        status.textContent = '¡Gracias! Tu mensaje ha sido registrado. Un asesor se pondrá en contacto contigo.';
+        status.classList.remove('hidden');
+        showToast('Mensaje enviado correctamente');
+      } catch (err) {
+        status.style.color = '#dc2626';
+        status.textContent = err.message;
+        status.classList.remove('hidden');
+      }
+    });
+  }
+
   // Map interactions (Lot click, filter pills, tabs, zoom, pan)
   $('mapSvg').addEventListener('click', (e) => {
     const g = e.target.closest('.lot-group');
