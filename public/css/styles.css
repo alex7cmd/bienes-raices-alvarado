@@ -161,6 +161,18 @@ body { overflow-x: hidden; }
   padding-top: 12px; border-top: 1px solid var(--border);
 }
 
+/* FINANCING LOGOS SECTION */
+.financing-section { padding: 24px 24px 48px; }
+.financing-inner { max-width: var(--container-max); margin: 0 auto; text-align: center; }
+.financing-inner h2 { font-size: 28px; font-weight: 700; margin: 6px 0 28px; }
+.financing-logos {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center;
+  gap: 28px 48px; padding: 24px; border-radius: 16px;
+  background: var(--surface); border: 1px solid var(--border);
+}
+.fin-logo { display: flex; align-items: center; justify-content: center; transition: transform var(--transition); }
+.fin-logo:hover { transform: scale(1.05); }
+
 /* CONTACT FORM + MAP SECTION */
 .contact-section { padding-top: 20px; padding-bottom: 72px; }
 .contact-card {
