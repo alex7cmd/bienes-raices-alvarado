@@ -1339,6 +1339,48 @@ function resetZoom() {
 }
 
 // --- ADMIN CMS RENDERING ---
+async function renderCmsPrototypesGrid() {
+  const grid = $('cmsPrototypesGrid');
+  if (!grid) return;
+  const q = ($('cmsProtoSearchInput')?.value || '').trim().toLowerCase();
+  const devFilter = $('cmsProtoDevFilter')?.value || 'all';
+  const list = (state.prototypes || []).filter(p => {
+    if (devFilter !== 'all' && (!Array.isArray(p.developments) || !p.developments.includes(devFilter))) return false;
+    if (!q) return true;
+    const haystack = [
+      p.name,
+      p.description,
+      String(p.price),
+      `${p.bedrooms} recamaras`,
+      ...(p.developments || [])
+    ].join(' ').toLowerCase();
+    return haystack.includes(q);
+  });
+  const badge = $('cmsProtoCountBadge');
+  if (badge) badge.textContent = `${list.length} prototipo${list.length === 1 ? '' : 's'}`;
+  if (!list.length) {
+    grid.innerHTML = `<div class="cms-form-card" style="grid-column:1/-1;text-align:center;color:var(--muted);">No se encontraron prototipos que coincidan con "${q}".</div>`;
+    return;
+  }
+  grid.innerHTML = list.map(p => `
+    <div class="cms-form-card" data-cms-proto="${p.id}">
+      <img src="${p.image}" class="cms-preview-img" alt="${p.name}" />
+      <h3>Prototipo: ${p.name}</h3>
+      <div class="form-grid">
+        <label>Precio (MXN)<input type="number" class="p-price" value="${p.price}" /></label>
+        <label>Terreno (m²)<input type="number" class="p-area" value="${p.area}" /></label>
+        <label>Recámaras<input type="number" class="p-beds" value="${p.bedrooms}" /></label>
+        <label>Baños<input type="number" step="0.5" class="p-baths" value="${p.bathrooms}" /></label>
+      </div>
+      <label style="margin-bottom:10px;">Descripción<textarea rows="2" class="p-desc">${p.description}</textarea></label>
+      <label style="margin-bottom:10px;">URL Imagen<input type="text" class="p-img" value="${p.image}" /></label>
+      <label style="margin-bottom:10px;">Subir nueva imagen<input type="file" class="p-upload-img" accept="image/*" /></label>
+      <label style="margin-bottom:12px;">URL Video (opcional)<input type="text" class="p-video" value="${p.video || ''}" placeholder="https://... o sube archivo" /></label>
+      <button class="btn-primary save-proto-btn">Guardar cambios</button>
+    </div>
+  `).join('');
+}
+
 async function renderAdminCms() {
   const { prototypes, developments, site } = state;
   const slug = state.cmsDevSlug || 'sorento';
@@ -1359,25 +1401,7 @@ async function renderAdminCms() {
   `;
 
   renderCmsLotsTable();
-
-  $('cmsPrototypesGrid').innerHTML = prototypes.map(p => `
-    <div class="cms-form-card" data-cms-proto="${p.id}">
-      <img src="${p.image}" class="cms-preview-img" alt="${p.name}" />
-      <h3>Prototipo: ${p.name}</h3>
-      <div class="form-grid">
-        <label>Precio (MXN)<input type="number" class="p-price" value="${p.price}" /></label>
-        <label>Terreno (m²)<input type="number" class="p-area" value="${p.area}" /></label>
-        <label>Recámaras<input type="number" class="p-beds" value="${p.bedrooms}" /></label>
-        <label>Baños<input type="number" step="0.5" class="p-baths" value="${p.bathrooms}" /></label>
-      </div>
-      <label style="margin-bottom:10px;">Descripción<textarea rows="2" class="p-desc">${p.description}</textarea></label>
-      <label style="margin-bottom:10px;">URL Imagen<input type="text" class="p-img" value="${p.image}" /></label>
-      <label style="margin-bottom:10px;">Subir nueva imagen<input type="file" class="p-upload-img" accept="image/*" /></label>
-      <label style="margin-bottom:12px;">URL Video (opcional)<input type="text" class="p-video" value="${p.video || ''}" placeholder="https://... o sube archivo" /></label>
-      <button class="btn-primary save-proto-btn">Guardar cambios</button>
-    </div>
-  `).join('');
-
+  renderCmsPrototypesGrid();
   $('editHeroEyebrow').value = site.eyebrow;
   $('editHeroTitle').value = site.heroTitle;
   $('editHeroSubtitle').value = site.heroSubtitle;
@@ -1936,6 +1960,8 @@ function bindEvents() {
 
   $('lotSearchInput').addEventListener('input', renderCmsLotsTable);
   $('lotStatusFilter').addEventListener('change', renderCmsLotsTable);
+  $('cmsProtoSearchInput')?.addEventListener('input', renderCmsPrototypesGrid);
+  $('cmsProtoDevFilter')?.addEventListener('change', renderCmsPrototypesGrid);
 
   if ($('cmsDevSelect')) {
     $('cmsDevSelect').addEventListener('change', async (e) => {

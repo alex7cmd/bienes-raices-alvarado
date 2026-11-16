@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.9.7" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.9.8" />
 </head>
 <body>
   <!-- DOCK SUPERIOR FLOTANTE iOS 27 LIQUID GLASS -->
@@ -502,6 +502,19 @@
 
       <!-- TAB 2: PROTOTYPES -->
       <div class="cms-panel hidden" id="cmsTabPrototypes">
+        <div class="cms-toolbar" style="align-items:center;">
+          <input type="search" id="cmsProtoSearchInput" placeholder="Buscar prototipo por nombre, privada, precio o recámaras..." />
+          <select id="cmsProtoDevFilter">
+            <option value="all">Todos los desarrollos</option>
+            <option value="sorento">Sorento</option>
+            <option value="oporto">Oporto</option>
+            <option value="ardenza">Ardenza</option>
+            <option value="montalese">Montalese</option>
+            <option value="torres-qavalta">Torres Qavalta</option>
+            <option value="vittoria">Vittoria</option>
+          </select>
+          <span class="cms-note" id="cmsProtoCountBadge" style="white-space:nowrap;font-weight:600;"></span>
+        </div>
         <div class="cms-cards-grid" id="cmsPrototypesGrid"></div>
       </div>
 
@@ -648,6 +661,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.9.7"></script>
+  <script src="/js/app.js?v=1.9.8"></script>
 </body>
 </html>
