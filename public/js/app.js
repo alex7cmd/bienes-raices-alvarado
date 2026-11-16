@@ -700,29 +700,28 @@ function getMapCounts(lots) {
   return c;
 }
 
-function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all', protoFilter = 'all' } = {}) {
+function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all', protoFilter = 'all', floorId = null } = {}) {
   const colors = {
     disponible: { fill: 'rgba(16, 185, 129, 0.52)', stroke: '#047857' },
     reservado: { fill: 'rgba(245, 158, 11, 0.58)', stroke: '#b45309' },
-    vendido: { fill: 'rgba(239, 68, 68, 0.50)', stroke: '#b91c1c' },
+    vendido: { fill: 'rgba(59, 130, 246, 0.52)', stroke: '#1d4ed8' },
     'no-disponible': { fill: 'rgba(100, 116, 139, 0.42)', stroke: '#475569' }
   };
 
+  let activeBg = mapData.bg;
+  let activeLots = mapData.lots;
+  if (mapData.isTowerFloors && Array.isArray(mapData.floors)) {
+    const fl = mapData.floors.find(f => f.id === Number(floorId)) || mapData.floors[mapData.floors.length - 1];
+    if (fl) {
+      activeBg = fl.bg;
+      const byId = new Map(mapData.lots.map(l => [l.id, l]));
+      activeLots = fl.lots.map(l => byId.get(l.id) || l);
+    }
+  }
+
   let bgMarkup = '';
-  if (mapData.isTower) {
-    // Architectural elevation backdrop for Torres Qavalta (960x620)
-    bgMarkup = `
-      <rect x="0" y="0" width="960" height="620" fill="#f1f5f9" />
-      <rect x="65" y="45" width="830" height="535" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" />
-      <rect x="65" y="45" width="830" height="52" rx="14" fill="#0f172a" />
-      <text x="480" y="77" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#ffffff">TORRES QAVALTA · TORRE A (6 NIVELES)</text>
-      <rect x="467" y="108" width="26" height="448" rx="6" fill="#e2e8f0" stroke="#cbd5e1" />
-      <text x="480" y="335" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#475569" transform="rotate(-90 480 335)">ELEVADORES Y ESCALERAS</text>
-      <text x="202" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 1 (68 m²)</text>
-      <text x="377" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 2 (84 m²)</text>
-      <text x="582" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 2 (84 m²)</text>
-      <text x="757" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 1 (68 m²)</text>
-    `;
+  if (mapData.isTowerFloors && activeBg) {
+    bgMarkup = `<image href="${activeBg}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
   } else if (mapData.bg) {
     bgMarkup = `
       <defs>
@@ -739,10 +738,10 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
     `;
   }
 
-  const sw = mapData.isTower ? 2 : 9;
-  const swSel = mapData.isTower ? 4 : 24;
+  const sw = mapData.isTowerFloors ? 12 : 9;
+  const swSel = mapData.isTowerFloors ? 30 : 24;
 
-  const lotsMarkup = mapData.lots.map(l => {
+  const lotsMarkup = activeLots.map(l => {
     const stKey = l.s === 'apartado' ? 'reservado' : l.s;
     const st = colors[stKey] || colors['no-disponible'];
     const isSel = selectedLotId === l.id;
@@ -751,27 +750,20 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
     const dimmedProto = protoFilter !== 'all' && (!lotProto || lotProto.id !== protoFilter);
     const dimmed = dimmedStatus || dimmedProto;
     const op = dimmed ? '0.14' : '1';
-    const attrs = `class="qmap-lot ${isSel ? 'selected' : ''}" data-lot="${l.id}" fill="${st.fill}" stroke="${isSel ? '#0f172a' : st.stroke}" stroke-width="${isSel ? swSel : sw}" opacity="${op}"`;
-    const shape = l.t === 'g'
+    const attrs = `class="qmap-lot ${isSel ? 'selected' : ''}" data-lot="${l.id}" fill="${st.fill}" stroke="${isSel ? '#ffffff' : st.stroke}" stroke-width="${isSel ? swSel : sw}" opacity="${op}"`;
+    return l.t === 'g'
       ? `<polygon points="${l.d}" ${attrs} />`
       : `<path d="${l.d}" ${attrs} />`;
-    if (mapData.isTower) {
-      const m = l.d.match(/^M(\d+),(\d+)/);
-      const tx = m ? Number(m[1]) + 82 : 0;
-      const ty = m ? Number(m[2]) + 34 : 0;
-      return `${shape}<text x="${tx}" y="${ty}" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#0f172a" pointer-events="none">${l.id}</text>`;
-    }
-    return shape;
   }).join('');
 
   return `${bgMarkup}<g class="qmap-lots-layer">${lotsMarkup}</g>`;
 }
 
-async function loadInlineDevMap(slug) {
+async function loadInlineDevMap(slug, floorId = null) {
   const section = document.querySelector(`.dev-inline-map-section[data-inline-map="${slug}"]`);
   if (!section) return;
   const svg = section.querySelector('.dev-inline-svg');
-  if (!svg || svg.dataset.loaded === slug) return;
+  if (!svg || (svg.dataset.loaded === slug && floorId === null)) return;
   try {
     const mapData = await fetchDevMapData(slug);
     const counts = getMapCounts(mapData.lots);
@@ -779,8 +771,29 @@ async function loadInlineDevMap(slug) {
       const el = section.querySelector(`[data-c="${k}"]`);
       if (el) el.textContent = counts[k];
     });
+    const vp = section.querySelector('.dev-inline-map-viewport');
+    if (vp) vp.classList.toggle('is-tower-bg', Boolean(mapData.isTowerFloors));
+
+    let activeFloorId = floorId;
+    if (mapData.isTowerFloors && Array.isArray(mapData.floors)) {
+      activeFloorId = activeFloorId || mapData.floors[mapData.floors.length - 1].id;
+      let floorBar = section.querySelector('.dev-inline-floors');
+      if (!floorBar) {
+        floorBar = document.createElement('div');
+        floorBar.className = 'dev-inline-floors';
+        vp?.parentNode?.insertBefore(floorBar, vp);
+      }
+      floorBar.innerHTML = `<span class="floor-bar-tag">TORRE A · PISOS:</span>` + mapData.floors.map(f => `
+        <button type="button" class="floor-pill ${f.id === Number(activeFloorId) ? 'active' : ''}" data-inline-floor="${f.id}">${f.name}</button>
+      `).join('');
+      floorBar.onclick = (ev) => {
+        const btn = ev.target.closest('[data-inline-floor]');
+        if (btn) loadInlineDevMap(slug, Number(btn.dataset.inlineFloor));
+      };
+    }
+
     svg.setAttribute('viewBox', `0 0 ${mapData.w} ${mapData.h}`);
-    svg.innerHTML = buildDevMapSvgMarkup(mapData);
+    svg.innerHTML = buildDevMapSvgMarkup(mapData, { floorId: activeFloorId });
     svg.dataset.loaded = slug;
   } catch (err) {
     console.error(err);
@@ -958,12 +971,40 @@ async function renderInteractiveMap() {
     ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}">${f.label}</button>`).join('');
   }
 
+  if ($('mapView')) $('mapView').classList.toggle('is-tower-bg', Boolean(mapData.isTowerFloors));
+  const floorBar = $('mapFloorBar');
+  if (floorBar) {
+    if (mapData.isTowerFloors && Array.isArray(mapData.floors)) {
+      if (!state.mapFloorId || !mapData.floors.some(f => f.id === Number(state.mapFloorId))) {
+        state.mapFloorId = mapData.floors[mapData.floors.length - 1].id;
+      }
+      floorBar.classList.remove('hidden');
+      floorBar.innerHTML = `
+        <span class="floor-bar-tag">TORRE A</span>
+        ${mapData.floors.map(f => {
+          const disp = f.lots.filter(l => l.s === 'disponible').length;
+          return `<button type="button" class="floor-pill ${f.id === Number(state.mapFloorId) ? 'active' : ''}" data-mfloor="${f.id}">${f.name} <small>${disp}</small></button>`;
+        }).join('')}
+      `;
+      floorBar.onclick = (e) => {
+        const btn = e.target.closest('[data-mfloor]');
+        if (!btn) return;
+        state.mapFloorId = Number(btn.dataset.mfloor);
+        state.selectedLotId = null;
+        renderInteractiveMap();
+      };
+    } else {
+      floorBar.classList.add('hidden');
+    }
+  }
+
   const svg = $('mapSvg');
   svg.setAttribute('viewBox', `0 0 ${mapData.w} ${mapData.h}`);
   svg.innerHTML = buildDevMapSvgMarkup(mapData, {
     selectedLotId: state.selectedLotId,
     statusFilter: state.mapStatusFilter,
-    protoFilter: state.mapProtoFilter
+    protoFilter: state.mapProtoFilter,
+    floorId: state.mapFloorId
   });
   renderMapAmenities(slug, 0);
   renderSelectedLotDetail();

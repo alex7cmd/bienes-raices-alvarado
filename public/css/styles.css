@@ -939,6 +939,33 @@ html[data-theme="dark"] .dock-icon-circle {
 }
 .btn-back-home:hover { background: var(--accent-hover); }
 
+.fullscreen-map-view.is-tower-bg,
+.fullscreen-map-view.is-tower-bg .map-canvas-area,
+.dev-inline-map-viewport.is-tower-bg {
+  background: #1d1b18;
+  background-image: none;
+}
+.map-floor-bar {
+  position: absolute; top: 58px; left: 50%; transform: translateX(-50%); z-index: 15;
+  background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px);
+  padding: 6px 12px; border-radius: 999px; display: flex; align-items: center; gap: 6px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22); max-width: calc(100% - 360px); overflow-x: auto;
+}
+.dev-inline-floors {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-bottom: 10px;
+}
+.floor-bar-tag { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 1px; margin-right: 4px; }
+.floor-pill {
+  border: 1px solid var(--border); background: var(--card-bg); color: var(--text);
+  padding: 5px 12px; border-radius: 999px; font-size: 12px; font-weight: 600;
+  cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+}
+.floor-pill small {
+  font-size: 10px; padding: 1px 6px; border-radius: 999px;
+  background: rgba(22, 163, 74, 0.14); color: var(--green);
+}
+.floor-pill.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.floor-pill.active small { background: rgba(255,255,255,0.22); color: #fff; }
 .map-canvas-area { position: relative; flex: 1; width: 100%; height: calc(100vh - 60px); overflow: hidden; }
 .svg-viewport { width: 100%; height: 100%; cursor: grab; display: flex; align-items: center; justify-content: center; }
 .svg-viewport:active { cursor: grabbing; }
