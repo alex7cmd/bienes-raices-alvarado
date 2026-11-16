@@ -763,7 +763,9 @@ html[data-theme="dark"] .site-header {
   width: 40px; height: 40px; border-radius: 10px; background: #e2e8f0; color: var(--text);
   display: grid; place-items: center; text-decoration: none; transition: all var(--transition);
 }
-.social-box:hover { background: var(--text); color: #fff; }
+.social-box.social-fb { background: #1877f2; color: #fff; }
+.social-box.social-wa { background: #25d366; color: #fff; }
+.social-box:hover { transform: translateY(-2px); opacity: 0.92; }
 .btn-wa {
   display: inline-block; background: #16a34a; color: #fff !important;
   padding: 10px 18px; border-radius: 999px; width: fit-content; font-weight: 600; text-decoration: none;
