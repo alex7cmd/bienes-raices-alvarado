@@ -1026,11 +1026,12 @@ async function renderInteractiveMap() {
 
   if ($('mapStatusFilters')) {
     $('mapStatusFilters').innerHTML = [
-      { id: 'all', label: 'Todos los lotes', count: mapData.lots.length },
-      { id: 'disponible', label: 'Disponibles', count: counts.disponible },
-      { id: 'reservado', label: 'Apartados', count: counts.reservado },
-      { id: 'vendido', label: 'Vendidos', count: counts.vendido }
-    ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}"><span>${f.label}</span><small>${f.count}</small></button>`).join('');
+      { id: 'all', label: 'Todos los lotes', count: mapData.lots.length, dot: '' },
+      { id: 'disponible', label: 'Disponibles', count: counts.disponible, dot: 'disponible' },
+      { id: 'reservado', label: 'Apartados', count: counts.reservado, dot: 'reservado' },
+      { id: 'no_disponible', label: 'No disponibles', count: counts.no_disponible, dot: 'no_disponible' },
+      { id: 'vendido', label: 'Vendidos', count: counts.vendido, dot: 'vendido' }
+    ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}"><span class="status-filter-label">${f.dot ? `<span class="dot ${f.dot}"></span>` : ''}${f.label}</span><small>${f.count}</small></button>`).join('');
   }
 
   if ($('mapView')) $('mapView').classList.toggle('is-tower-bg', Boolean(mapData.isTowerFloors));

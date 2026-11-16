@@ -1052,16 +1052,32 @@ html[data-theme="dark"] .fin-logo img {
 .map-zoom-controls span { font-size: 12px; font-weight: 600; min-width: 40px; text-align: center; }
 
 .map-legend-pill {
-  position: absolute; bottom: 20px; left: calc((100% - 348px) / 2); transform: translateX(-50%); z-index: 10;
+  display: none;
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 10;
   background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
-  padding: 10px 18px; border-radius: 999px; display: flex; gap: 18px; font-size: 13px;
+  padding: 10px 18px; border-radius: 999px; gap: 18px; font-size: 13px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1);
 }
-.map-legend-pill span { display: flex; align-items: center; gap: 6px; }
-.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-.dot.disponible { background: var(--green); }
-.dot.no_disponible { background: var(--amber); }
-.dot.vendido { background: var(--blue); }
+.map-legend-pill span { display: flex; align-items: center; gap: 7px; }
+.dot {
+  position: relative; width: 10px; height: 10px; border-radius: 50%; display: inline-block; flex-shrink: 0;
+  --dot-rgb: 22, 163, 74;
+}
+.dot::after {
+  content: ''; position: absolute; inset: 0; border-radius: 50%;
+  background: rgba(var(--dot-rgb), 0.55);
+  animation: statusWavePulse 2.1s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  pointer-events: none;
+}
+@keyframes statusWavePulse {
+  0% { transform: scale(1); opacity: 0.85; }
+  75%, 100% { transform: scale(2.6); opacity: 0; }
+}
+.dot.disponible { background: var(--green); --dot-rgb: 22, 163, 74; }
+.dot.reservado { background: var(--amber); --dot-rgb: 245, 158, 11; }
+.dot.no_disponible { background: #d97706; --dot-rgb: 217, 119, 6; }
+.dot.vendido { background: var(--blue); --dot-rgb: 37, 99, 235; }
+.status-filter-label { display: inline-flex; align-items: center; gap: 9px; }
 
 .map-side-panel {
   position: absolute; top: 16px; right: 16px; bottom: 16px; width: 324px; z-index: 15;
@@ -1430,7 +1446,11 @@ html[data-theme="dark"] .fin-logo img {
   .map-side-panel { width: calc(100% - 24px); left: 12px; right: 12px; top: auto; bottom: 12px; height: 40vh; }
   .map-zoom-controls { right: 12px; top: 54px; }
   .map-hint-pill { display: none; }
-  .map-legend-pill { display: none; }
+  .map-legend-pill {
+    display: flex; left: 50%; bottom: calc(40vh + 22px);
+    max-width: calc(100% - 24px); flex-wrap: wrap; justify-content: center;
+    gap: 10px 14px; padding: 8px 14px; font-size: 11.5px;
+  }
   .form-grid, .contact-form-grid { grid-template-columns: 1fr; }
   .contact-card { padding: 22px; }
 }
