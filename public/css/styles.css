@@ -841,7 +841,7 @@ html[data-theme="dark"] .fin-logo img {
 }
 
 /* FOOTER 4 COLUMNAS */
-.site-footer { background: var(--surface); border-top: 1px solid var(--border); padding: 56px 24px 28px; }
+.site-footer { background: var(--surface); border-top: 1px solid var(--border); padding: 56px 24px 64px; }
 .footer-grid {
   max-width: var(--container-max); margin: 0 auto;
   display: grid; grid-template-columns: 1.4fr 1fr 1.1fr 0.7fr; gap: 32px; padding-bottom: 36px;
@@ -1373,7 +1373,7 @@ html[data-theme="dark"] .fin-logo img {
 
 /* FLOATING STACK SIEMPRE VISIBLE (INFO/TOUR + WHATSAPP) */
 .floating-stack {
-  position: fixed; bottom: 24px; right: 24px; z-index: 950;
+  position: fixed; bottom: 38px; right: 34px; z-index: 950;
   display: flex; flex-direction: column; align-items: flex-end; gap: 10px;
 }
 .floating-stack.on-map { right: auto; left: 24px; }
