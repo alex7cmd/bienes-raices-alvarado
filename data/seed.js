@@ -26,7 +26,7 @@ function buildInitialData() {
       bathrooms: 1,
       area: 90,
       parking: 2,
-      developments: ['oporto', 'vittoria'],
+      developments: ['oporto'],
       description: 'Diseño funcional y luminoso ideal para parejas o familias jóvenes, con excelente distribución en terreno de 90 m².',
       features: commonFeatures,
       image: '/assets/images/casa-2.jpg',
@@ -41,7 +41,7 @@ function buildInitialData() {
       bathrooms: 1.5,
       area: 90,
       parking: 2,
-      developments: ['montalese', 'vittoria'],
+      developments: ['ardenza', 'montalese', 'oporto', 'vittoria'],
       description: 'Residencia contemporánea de 2 recámaras y 1.5 baños con espacios integrados y acabados de primera.',
       features: commonFeatures,
       image: '/assets/images/casa-3.jpg',
@@ -56,7 +56,7 @@ function buildInitialData() {
       bathrooms: 1.5,
       area: 78,
       parking: 2,
-      developments: ['montalese', 'vittoria'],
+      developments: ['ardenza', 'montalese', 'oporto', 'vittoria'],
       description: 'Tres recámaras optimizadas en un proyecto inteligente con iluminación natural y 2 cajones de estacionamiento.',
       features: commonFeatures,
       image: '/assets/images/casa-4.jpg',
@@ -71,7 +71,7 @@ function buildInitialData() {
       bathrooms: 1.5,
       area: 80,
       parking: 2,
-      developments: ['montalese', 'vittoria'],
+      developments: ['ardenza', 'montalese', 'oporto', 'vittoria'],
       description: 'Estilo minimalista con sala-comedor amplia, cocina equipada y patio trasero privado.',
       features: commonFeatures,
       image: '/assets/images/casa-5.png',
@@ -101,7 +101,7 @@ function buildInitialData() {
       bathrooms: 2.5,
       area: 105,
       parking: 2,
-      developments: ['ardenza', 'oporto', 'torres-qavalta', 'vittoria'],
+      developments: ['ardenza', 'montalese', 'oporto', 'vittoria'],
       description: 'Tres recámaras y 2.5 baños con recámara principal amplia, vestidor y excelente orientación.',
       features: commonFeatures,
       image: '/assets/images/casa-1.jpg',
@@ -131,7 +131,7 @@ function buildInitialData() {
       bathrooms: 2.5,
       area: 105,
       parking: 2,
-      developments: ['ardenza', 'sorento', 'vittoria'],
+      developments: ['ardenza', 'montalese', 'sorento'],
       description: 'Arquitectura moderna con doble altura parcial, 3 recámaras y 2.5 baños.',
       features: commonFeatures,
       image: '/assets/images/casa-4.jpg',
@@ -146,7 +146,7 @@ function buildInitialData() {
       bathrooms: 3.5,
       area: 123,
       parking: 2,
-      developments: ['sorento', 'torres-qavalta'],
+      developments: ['sorento'],
       description: 'Cada recámara con baño completo más medio baño de visitas, acabados residenciales premium.',
       features: commonFeatures,
       image: '/assets/images/casa-1.jpg',
@@ -176,10 +176,52 @@ function buildInitialData() {
       bathrooms: 5,
       area: 242,
       parking: 2,
-      developments: ['sorento', 'vittoria'],
+      developments: ['sorento'],
       description: 'Nuestra residencia insignia de 4 recámaras, 5 baños y 242 m² de terreno con espacios de lujo.',
       features: commonFeatures,
       image: '/assets/images/casa-1.jpg',
+      video: ''
+    },
+    {
+      id: 'flat-1',
+      propertyId: '20032',
+      name: 'Flat 1',
+      type: 'departamento',
+      price: 1544000,
+      bedrooms: 2,
+      bathrooms: 1,
+      area: 68,
+      parking: 1,
+      developments: ['torres-qavalta'],
+      description: 'Departamento funcional en Torre A de 67.94 m² con 2 recámaras, 1 baño completo, sala-comedor, cocina integral y 1 cajón de estacionamiento.',
+      features: ['Acceso controlado', 'Elevadores', 'Áreas verdes', 'Salón multiusos', 'Servicio de vigilancia 24/7'],
+      image: '/assets/images/torres/flat1-1.webp',
+      gallery: [
+        '/assets/images/torres/flat1-1.webp',
+        '/assets/images/torres/flat1-2.webp',
+        '/assets/images/torres/flat1-3.webp'
+      ],
+      video: ''
+    },
+    {
+      id: 'flat-2',
+      propertyId: '20033',
+      name: 'Flat 2',
+      type: 'departamento',
+      price: 1743000,
+      bedrooms: 2,
+      bathrooms: 2.5,
+      area: 77,
+      parking: 1,
+      developments: ['torres-qavalta'],
+      description: 'Departamento amplio en Torre A de 73.33 a 77.45 m² con 2 recámaras, 2.5 baños, acabados contemporáneos y 1 cajón de estacionamiento.',
+      features: ['Acceso controlado', 'Elevadores', 'Áreas verdes', 'Salón multiusos', 'Servicio de vigilancia 24/7'],
+      image: '/assets/images/torres/flat2-1.webp',
+      gallery: [
+        '/assets/images/torres/flat2-1.webp',
+        '/assets/images/torres/flat2-2.webp',
+        '/assets/images/torres/flat2-3.webp'
+      ],
       video: ''
     }
   ];
@@ -189,36 +231,36 @@ function buildInitialData() {
       id: 'sorento',
       name: 'Sorento',
       tagline: 'Privada residencial con casa club y alberca',
-      startingPrice: 1660000,
+      startingPrice: 2600000,
       image: '/assets/images/casa-1.jpg'
     },
     {
       id: 'oporto',
       name: 'Oporto',
       tagline: 'Canchas deportivas y amplias áreas verdes',
-      startingPrice: 1382000,
+      startingPrice: 1500000,
       image: '/assets/images/casa-2.jpg'
     },
     {
       id: 'ardenza',
       name: 'Ardenza',
       tagline: 'Acceso controlado y arquitectura contemporánea',
-      startingPrice: 1905000,
+      startingPrice: 1770000,
       image: '/assets/images/casa-3.jpg'
     },
     {
       id: 'montalese',
       name: 'Montalese',
       tagline: 'Diseño familiar con calles tranquilas',
-      startingPrice: 1847000,
+      startingPrice: 1660000,
       image: '/assets/images/casa-4.jpg'
     },
     {
       id: 'torres-qavalta',
       name: 'Torres Qavalta',
       tagline: 'Departamentos modernos con vista panorámica',
-      startingPrice: 1970000,
-      image: '/assets/images/casa-5.png'
+      startingPrice: 1544000,
+      image: '/assets/images/torres/flat1-1.webp'
     },
     {
       id: 'vittoria',
@@ -404,6 +446,12 @@ function ensureDatabase() {
         .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-525x328.jpg', '/assets/images/casa-4.jpg')
         .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3-525x328.png', '/assets/images/casa-5.png');
       fs.writeFileSync(DB_PATH, migrated, 'utf8');
+    } else if (!parsed.catalogVersion || parsed.catalogVersion < 2) {
+      const fresh = buildInitialData();
+      parsed.developments = fresh.developments;
+      parsed.prototypes = fresh.prototypes;
+      parsed.catalogVersion = 2;
+      fs.writeFileSync(DB_PATH, JSON.stringify(parsed, null, 2), 'utf8');
     }
   }
   return DB_PATH;

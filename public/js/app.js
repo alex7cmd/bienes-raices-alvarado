@@ -123,7 +123,7 @@ const DEV_DETAILS = {
     description: 'La primera etapa de Torres Qavalta reúne diseño vertical contemporáneo, departamentos Flat 1 y Flat 2, amenidades exclusivas y un estilo de vida urbano en Pachuca.',
     address: 'Torres Qavalta (Torre A), Qavalta Residencial, Pachuca, Hgo.',
     mapQuery: 'Qavalta Residencial, Los Vinedos, Pachuca, Hidalgo',
-    lotesLabel: '24 deptos · Torre A',
+    lotesLabel: '39 deptos · Torre A',
     amenidades: ['Acceso controlado', 'Elevadores', 'Áreas verdes', 'Salón multiusos', 'Vigilancia 24/7']
   },
   vittoria: {
@@ -324,6 +324,7 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
   if (!p) return '';
   const gallery = getProtoGallery(p);
   const activeIdx = Math.max(0, Math.min(slideIdx, gallery.length - 1));
+  const isDepto = p.type === 'departamento' || (Array.isArray(p.developments) && p.developments.length === 1 && p.developments[0] === 'torres-qavalta');
   return `
     <div class="proto-tab-panel" data-active-proto="${p.id}" data-slide-idx="${activeIdx}">
       <div class="proto-panel-media">
@@ -370,7 +371,7 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
         <p class="proto-panel-desc">${p.description}</p>
 
         <div class="lot-specs-grid proto-panel-specs">
-          ${specBox('area', 'Terreno', `${p.area} m²`)}
+          ${specBox('area', isDepto ? 'Superficie' : 'Terreno', `${p.area} m²`)}
           ${specBox('bed', 'Recámaras', p.bedrooms)}
           ${specBox('bath', 'Baños', p.bathrooms)}
           ${specBox('car', 'Estac.', p.parking)}
@@ -446,8 +447,8 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
               <span class="dev-overview-kicker">DESARROLLO SELECCIONADO · ${activeDev.name.toUpperCase()}</span>
               <p class="dev-overview-desc">${info.description}</p>
               <div class="dev-overview-details">
-                ${specBox('home', 'Privada', activeDev.name)}
-                ${specBox('area', 'Capacidad', info.lotesLabel)}
+                ${specBox('home', activeDev.id === 'torres-qavalta' ? 'Tipo' : 'Privada', activeDev.id === 'torres-qavalta' ? 'Departamentos' : activeDev.name)}
+                ${specBox('area', activeDev.id === 'torres-qavalta' ? 'Unidades' : 'Capacidad', info.lotesLabel)}
                 ${specBox('tag', 'Desde', mxn.format(activeDev.startingPrice))}
                 ${specBox('gallery', 'Modelos', `${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}`)}
               </div>
