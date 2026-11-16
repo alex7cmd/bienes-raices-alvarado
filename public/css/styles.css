@@ -143,9 +143,9 @@ html[data-theme="dark"] .site-header {
   padding: 7px 14px;
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
-.brand { display: flex; align-items: center; flex-shrink: 0; }
-.brand-logo { height: 48px; width: auto; object-fit: contain; display: block; }
-.brand-mark { display: none; height: 40px; width: 35px; }
+.brand { display: flex; align-items: center; flex-shrink: 0; padding-left: 4px; }
+.brand-logo { height: 42px; width: auto; object-fit: contain; display: block; }
+.brand-mark { display: block; height: 40px; width: 35px; }
 .main-nav { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .dock-link {
   display: inline-flex; align-items: center; gap: 7px;
