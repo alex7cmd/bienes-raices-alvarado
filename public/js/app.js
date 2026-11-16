@@ -1769,6 +1769,32 @@ function bindEvents() {
   });
   window.addEventListener('mouseup', () => { state.dragging = false; });
 
+  // Touch pan for mobile & tablet
+  let touchMoved = false;
+  vp.addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    const t = e.touches[0];
+    state.dragging = true;
+    touchMoved = false;
+    state.dragStartX = t.clientX - state.panX;
+    state.dragStartY = t.clientY - state.panY;
+  }, { passive: true });
+  vp.addEventListener('touchmove', (e) => {
+    if (!state.dragging || e.touches.length !== 1) return;
+    const t = e.touches[0];
+    const nextX = t.clientX - state.dragStartX;
+    const nextY = t.clientY - state.dragStartY;
+    if (Math.hypot(nextX - state.panX, nextY - state.panY) > 4) touchMoved = true;
+    if (touchMoved) {
+      e.preventDefault();
+      state.panX = nextX;
+      state.panY = nextY;
+      applyTransform();
+    }
+  }, { passive: false });
+  vp.addEventListener('touchend', () => { state.dragging = false; });
+  vp.addEventListener('touchcancel', () => { state.dragging = false; });
+
   // CMS Tabs
   document.querySelectorAll('.cms-tab').forEach(tab => {
     tab.addEventListener('click', () => {
