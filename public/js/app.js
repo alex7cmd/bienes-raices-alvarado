@@ -324,7 +324,6 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
   if (!p) return '';
   const gallery = getProtoGallery(p);
   const activeIdx = Math.max(0, Math.min(slideIdx, gallery.length - 1));
-  const waMsg = encodeURIComponent(`Hola, me interesa información del prototipo ${p.name} (${mxn.format(p.price)}).`);
   return `
     <div class="proto-tab-panel" data-active-proto="${p.id}" data-slide-idx="${activeIdx}">
       <div class="proto-panel-media">
@@ -383,8 +382,6 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
             ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
           </div>
         </div>
-
-        <a href="https://wa.me/${state.site.whatsapp}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa">Solicitar información por WhatsApp →</a>
       </div>
     </div>
   `;
