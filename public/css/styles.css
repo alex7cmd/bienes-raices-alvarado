@@ -1393,6 +1393,10 @@ html[data-theme="dark"] .footer-mini-prop:hover { background: rgba(255, 255, 255
   width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box;
   padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text); font-family: inherit;
 }
+.cms-form-card textarea {
+  resize: vertical; min-height: 92px; height: 92px; max-height: 260px; line-height: 1.45;
+}
+textarea { resize: vertical; }
 .cms-preview-img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; background: var(--surface); }
 
 /* BUTTONS & MODALS */
