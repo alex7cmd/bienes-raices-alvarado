@@ -454,12 +454,6 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
                 ${specBox('tag', 'Desde', mxn.format(activeDev.startingPrice))}
                 ${specBox('gallery', 'Modelos', `${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}`)}
               </div>
-              <div class="dev-overview-amenities">
-                <span class="proto-panel-subtitle">Características de ${activeDev.name}</span>
-                <div class="proto-features-chips">
-                  ${info.amenidades.map(a => `<span class="proto-chip">${featureIcon(a)} ${a}</span>`).join('')}
-                </div>
-              </div>
             </div>
             <div class="dev-overview-map">
               <div class="dev-overview-addr">
