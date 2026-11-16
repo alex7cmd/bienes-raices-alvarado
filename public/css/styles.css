@@ -144,8 +144,8 @@ html[data-theme="dark"] .site-header {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
 .brand { display: flex; align-items: center; flex-shrink: 0; }
-.brand-logo { height: 38px; width: auto; object-fit: contain; display: block; }
-.brand-mark { display: none; height: 36px; width: 32px; }
+.brand-logo { height: 48px; width: auto; object-fit: contain; display: block; }
+.brand-mark { display: none; height: 40px; width: 35px; }
 .main-nav { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .dock-link {
   display: inline-flex; align-items: center; gap: 7px;
@@ -742,7 +742,7 @@ html[data-theme="dark"] .site-header {
   max-width: var(--container-max); margin: 0 auto;
   display: grid; grid-template-columns: 1.4fr 1fr 1.1fr 0.7fr; gap: 32px; padding-bottom: 36px;
 }
-.footer-logo { height: 40px; margin-bottom: 14px; display: block; }
+.footer-logo { height: 82px; width: auto; max-width: 100%; margin-bottom: 16px; display: block; }
 .footer-col h4 { font-size: 15px; font-weight: 700; margin-bottom: 14px; color: var(--text); }
 .footer-about { font-size: 13.5px; color: var(--muted); line-height: 1.65; }
 .footer-contact-list { list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 13.5px; color: var(--muted); }
@@ -1221,8 +1221,8 @@ html[data-theme="dark"] .site-header {
 }
 
 @media (max-width: 480px) {
-  .header-inner { padding: 10px 14px; }
-  .brand-logo { height: 34px; }
+  .header-inner { padding: 6px 10px; }
+  .brand-mark { height: 38px; width: 34px; }
   .developments-grid { grid-template-columns: 1fr; }
   .smart-photo-card { height: 220px; }
   .footer-grid { grid-template-columns: 1fr; }
