@@ -26,17 +26,71 @@ const $ = (id) => document.getElementById(id);
 
 function featureIcon(name) {
   const n = (name || '').toLowerCase();
-  if (n.includes('acceso')) return '🛡️';
+  if (n.includes('alberca')) return '🏊';
+  if (n.includes('pádel') || n.includes('padel')) return '🎾';
+  if (n.includes('game')) return '🎮';
+  if (n.includes('jumping')) return '🤸';
+  if (n.includes('oculto')) return '⚡';
+  if (n.includes('lineal')) return '🌿';
+  if (n.includes('elevador')) return '🛗';
+  if (n.includes('acceso') || n.includes('seguridad')) return '🛡️';
   if (n.includes('verdes')) return '🌳';
   if (n.includes('cancha')) return '⚽';
   if (n.includes('ciclo')) return '🚲';
   if (n.includes('familiar')) return '👨‍👩‍👧‍👦';
   if (n.includes('juego')) return '🛝';
-  if (n.includes('canino')) return '🐾';
-  if (n.includes('salón') || n.includes('salon')) return '🎉';
+  if (n.includes('canino') || n.includes('dog') || n.includes('mascota')) return '🐾';
+  if (n.includes('salón') || n.includes('salon') || n.includes('multiusos') || n.includes('múltiples')) return '🎉';
   if (n.includes('vigilancia')) return '👮';
   return '✨';
 }
+
+const QAVALTA_OFFICE_ORIGIN = 'Unidad Estrategica Comercial Qavalta, Pachuca, Hidalgo';
+
+const DEV_DETAILS = {
+  sorento: {
+    description: 'Sorento es la privada premium de Qavalta Residencial: diseño arquitectónico sofisticado, acabados superiores y amenidades exclusivas para quienes valoran vivir bien al sur de Pachuca.',
+    address: 'Privada Sorento, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
+    mapQuery: 'Privada Sorento, Los Vinedos, Pachuca, Hidalgo',
+    lotesLabel: '262 lotes',
+    amenidades: ['Acceso controlado', 'Áreas verdes', 'Juegos infantiles', 'Alberca climatizada', 'Cancha de pádel', 'Salón multiusos con terraza']
+  },
+  oporto: {
+    description: 'Oporto forma parte de Qavalta Residencial al sur de Pachuca, con entorno seguro, familiar, servicios ocultos y amenidades pensadas para tranquilidad y plusvalía creciente.',
+    address: 'Privada Oporto, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
+    mapQuery: 'Privada Oporto, Los Vinedos, Pachuca, Hidalgo',
+    lotesLabel: '422 lotes',
+    amenidades: ['Acceso controlado', 'Áreas verdes', 'Juegos infantiles', 'Ciclovía', 'Servicios ocultos']
+  },
+  ardenza: {
+    description: 'Ardenza combina diseño contemporáneo, amenidades familiares y ubicación estratégica al sur de Pachuca para elegir el prototipo ideal según tu familia y presupuesto.',
+    address: 'Privada Ardenza, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
+    mapQuery: 'Privada Ardenza, Los Vinedos, Pachuca, Hidalgo',
+    lotesLabel: '285 lotes',
+    amenidades: ['Acceso controlado', 'Áreas verdes', 'Juegos infantiles', 'Ciclovía', 'Servicios ocultos']
+  },
+  montalese: {
+    description: 'Montalese es la privada moderna y funcional de Qavalta Residencial, equipada con amenidades únicas como Game Center, Jumping Park, Dog Park y parques lineales.',
+    address: 'Privada Montalese, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
+    mapQuery: 'Privada Montalese, Los Vinedos, Pachuca, Hidalgo',
+    lotesLabel: '392 lotes',
+    amenidades: ['Game Center', 'Jumping park', 'Ciclovía', 'Servicios ocultos', 'Dog park', 'Parques lineales']
+  },
+  'torres-qavalta': {
+    description: 'La primera etapa de Torres Qavalta reúne diseño vertical contemporáneo, departamentos Flat 1 y Flat 2, amenidades exclusivas y un estilo de vida urbano en Pachuca.',
+    address: 'Torres Qavalta (Torre A), Qavalta Residencial, Pachuca, Hgo.',
+    mapQuery: 'Qavalta Residencial, Los Vinedos, Pachuca, Hidalgo',
+    lotesLabel: '24 deptos · Torre A',
+    amenidades: ['Acceso controlado', 'Elevadores', 'Áreas verdes', 'Salón multiusos', 'Vigilancia 24/7']
+  },
+  vittoria: {
+    description: 'Descubre Vittoria, la privada de Qavalta con parque lineal, ciclovía, área para mascotas, canchas deportivas y espacios diseñados para comenzar una nueva etapa en familia.',
+    address: 'Privada Vittoria, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
+    mapQuery: 'Privada Vittoria, Los Vinedos, Pachuca, Hidalgo',
+    lotesLabel: '473 lotes',
+    amenidades: ['Parque Lineal', 'Ciclovía', 'Área para mascotas', 'Juegos infantiles', 'Canchas deportivas', 'Salón de usos múltiples']
+  }
+};
 
 const FALLBACK_GALLERY_POOL = [
   '/assets/images/casa-1.jpg',
@@ -296,9 +350,53 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
           </div>
         </button>
         <div class="dev-pill-body ${isOpen ? '' : 'hidden'}">
-          <div class="dev-pill-subbar">
-            <p class="dev-pill-tagline">${dev.tagline} · Qavalta Residencial</p>
-          </div>
+          ${(() => {
+            const info = DEV_DETAILS[dev.id] || {
+              description: dev.tagline || '',
+              address: 'Qavalta Residencial, Pachuca, Hgo.',
+              mapQuery: `Privada ${dev.name}, Los Vinedos, Pachuca, Hidalgo`,
+              lotesLabel: `${devProtos.length} prototipos`,
+              amenidades: ['Acceso controlado', 'Áreas verdes']
+            };
+            const originEnc = encodeURIComponent(QAVALTA_OFFICE_ORIGIN);
+            const destEnc = encodeURIComponent(info.mapQuery);
+            const embedRouteUrl = `https://maps.google.com/maps?saddr=${originEnc}&daddr=${destEnc}&output=embed`;
+            const dirRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${originEnc}&destination=${destEnc}`;
+            return `
+              <div class="dev-overview-card">
+                <div class="dev-overview-info">
+                  <span class="dev-overview-kicker">DESCRIPCIÓN DEL DESARROLLO</span>
+                  <p class="dev-overview-desc">${info.description}</p>
+                  <div class="dev-overview-details">
+                    <div class="lot-spec-box"><small>🏘️ Privada</small><strong>${dev.name}</strong></div>
+                    <div class="lot-spec-box"><small>📐 Capacidad</small><strong>${info.lotesLabel}</strong></div>
+                    <div class="lot-spec-box"><small>💰 Desde</small><strong>${mxn.format(dev.startingPrice)}</strong></div>
+                    <div class="lot-spec-box"><small>🏡 Modelos</small><strong>${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}</strong></div>
+                  </div>
+                  <div class="dev-overview-amenities">
+                    <span class="proto-panel-subtitle">Características de ${dev.name}</span>
+                    <div class="proto-features-chips">
+                      ${info.amenidades.map(a => `<span class="proto-chip">${featureIcon(a)} ${a}</span>`).join('')}
+                    </div>
+                  </div>
+                </div>
+                <div class="dev-overview-map">
+                  <div class="dev-overview-addr">
+                    <strong>📍 Dirección</strong>
+                    <span>${info.address}</span>
+                    <small class="dev-route-badge">🚗 Recorrido automático: Oficinas Qavalta → ${dev.name}</small>
+                  </div>
+                  <iframe
+                    title="Ruta Oficinas Qavalta a ${dev.name}"
+                    src="${embedRouteUrl}"
+                    loading="lazy"
+                    referrerpolicy="no-referrer-when-downgrade"
+                  ></iframe>
+                  <a href="${dirRouteUrl}" target="_blank" rel="noopener" class="dev-route-link">Ver recorrido completo en Google Maps →</a>
+                </div>
+              </div>
+            `;
+          })()}
           <div class="dev-proto-tabs" role="tablist" aria-label="Prototipos de ${dev.name}">
             ${devProtos.map((p, idx) => `
               <button type="button" role="tab" class="dev-proto-tab ${idx === 0 ? 'active' : ''}" aria-selected="${idx === 0}" data-proto-tab="${p.id}">

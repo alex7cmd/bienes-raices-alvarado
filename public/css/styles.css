@@ -381,6 +381,42 @@ body { overflow-x: hidden; }
 .proto-panel-map-head a { color: var(--accent); text-decoration: none; font-weight: 600; }
 .proto-panel-map iframe { width: 100%; height: 170px; border: none; display: block; }
 
+/* DEVELOPMENT OVERVIEW (DESCRIPCIÓN, DETALLES, CARACTERÍSTICAS Y RUTA MAPS) */
+.dev-overview-card {
+  display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: start;
+  padding: 20px; margin: 16px 0 22px; border-radius: 14px;
+  background: var(--surface); border: 1px solid var(--border);
+}
+.dev-overview-kicker {
+  display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 1.3px;
+  color: var(--accent); margin-bottom: 6px;
+}
+.dev-overview-desc { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 14px; }
+.dev-overview-details {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px;
+}
+.dev-overview-map {
+  background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
+  display: flex; flex-direction: column;
+}
+.dev-overview-addr {
+  padding: 12px 14px; border-bottom: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 3px;
+}
+.dev-overview-addr strong { font-size: 12.5px; color: var(--text); }
+.dev-overview-addr span { font-size: 12px; color: var(--muted); line-height: 1.4; }
+.dev-route-badge {
+  display: inline-block; width: fit-content; margin-top: 4px;
+  font-size: 11px; font-weight: 600; color: #1d4ed8;
+  background: #eff6ff; padding: 3px 9px; border-radius: 999px;
+}
+.dev-overview-map iframe { width: 100%; height: 190px; border: none; display: block; }
+.dev-route-link {
+  display: block; text-align: center; padding: 9px 12px; font-size: 12px; font-weight: 600;
+  color: var(--accent); text-decoration: none; border-top: 1px solid var(--border); background: #fff;
+}
+.dev-route-link:hover { background: var(--surface); }
+
 /* TRANSPORTE DIRECTO */
 .transport-section { padding-top: 8px; padding-bottom: 36px; }
 .transport-hero-card {
@@ -889,7 +925,8 @@ body { overflow-x: hidden; }
 @media (max-width: 992px) {
   .main-nav { gap: 18px; }
   .proto-card { flex: 0 0 calc((100% - 20px) / 2); }
-  .proto-tab-panel, .transport-hero-card { grid-template-columns: 1fr; }
+  .proto-tab-panel, .transport-hero-card, .dev-overview-card { grid-template-columns: 1fr; }
+  .dev-overview-details { grid-template-columns: repeat(2, 1fr); }
   .transport-cards-grid { grid-template-columns: 1fr; }
   .proto-panel-stage { height: 270px; }
   .cms-cards-grid { grid-template-columns: 1fr; }
