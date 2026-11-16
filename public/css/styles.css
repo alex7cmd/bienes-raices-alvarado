@@ -144,6 +144,20 @@ html[data-theme="dark"] .cms-form-card {
 html[data-theme="dark"] .cms-table th { background: var(--surface); color: var(--text); }
 html[data-theme="dark"] .cms-table td { color: var(--text); border-bottom-color: var(--border); }
 html[data-theme="dark"] .cms-live-pill { background: rgba(22, 163, 74, 0.22); color: #86efac; }
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  padding-right: 34px !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 14px;
+  cursor: pointer;
+}
+html[data-theme="dark"] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%239eb3cc' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+}
 html[data-theme="dark"] .site-footer {
   background: #161412;
   border-top-color: var(--border);
