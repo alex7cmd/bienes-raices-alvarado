@@ -21,9 +21,9 @@ function buildInitialData() {
       id: 'areni',
       propertyId: '20021',
       name: 'Areni',
-      price: 1382000,
+      price: 1500000,
       bedrooms: 2,
-      bathrooms: 1,
+      bathrooms: 1.5,
       area: 90,
       parking: 2,
       developments: ['oporto'],
@@ -51,7 +51,7 @@ function buildInitialData() {
       id: 'brachetto',
       propertyId: '20023',
       name: 'Brachetto',
-      price: 1847000,
+      price: 1770000,
       bedrooms: 3,
       bathrooms: 1.5,
       area: 78,
@@ -81,7 +81,7 @@ function buildInitialData() {
       id: 'moscatel',
       propertyId: '20025',
       name: 'Moscatel',
-      price: 1905000,
+      price: 1860000,
       bedrooms: 3,
       bathrooms: 1.5,
       area: 105,
@@ -141,7 +141,7 @@ function buildInitialData() {
       id: 'loureira',
       propertyId: '20029',
       name: 'Loureira',
-      price: 2920000,
+      price: 3200000,
       bedrooms: 3,
       bathrooms: 3.5,
       area: 123,
@@ -156,7 +156,7 @@ function buildInitialData() {
       id: 'gracciano',
       propertyId: '20030',
       name: 'Gracciano',
-      price: 3345000,
+      price: 3600000,
       bedrooms: 3,
       bathrooms: 3.5,
       area: 140,
@@ -171,7 +171,7 @@ function buildInitialData() {
       id: 'malvasia',
       propertyId: '20031',
       name: 'Malvasia',
-      price: 4500000,
+      price: 4450000,
       bedrooms: 4,
       bathrooms: 5,
       area: 242,
@@ -222,6 +222,81 @@ function buildInitialData() {
         '/assets/images/torres/flat2-2.webp',
         '/assets/images/torres/flat2-3.webp'
       ],
+      video: ''
+    },
+    {
+      id: 'areni-3r',
+      propertyId: '20034',
+      name: 'Areni 3R',
+      price: 1610000,
+      bedrooms: 3,
+      bathrooms: 1.5,
+      area: 79,
+      parking: 2,
+      developments: ['oporto'],
+      description: 'Versión ampliada de 3 recámaras y 1.5 baños con excelente aprovechamiento de espacios y 2 cajones de estacionamiento.',
+      features: commonFeatures,
+      image: '/assets/images/casa-2.jpg',
+      video: ''
+    },
+    {
+      id: 'castella',
+      propertyId: '20035',
+      name: 'Castella',
+      price: 2182000,
+      bedrooms: 3,
+      bathrooms: 2,
+      area: 123,
+      parking: 2,
+      developments: ['ardenza', 'oporto'],
+      description: 'Residencia de 123 m² con 3 recámaras, 2 baños completos, amplios espacios sociales y acabados contemporáneos.',
+      features: commonFeatures,
+      image: '/assets/images/casa-3.jpg',
+      video: ''
+    },
+    {
+      id: 'montello',
+      propertyId: '20036',
+      name: 'Montello',
+      price: 2200000,
+      bedrooms: 3,
+      bathrooms: 1.5,
+      area: 120,
+      parking: 2,
+      developments: ['ardenza', 'oporto'],
+      description: 'Proyecto equilibrado de 120 m² con 3 recámaras, 1.5 baños, sala-comedor iluminada y cochera para 2 autos.',
+      features: commonFeatures,
+      image: '/assets/images/casa-4.jpg',
+      video: ''
+    },
+    {
+      id: 'moscato',
+      propertyId: '20037',
+      name: 'Moscato',
+      price: 2230000,
+      bedrooms: 3,
+      bathrooms: 1.5,
+      area: 104,
+      parking: 2,
+      developments: ['montalese', 'vittoria'],
+      description: 'Diseño moderno de 104 m² con 3 recámaras, 1.5 baños y acceso directo a parques lineales y amenidades familiares.',
+      features: commonFeatures,
+      image: '/assets/images/casa-5.png',
+      video: ''
+    },
+    {
+      id: 'nebbiolo',
+      propertyId: '20038',
+      name: 'Nebbiolo',
+      price: 1550000,
+      bedrooms: 2,
+      bathrooms: 1,
+      area: 66,
+      parking: 1,
+      developments: ['vittoria'],
+      description: 'Modelo accesible en Privada Vittoria con 2 recámaras, 1 baño y distribución funcional para comenzar tu patrimonio.',
+      features: commonFeatures,
+      image: '/assets/images/casa-1.jpg',
       video: ''
     }
   ];
@@ -446,11 +521,11 @@ function ensureDatabase() {
         .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-525x328.jpg', '/assets/images/casa-4.jpg')
         .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3-525x328.png', '/assets/images/casa-5.png');
       fs.writeFileSync(DB_PATH, migrated, 'utf8');
-    } else if (!parsed.catalogVersion || parsed.catalogVersion < 2) {
+    } else if (!parsed.catalogVersion || parsed.catalogVersion < 3) {
       const fresh = buildInitialData();
       parsed.developments = fresh.developments;
       parsed.prototypes = fresh.prototypes;
-      parsed.catalogVersion = 2;
+      parsed.catalogVersion = 3;
       fs.writeFileSync(DB_PATH, JSON.stringify(parsed, null, 2), 'utf8');
     }
   }
