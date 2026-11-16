@@ -765,9 +765,9 @@ function getMapCounts(lots) {
 const MAP_LIFE_CONFIG = {
   sorento: {
     cars: [
-      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 5440 5550 L 5440 900' },
-      { color: '#1e3a5f', dur: '32s', begin: '-11s', path: 'M 5780 900 L 5780 5550' },
-      { color: '#d6b68a', dur: '26s', begin: '-6s', path: 'M 2050 4910 L 4650 4910' }
+      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 5800 5550 L 5800 900' },
+      { color: '#1e3a5f', dur: '32s', begin: '-11s', path: 'M 5410 900 L 5410 5550' },
+      { color: '#d6b68a', dur: '26s', begin: '-6s', path: 'M 2050 4965 L 4650 4965' }
     ],
     walkers: [
       { color: '#0ea5e9', dur: '36s', begin: '0s', path: 'M 2550 3820 L 3350 3820 L 3350 4040 L 2550 4040 Z' },
@@ -850,12 +850,12 @@ function buildMapLifeOverlay(mapData) {
           <stop offset="100%" stop-color="#15803d" />
         </radialGradient>
         <g id="qmapCarShape">
-          <ellipse cx="2" cy="5" rx="48" ry="25" fill="rgba(15,23,42,0.22)" />
-          <rect x="-46" y="-21" width="92" height="42" rx="14" fill="currentColor" stroke="#0f172a" stroke-width="3" />
-          <rect x="-20" y="-15" width="44" height="30" rx="8" fill="#e2e8f0" opacity="0.9" />
-          <rect x="-10" y="-12" width="22" height="24" rx="5" fill="currentColor" />
-          <circle cx="40" cy="-12" r="3.5" fill="#fef08a" />
-          <circle cx="40" cy="12" r="3.5" fill="#fef08a" />
+          <ellipse cx="2" cy="4" rx="38" ry="19" fill="rgba(15,23,42,0.22)" />
+          <rect x="-37" y="-16" width="74" height="32" rx="11" fill="currentColor" stroke="#0f172a" stroke-width="2.5" />
+          <rect x="-16" y="-12" width="35" height="24" rx="6" fill="#e2e8f0" opacity="0.9" />
+          <rect x="-8" y="-9" width="18" height="18" rx="4" fill="currentColor" />
+          <circle cx="32" cy="-9" r="3" fill="#fef08a" />
+          <circle cx="32" cy="9" r="3" fill="#fef08a" />
         </g>
         <g id="qmapWalkerShape">
           <ellipse cx="0" cy="4" rx="16" ry="12" fill="rgba(15,23,42,0.18)" />
