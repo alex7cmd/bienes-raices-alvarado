@@ -1,15 +1,15 @@
 :root {
-  /* Paleta Oficial Bienes Raíces Alvarado (extraída del logo) */
-  --bg: #faf8f5;
+  /* Paleta Azul Ejecutivo · Bienes Raíces Alvarado */
+  --bg: #f6f9fc;
   --card-bg: #ffffff;
-  --surface: #f3ede4;
-  --text: #1c1917;
-  --muted: #6b625b;
-  --border: #e6ddd0;
-  --accent: #ad7759;
-  --accent-hover: #8f5e43;
-  --accent-soft: #bc8e83;
-  --gold: #e3d3b9;
+  --surface: #ebf2f9;
+  --text: #0f243e;
+  --muted: #52677f;
+  --border: #d8e4f0;
+  --accent: #1e5b8f;
+  --accent-hover: #15436b;
+  --accent-soft: #4e87b5;
+  --gold: #ad7759;
   --green: #16a34a;
   --amber: #d97706;
   --blue: #2563eb;
@@ -22,20 +22,20 @@
   --space-md: 20px;
   --space-lg: 32px;
   --transition: 0.25s ease;
-  --shadow: 0 10px 30px rgba(28, 25, 23, 0.08);
+  --shadow: 0 10px 30px rgba(15, 36, 62, 0.08);
 }
 
 html[data-theme="dark"] {
-  --bg: #11100e;
-  --card-bg: #1b1916;
-  --surface: #24211d;
-  --text: #f5f0ea;
-  --muted: #aca39a;
-  --border: #332e28;
-  --accent: #c78c6b;
-  --accent-hover: #dba282;
-  --accent-soft: #bc8e83;
-  --gold: #e3d3b9;
+  --bg: #0b1320;
+  --card-bg: #121e31;
+  --surface: #192840;
+  --text: #eef4fb;
+  --muted: #9eb3cc;
+  --border: #253854;
+  --accent: #4c93ce;
+  --accent-hover: #6ba8db;
+  --accent-soft: #85b8e3;
+  --gold: #c78c6b;
   --shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
 }
 
