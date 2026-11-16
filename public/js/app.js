@@ -418,7 +418,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
   };
   const originEnc = encodeURIComponent(QAVALTA_OFFICE_ORIGIN);
   const destEnc = encodeURIComponent(info.mapQuery);
-  const embedRouteUrl = `https://maps.google.com/maps?saddr=${originEnc}&daddr=${destEnc}&output=embed`;
+  const embedRouteUrl = `https://maps.google.com/maps?saddr=${originEnc}&daddr=${destEnc}&dirflg=d&z=15&output=embed`;
   const dirRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${originEnc}&destination=${destEnc}`;
 
   container.innerHTML = `
