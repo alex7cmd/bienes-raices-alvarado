@@ -899,7 +899,7 @@ html[data-theme="dark"] .fin-logo img {
 .mode-tab.active { background: var(--text); color: #fff; }
 .map-topbar-right { display: flex; align-items: center; gap: 16px; }
 .map-dev-pills {
-  display: flex; align-items: center; gap: 6px; overflow-x: auto; max-width: 48vw; padding: 2px 0;
+  display: flex; align-items: center; flex-wrap: wrap; gap: 6px; max-width: 100%; padding: 2px 0;
 }
 .map-dev-pill {
   border: 1px solid var(--border); background: #fff; color: var(--muted);
@@ -1462,9 +1462,12 @@ html[data-theme="dark"] .fin-logo img {
   .dev-pill-body { padding: 6px 14px 18px; }
   .dev-overview-card { padding: 14px; gap: 16px; }
   .dev-inline-map-viewport { height: 520px; }
-  .map-topbar { height: auto; padding: 10px 14px; flex-wrap: wrap; }
+  .map-topbar { height: auto; padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
+  .map-topbar-left, .map-topbar-right { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  .map-dev-pills { width: 100%; max-width: 100%; flex-wrap: wrap; overflow-x: visible; }
+  .map-dev-pill { padding: 5px 10px; font-size: 11.5px; }
   .svg-viewport { width: 100%; height: 67vh; padding: 12px; touch-action: none; }
-  .map-floor-bar { left: 50%; max-width: calc(100% - 24px); }
+  .map-floor-bar { left: 50%; max-width: calc(100% - 24px); flex-wrap: wrap; justify-content: center; border-radius: 16px; }
   .map-mode-tabs { order: 3; width: 100%; justify-content: center; }
   .map-side-panel {
     width: calc(100% - 20px); left: 10px; right: 10px; top: auto; bottom: 10px;
