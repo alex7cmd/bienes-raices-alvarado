@@ -659,6 +659,26 @@ function showOnlyView(viewName) {
   }
 }
 
+function resolveLotPrototype(lot, slug) {
+  const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(slug));
+  const pool = devProtos.length ? devProtos : state.prototypes;
+  if (lot.pr) {
+    const exact = state.prototypes.find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase());
+    if (exact) return exact;
+    return { id: String(lot.pr).toLowerCase().replace(/\s+/g, '-'), name: lot.pr, price: lot.p || pool[0]?.price || 1500000, image: pool[0]?.image || '' };
+  }
+  if (!pool.length) return null;
+  const area = Number(lot.a) || 0;
+  if (area > 0) {
+    const minDiff = Math.min(...pool.map(p => Math.abs((p.area || 0) - area)));
+    const closest = pool.filter(p => Math.abs((p.area || 0) - area) <= minDiff + 6);
+    const seed = String(lot.id || '').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+    return closest[seed % closest.length];
+  }
+  const seed = String(lot.id || '').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  return pool[seed % pool.length];
+}
+
 async function fetchDevMapData(slug, forceRefresh = false) {
   if (!forceRefresh && state.devMapsCache[slug]) return state.devMapsCache[slug];
   const res = await fetch(`/api/public/qavalta-map/${slug}${forceRefresh ? '?refresh=1' : ''}`);
@@ -680,7 +700,7 @@ function getMapCounts(lots) {
   return c;
 }
 
-function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all' } = {}) {
+function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all', protoFilter = 'all' } = {}) {
   const colors = {
     disponible: { fill: 'rgba(16, 185, 129, 0.52)', stroke: '#047857' },
     reservado: { fill: 'rgba(245, 158, 11, 0.58)', stroke: '#b45309' },
@@ -714,8 +734,11 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
     const stKey = l.s === 'apartado' ? 'reservado' : l.s;
     const st = colors[stKey] || colors['no-disponible'];
     const isSel = selectedLotId === l.id;
-    const dimmed = statusFilter !== 'all' && stKey !== statusFilter;
-    const op = dimmed ? '0.16' : '1';
+    const lotProto = resolveLotPrototype(l, mapData.slug);
+    const dimmedStatus = statusFilter !== 'all' && stKey !== statusFilter;
+    const dimmedProto = protoFilter !== 'all' && (!lotProto || lotProto.id !== protoFilter);
+    const dimmed = dimmedStatus || dimmedProto;
+    const op = dimmed ? '0.14' : '1';
     const attrs = `class="qmap-lot ${isSel ? 'selected' : ''}" data-lot="${l.id}" fill="${st.fill}" stroke="${isSel ? '#0f172a' : st.stroke}" stroke-width="${isSel ? swSel : sw}" opacity="${op}"`;
     const shape = l.t === 'g'
       ? `<polygon points="${l.d}" ${attrs} />`
@@ -757,6 +780,7 @@ async function openInteractiveMap(devSlug = null) {
   else if (!state.mapDevSlug) state.mapDevSlug = 'sorento';
   state.selectedLotId = null;
   state.mapStatusFilter = 'all';
+  state.mapProtoFilter = 'all';
   resetZoom();
   showOnlyView('map');
   await renderInteractiveMap();
@@ -798,18 +822,27 @@ async function renderInteractiveMap() {
     `).join('');
   }
 
+  const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(slug));
   $('mapProtoFilters').innerHTML = [
-    { id: 'all', label: `Todos (${mapData.lots.length})` },
-    { id: 'disponible', label: `Disponibles (${counts.disponible})` },
-    { id: 'reservado', label: `Apartados (${counts.reservado})` },
-    { id: 'vendido', label: `Vendidos (${counts.vendido})` }
-  ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}">${f.label}</button>`).join('');
+    `<button class="${state.mapProtoFilter === 'all' ? 'active' : ''}" data-mproto="all">Todos</button>`,
+    ...devProtos.map(p => `<button class="${state.mapProtoFilter === p.id ? 'active' : ''}" data-mproto="${p.id}">${p.name}</button>`)
+  ].join('');
+
+  if ($('mapStatusFilters')) {
+    $('mapStatusFilters').innerHTML = [
+      { id: 'all', label: `Todos (${mapData.lots.length})` },
+      { id: 'disponible', label: `Disponibles (${counts.disponible})` },
+      { id: 'reservado', label: `Apartados (${counts.reservado})` },
+      { id: 'vendido', label: `Vendidos (${counts.vendido})` }
+    ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}">${f.label}</button>`).join('');
+  }
 
   const svg = $('mapSvg');
   svg.setAttribute('viewBox', `0 0 ${mapData.w} ${mapData.h}`);
   svg.innerHTML = buildDevMapSvgMarkup(mapData, {
     selectedLotId: state.selectedLotId,
-    statusFilter: state.mapStatusFilter
+    statusFilter: state.mapStatusFilter,
+    protoFilter: state.mapProtoFilter
   });
   renderSelectedLotDetail();
 }
@@ -838,9 +871,7 @@ function renderSelectedLotDetail() {
   const lot = mapData.lots.find(l => l.id === state.selectedLotId);
   if (!lot) return;
   const dev = state.developments.find(d => d.id === state.mapDevSlug);
-  const protoMatch = state.prototypes.find(p => lot.pr && p.name.toLowerCase() === String(lot.pr).toLowerCase())
-    || state.prototypes.find(p => Array.isArray(p.developments) && p.developments.includes(state.mapDevSlug))
-    || state.prototypes[0];
+  const protoMatch = resolveLotPrototype(lot, state.mapDevSlug);
   const stKey = lot.s === 'apartado' ? 'reservado' : lot.s;
   const statusLabel = {
     disponible: 'Disponible',
@@ -1209,13 +1240,15 @@ function bindEvents() {
         const stKey = lot.s === 'apartado' ? 'reservado' : lot.s;
         const stLabel = { disponible: 'Disponible', reservado: 'Apartado', 'no-disponible': 'No disponible', vendido: 'Vendido' }[stKey] || lot.s;
         const devName = state.developments.find(d => d.id === slug)?.name || slug;
-        const waMsg = encodeURIComponent(`Hola, me interesa información sobre ${lot.n} en ${devName} (${lot.a} m²).`);
+        const lotProto = resolveLotPrototype(lot, slug);
+        const waMsg = encodeURIComponent(`Hola, me interesa información sobre ${lot.n} (${lotProto?.name || ''}) en ${devName} (${lot.a} m²).`);
         bar.innerHTML = `
           <div class="dev-inline-lot-info">
             <span class="lot-status-pill ${stKey}">${stLabel}</span>
             <strong>${lot.n}</strong>
-            <span>📐 ${lot.a ? `${lot.a} m²` : 'N/A'}</span>
-            ${lot.pr ? `<span>🏡 ${lot.pr}</span>` : ''}
+            <span>${svgIcon('area')} ${lot.a ? `${lot.a} m²` : 'N/A'}</span>
+            ${lotProto ? `<span>${svgIcon('home')} ${lotProto.name}</span>` : ''}
+            ${lotProto?.price ? `<span>${svgIcon('tag')} ${mxn.format(lotProto.price)}</span>` : ''}
           </div>
           <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa-mini">Cotizar por WhatsApp →</a>
         `;
@@ -1357,17 +1390,27 @@ function bindEvents() {
       state.mapDevSlug = btn.dataset.mdev;
       state.selectedLotId = null;
       state.mapStatusFilter = 'all';
+      state.mapProtoFilter = 'all';
       resetZoom();
       renderInteractiveMap();
     });
   }
 
   $('mapProtoFilters').addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-mstatus]');
+    const btn = e.target.closest('button[data-mproto]');
     if (!btn) return;
-    state.mapStatusFilter = btn.dataset.mstatus;
+    state.mapProtoFilter = btn.dataset.mproto;
     renderInteractiveMap();
   });
+
+  if ($('mapStatusFilters')) {
+    $('mapStatusFilters').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-mstatus]');
+      if (!btn) return;
+      state.mapStatusFilter = btn.dataset.mstatus;
+      renderInteractiveMap();
+    });
+  }
 
   document.querySelectorAll('.mode-tab').forEach(btn => {
     btn.addEventListener('click', () => {
