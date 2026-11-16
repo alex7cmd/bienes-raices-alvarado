@@ -844,32 +844,39 @@ function buildMapLifeOverlay(mapData) {
   return `
     <g class="qmap-life-layer" pointer-events="none">
       <defs>
-        <radialGradient id="qmapTreeGrad" cx="38%" cy="35%" r="65%">
-          <stop offset="0%" stop-color="#86efac" />
-          <stop offset="55%" stop-color="#22c55e" />
+        <radialGradient id="qmapTreeGrad" cx="38%" cy="34%" r="68%">
+          <stop offset="0%" stop-color="#bbf7d0" />
+          <stop offset="45%" stop-color="#22c55e" />
           <stop offset="100%" stop-color="#15803d" />
         </radialGradient>
+        <radialGradient id="qmapGrassGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#4ade80" stop-opacity="0.32" />
+          <stop offset="100%" stop-color="#16a34a" stop-opacity="0" />
+        </radialGradient>
         <g id="qmapCarShape">
-          <ellipse cx="2" cy="4" rx="38" ry="19" fill="rgba(15,23,42,0.22)" />
-          <rect x="-37" y="-16" width="74" height="32" rx="11" fill="currentColor" stroke="#0f172a" stroke-width="2.5" />
-          <rect x="-16" y="-12" width="35" height="24" rx="6" fill="#e2e8f0" opacity="0.9" />
-          <rect x="-8" y="-9" width="18" height="18" rx="4" fill="currentColor" />
-          <circle cx="32" cy="-9" r="3" fill="#fef08a" />
-          <circle cx="32" cy="9" r="3" fill="#fef08a" />
+          <ellipse cx="3" cy="6" rx="56" ry="27" fill="rgba(15,23,42,0.24)" />
+          <rect x="-54" y="-23" width="108" height="46" rx="15" fill="currentColor" stroke="#0f172a" stroke-width="3" />
+          <rect x="-24" y="-17" width="52" height="34" rx="9" fill="#e2e8f0" opacity="0.92" />
+          <rect x="-12" y="-13" width="26" height="26" rx="6" fill="currentColor" />
+          <circle cx="46" cy="-13" r="4" fill="#fef08a" />
+          <circle cx="46" cy="13" r="4" fill="#fef08a" />
+          <rect x="-52" y="-15" width="4" height="8" rx="1.5" fill="#ef4444" />
+          <rect x="-52" y="7" width="4" height="8" rx="1.5" fill="#ef4444" />
         </g>
         <g id="qmapWalkerShape">
-          <ellipse cx="0" cy="4" rx="16" ry="12" fill="rgba(15,23,42,0.18)" />
-          <ellipse cx="0" cy="0" rx="14" ry="10" fill="currentColor" />
-          <circle cx="2" cy="0" r="8" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" />
-          <circle cx="3" cy="0" r="5" fill="#334155" />
+          <ellipse cx="0" cy="4" rx="17" ry="13" fill="rgba(15,23,42,0.18)" />
+          <ellipse cx="0" cy="0" rx="15" ry="11" fill="currentColor" />
+          <circle cx="2" cy="0" r="8.5" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" />
+          <circle cx="3" cy="0" r="5.5" fill="#334155" />
         </g>
       </defs>
 
       ${cfg.grass.map(g => `
         <g transform="translate(${g.x}, ${g.y})">
+          <ellipse cx="0" cy="6" rx="76" ry="34" fill="url(#qmapGrassGlow)" />
           <g class="qmap-grass-tuft">
-            <path d="M-28 8 Q-34 -14 -42 -22 M-8 10 Q-8 -16 -4 -26 M12 10 Q18 -14 26 -22 M28 8 Q36 -8 44 -14"
-              fill="none" stroke="#166534" stroke-width="4" stroke-linecap="round" opacity="0.38" />
+            <path d="M-46 10 Q-54 -14 -64 -24 M-28 12 Q-30 -18 -26 -30 M-10 12 Q-8 -16 -2 -26 M8 12 Q12 -18 20 -30 M26 12 Q34 -14 44 -22 M42 10 Q52 -10 62 -16"
+              fill="none" stroke="#14532d" stroke-width="4.5" stroke-linecap="round" opacity="0.46" />
           </g>
         </g>
       `).join('')}
@@ -877,9 +884,11 @@ function buildMapLifeOverlay(mapData) {
       ${cfg.trees.map(t => `
         <g transform="translate(${t.x}, ${t.y})">
           <g class="qmap-tree-sway" style="animation-delay:${t.d};">
-            <circle cx="10" cy="14" r="${t.r}" fill="rgba(15,23,42,0.16)" />
-            <circle cx="0" cy="0" r="${t.r}" fill="url(#qmapTreeGrad)" stroke="#166534" stroke-width="4" opacity="0.92" />
-            <circle cx="${-t.r * 0.24}" cy="${-t.r * 0.22}" r="${t.r * 0.42}" fill="#bbf7d0" opacity="0.38" />
+            <circle cx="12" cy="16" r="${t.r * 1.02}" fill="rgba(15,23,42,0.18)" />
+            <circle cx="${-t.r * 0.28}" cy="${t.r * 0.12}" r="${t.r * 0.72}" fill="url(#qmapTreeGrad)" stroke="#14532d" stroke-width="3.5" opacity="0.94" />
+            <circle cx="${t.r * 0.28}" cy="${t.r * 0.08}" r="${t.r * 0.68}" fill="url(#qmapTreeGrad)" stroke="#14532d" stroke-width="3.5" opacity="0.94" />
+            <circle cx="0" cy="${-t.r * 0.14}" r="${t.r * 0.78}" fill="url(#qmapTreeGrad)" stroke="#14532d" stroke-width="3.5" opacity="0.96" />
+            <circle cx="${-t.r * 0.16}" cy="${-t.r * 0.28}" r="${t.r * 0.36}" fill="#dcfce7" opacity="0.45" />
           </g>
         </g>
       `).join('')}
@@ -924,7 +933,7 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
   if (mapData.isTowerFloors && activeBg) {
     bgMarkup = `<image href="${activeBg}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
   } else if (mapData.bg) {
-    bgMarkup = `<image href="${mapData.bg}?v=1.8.3" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
+    bgMarkup = `<image href="${mapData.bg}?v=1.8.7" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
   }
 
   const sw = mapData.isTowerFloors ? 12 : 9;
