@@ -113,28 +113,63 @@ html[data-theme="dark"] .fullscreen-map-view {
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); background: var(--bg); }
-body { overflow-x: hidden; }
+html { scroll-behavior: smooth; font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; color: var(--text); background: var(--bg); max-width: 100%; overflow-x: clip; }
+body { max-width: 100%; overflow-x: clip; }
 .hidden { display: none !important; }
 
-/* HEADER */
+/* DOCK SUPERIOR FLOTANTE iOS 27 LIQUID GLASS (DESKTOP, IPAD & MOBILE) */
 .site-header {
-  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+  position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 120;
+  width: min(960px, calc(100vw - 24px));
+  border-radius: 999px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.56) 0%, rgba(250, 248, 245, 0.34) 100%);
+  backdrop-filter: blur(26px) saturate(185%);
+  -webkit-backdrop-filter: blur(26px) saturate(185%);
+  border: 1px solid rgba(255, 255, 255, 0.62);
+  box-shadow:
+    0 12px 36px rgba(28, 25, 23, 0.14),
+    inset 0 1px 1px rgba(255, 255, 255, 0.78),
+    inset 0 -1px 1px rgba(173, 119, 89, 0.14);
+}
+html[data-theme="dark"] .site-header {
+  background: linear-gradient(135deg, rgba(32, 29, 26, 0.68) 0%, rgba(20, 18, 16, 0.52) 100%);
+  border: 1px solid rgba(227, 211, 185, 0.22);
+  box-shadow:
+    0 14px 40px rgba(0, 0, 0, 0.45),
+    inset 0 1px 1px rgba(255, 255, 255, 0.14),
+    inset 0 -1px 1px rgba(199, 140, 107, 0.18);
 }
 .header-inner {
-  max-width: 1320px; margin: 0 auto; padding: 10px 24px;
-  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  padding: 7px 14px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
 }
-.brand-logo { height: 42px; width: auto; object-fit: contain; display: block; }
-.main-nav { display: flex; gap: 28px; }
-.main-nav a {
-  text-decoration: none; color: var(--text); font-size: 14px; font-weight: 500;
-  transition: color .2s;
+.brand { display: flex; align-items: center; flex-shrink: 0; }
+.brand-logo { height: 38px; width: auto; object-fit: contain; display: block; }
+.brand-mark { display: none; height: 36px; width: 32px; }
+.main-nav { display: flex; align-items: center; gap: 6px; min-width: 0; }
+.dock-link {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 13px; border-radius: 999px;
+  text-decoration: none; color: var(--text); font-size: 13.5px; font-weight: 600;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+  white-space: nowrap;
 }
-.main-nav a:hover { color: var(--accent); }
+.dock-link:hover {
+  background: rgba(173, 119, 89, 0.14);
+  color: var(--accent);
+  transform: translateY(-1px);
+}
+.dock-link-brand .dock-wa-icon { stroke: var(--accent); }
+.dock-link-brand {
+  background: rgba(173, 119, 89, 0.12);
+  color: var(--accent);
+  border: 1px solid rgba(173, 119, 89, 0.28);
+}
+.dock-link-brand:hover {
+  background: var(--accent);
+  color: #fff;
+}
+.dock-link-brand:hover .dock-wa-icon { stroke: #fff; }
 
 .header-actions { display: flex; align-items: center; gap: 12px; }
 .admin-menu-wrap { position: relative; }
@@ -1136,10 +1171,13 @@ body { overflow-x: hidden; }
 }
 
 @media (max-width: 992px) {
-  .main-nav { gap: 18px; }
+  .main-nav { gap: 4px; }
+  .dock-link { padding: 7px 10px; font-size: 12.5px; }
   .proto-card { flex: 0 0 calc((100% - 20px) / 2); }
   .proto-tab-panel, .transport-hero-card, .dev-overview-card { grid-template-columns: 1fr; }
+  .proto-panel-media, .proto-panel-info, .dev-overview-info, .dev-overview-map, .contact-form-col, .contact-map-col { min-width: 0; }
   .dev-overview-details { grid-template-columns: repeat(2, 1fr); }
+  .proto-panel-specs { grid-template-columns: repeat(2, 1fr); }
   .transport-cards-grid { grid-template-columns: 1fr; }
   .proto-panel-stage { height: 270px; }
   .cms-cards-grid { grid-template-columns: 1fr; }
@@ -1148,10 +1186,19 @@ body { overflow-x: hidden; }
 }
 
 @media (max-width: 768px) {
-  .main-nav { display: none; }
+  .site-header { width: max-content; max-width: calc(100vw - 16px); top: 10px; }
+  .header-inner { padding: 6px 10px; gap: 8px; }
+  .brand-full { display: none; }
+  .brand-mark { display: block; }
+  .nav-label { display: none; }
+  .dock-link { padding: 8px 11px; }
+  .icon-user-btn { width: 36px; height: 36px; }
   .developments-grid { grid-template-columns: repeat(2, 1fr); }
   .proto-card { flex: 0 0 86%; min-width: 0; }
   .proto-photo-arrow { opacity: 1; }
+  .dev-pill-body { padding: 6px 14px 18px; }
+  .dev-overview-card { padding: 14px; gap: 16px; }
+  .dev-inline-map-viewport { height: 300px; }
   .map-topbar { height: auto; padding: 10px 14px; flex-wrap: wrap; }
   .map-mode-tabs { order: 3; width: 100%; justify-content: center; }
   .map-side-panel { width: calc(100% - 24px); left: 12px; right: 12px; top: auto; bottom: 12px; height: 40vh; }
