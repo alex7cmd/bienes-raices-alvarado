@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 626 300" role="img" aria-label="Bienes Raíces Alvarado Real Estate Agent">
+  <!-- Hexágono exterior champagne -->
+  <polygon
+    points="104,14 196,67 196,173 104,226 12,173 12,67"
+    fill="none"
+    stroke="#E3D3B9"
+    stroke-width="4"
+    stroke-linejoin="miter"
+  />
+
+  <!-- 4 bandas concéntricas superiores-izquierdas (Terracota / Cobre) -->
+  <g fill="none" stroke="#AD7759" stroke-width="6.5" stroke-linecap="butt" stroke-linejoin="miter">
+    <polyline points="26,165 26,75 104,30 144,53" />
+    <polyline points="37,171 37,81 104,43 144,66" />
+    <polyline points="48,178 48,88 104,55 144,78" />
+    <polyline points="59,184 59,94 104,68 144,91" />
+  </g>
+
+  <!-- 4 bandas concéntricas inferiores-derechas (Negro) -->
+  <g fill="none" stroke="#1C1917" stroke-width="6.5" stroke-linecap="butt" stroke-linejoin="miter">
+    <polyline points="149,56 149,146 104,172 64,149" />
+    <polyline points="160,62 160,152 104,184 64,161" />
+    <polyline points="171,69 171,159 104,197 64,174" />
+    <polyline points="182,75 182,165 104,210 64,187" />
+  </g>
+
+  <!-- Casita minimalista central -->
+  <g transform="translate(104, 120)">
+    <path d="M-22,-5 L0,-23 L22,-5 L22,19 L15,19 L15,-2 L0,-14 L-15,-2 L-15,19 L-22,19 Z" fill="#BC8E83" />
+    <rect x="-8" y="0" width="6" height="6" fill="#BC8E83" />
+    <rect x="2" y="0" width="6" height="6" fill="#BC8E83" />
+    <rect x="-8" y="9" width="6" height="6" fill="#BC8E83" />
+    <rect x="2" y="9" width="6" height="6" fill="#BC8E83" />
+  </g>
+
+  <!-- Tipografía principal -->
+  <text
+    x="220"
+    y="102"
+    font-family="Georgia, 'Times New Roman', Times, serif"
+    font-size="44"
+    font-weight="700"
+    letter-spacing="2.2"
+    fill="#1C1917"
+  >BIENES RAICES</text>
+
+  <text
+    x="398"
+    y="162"
+    text-anchor="middle"
+    font-family="Georgia, 'Times New Roman', Times, serif"
+    font-size="43"
+    font-weight="700"
+    letter-spacing="2.6"
+    fill="#1C1917"
+  >ALVARADO</text>
+
+  <!-- Subtítulo inferior -->
+  <text
+    x="313"
+    y="280"
+    text-anchor="middle"
+    font-family="Georgia, 'Times New Roman', Times, serif"
+    font-size="31"
+    font-weight="400"
+    letter-spacing="10.5"
+    fill="#292524"
+  >REAL ESTATE AGENT</text>
+</svg>
