@@ -810,7 +810,7 @@ html[data-theme="dark"] .dock-icon-circle {
 .footer-mini-prop span { font-size: 13px; color: var(--muted); font-weight: 600; }
 .footer-socials { display: flex; gap: 10px; }
 .social-box {
-  width: 40px; height: 40px; border-radius: 10px; background: #e2e8f0; color: var(--text);
+  width: 42px; height: 42px; border-radius: 50%; background: #e2e8f0; color: var(--text);
   display: grid; place-items: center; text-decoration: none; transition: all var(--transition);
 }
 .social-box.social-fb { background: #1877f2; color: #fff; }
