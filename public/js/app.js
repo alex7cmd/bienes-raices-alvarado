@@ -924,19 +924,7 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
   if (mapData.isTowerFloors && activeBg) {
     bgMarkup = `<image href="${activeBg}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
   } else if (mapData.bg) {
-    bgMarkup = `
-      <defs>
-        <linearGradient id="fadeL" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
-        <linearGradient id="fadeR" x1="100%" y1="0%" x2="0%" y2="0%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
-        <linearGradient id="fadeT" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
-        <linearGradient id="fadeB" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
-      </defs>
-      <image href="${mapData.bg}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />
-      <rect x="0" y="0" width="420" height="${mapData.h}" fill="url(#fadeL)" pointer-events="none" />
-      <rect x="${mapData.w - 420}" y="0" width="420" height="${mapData.h}" fill="url(#fadeR)" pointer-events="none" />
-      <rect x="0" y="0" width="${mapData.w}" height="340" fill="url(#fadeT)" pointer-events="none" />
-      <rect x="0" y="${mapData.h - 340}" width="${mapData.w}" height="340" fill="url(#fadeB)" pointer-events="none" />
-    `;
+    bgMarkup = `<image href="${mapData.bg}?v=1.8.3" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
   }
 
   const sw = mapData.isTowerFloors ? 12 : 9;
@@ -1143,7 +1131,21 @@ async function renderInteractiveMap() {
   const counts = getMapCounts(mapData.lots);
 
   if ($('mapLocBadge')) $('mapLocBadge').textContent = `📍 Qavalta · ${dev.name}`;
-  if ($('mapPanelTitle')) $('mapPanelTitle').textContent = dev.name;
+  const titleEl = $('mapPanelTitle');
+  if (titleEl) {
+    if (slug === 'oporto') {
+      titleEl.innerHTML = `<img src="/assets/maps/logo-oporto.png?v=1.8.3" alt="Oporto" class="panel-dev-logo" />`;
+    } else {
+      titleEl.innerHTML = `
+        <span class="panel-dev-crest">
+          <svg viewBox="0 0 36 36" width="24" height="24" aria-hidden="true">
+            <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="64 16" stroke-linecap="round"/>
+          </svg>
+          <span>${dev.name}</span>
+        </span>
+      `;
+    }
+  }
   $('mapAvailCount').textContent = `• ${counts.disponible} disponibles`;
   $('countDisp').textContent = counts.disponible;
   if ($('countRes')) $('countRes').textContent = counts.reservado;

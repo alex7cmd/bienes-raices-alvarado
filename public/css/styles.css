@@ -1103,6 +1103,11 @@ html[data-theme="dark"] .fin-logo img {
   display: flex; flex-direction: column; gap: 16px; overflow-y: auto;
 }
 .panel-header h2 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
+.panel-dev-logo {
+  display: block; height: 54px; width: auto; max-width: 185px; object-fit: contain; margin-bottom: 4px;
+}
+.panel-dev-crest { display: inline-flex; align-items: center; gap: 9px; color: var(--text); }
+.panel-dev-crest svg { color: var(--accent); flex-shrink: 0; }
 .panel-sub { font-size: 11px; letter-spacing: 1.4px; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
 .panel-proto-filters { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .panel-proto-filters button {
