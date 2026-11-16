@@ -765,9 +765,9 @@ function getMapCounts(lots) {
 const MAP_LIFE_CONFIG = {
   sorento: {
     cars: [
-      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 5800 5550 L 5800 900' },
-      { color: '#1e3a5f', dur: '32s', begin: '-11s', path: 'M 5410 900 L 5410 5550' },
-      { color: '#d6b68a', dur: '26s', begin: '-6s', path: 'M 2050 4965 L 4650 4965' }
+      { color: '#ffffff', dur: '34s', begin: '0s', path: 'M 6245 725 L 8175 725 L 8175 1865 L 6245 1865 Z' },
+      { color: '#1e3a5f', dur: '36s', begin: '-12s', path: 'M 6185 1925 L 8235 1925 L 8235 3035 L 6185 3035 Z' },
+      { color: '#d6b68a', dur: '28s', begin: '-6s', path: 'M 6150 4935 L 8205 4935 L 8205 4875 L 6150 4875 Z' }
     ],
     walkers: [
       { color: '#0ea5e9', dur: '36s', begin: '0s', path: 'M 2550 3820 L 3350 3820 L 3350 4040 L 2550 4040 Z' },
