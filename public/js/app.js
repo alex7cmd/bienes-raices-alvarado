@@ -422,23 +422,29 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
   const embedRouteUrl = `https://maps.google.com/maps?saddr=${originEnc}&daddr=${destEnc}&dirflg=d&z=15&output=embed`;
   const dirRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${originEnc}&destination=${destEnc}`;
 
+  const dockEl = $('heroDevDock');
+  const tabsHtml = `
+    <div class="unified-dev-tabs" role="tablist" aria-label="Desarrollos residenciales">
+      ${state.developments.map(dev => {
+        const count = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(dev.id)).length;
+        const isActive = dev.id === activeDev.id;
+        return `
+          <button type="button" role="tab" class="unified-dev-tab ${isActive ? 'active' : ''}" aria-selected="${isActive}" data-dev-tab="${dev.id}">
+            <span class="unified-dev-tab-top">
+              <strong>${dev.name}</strong>
+              <span class="unified-dev-tab-count">${count}</span>
+            </span>
+            <small>Desde ${mxn.format(dev.startingPrice)}</small>
+          </button>
+        `;
+      }).join('')}
+    </div>
+  `;
+  if (dockEl) dockEl.innerHTML = tabsHtml;
+
   container.innerHTML = `
     <div class="unified-dev-shell">
-      <div class="unified-dev-tabs" role="tablist" aria-label="Desarrollos residenciales">
-        ${state.developments.map(dev => {
-          const count = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(dev.id)).length;
-          const isActive = dev.id === activeDev.id;
-          return `
-            <button type="button" role="tab" class="unified-dev-tab ${isActive ? 'active' : ''}" aria-selected="${isActive}" data-dev-tab="${dev.id}">
-              <span class="unified-dev-tab-top">
-                <strong>${dev.name}</strong>
-                <span class="unified-dev-tab-count">${count}</span>
-              </span>
-              <small>Desde ${mxn.format(dev.startingPrice)}</small>
-            </button>
-          `;
-        }).join('')}
-      </div>
+      ${dockEl ? '' : tabsHtml}
 
       <div class="dev-pill-item open unified-dev-body" data-dev-pill="${activeDev.id}">
         <div class="dev-pill-body">
@@ -1370,15 +1376,27 @@ function bindEvents() {
     trigger.setAttribute('aria-expanded', String(isOpen));
   });
 
-  // Unified development tabs + prototype tabs + downward detail panel
-  $('developmentAccordion').addEventListener('click', (e) => {
+  // Unified development tabs (sticky hero dock + panel) + prototype tabs
+  const handleDevTabClick = (e) => {
     const devTabBtn = e.target.closest('.unified-dev-tab');
-    if (devTabBtn) {
-      const devId = devTabBtn.dataset.devTab;
-      renderDevelopmentAccordion(devId);
-      loadInlineDevMap(devId);
-      return;
+    if (!devTabBtn) return false;
+    const devId = devTabBtn.dataset.devTab;
+    renderDevelopmentAccordion(devId);
+    loadInlineDevMap(devId);
+    const protoSection = $('prototipos');
+    if (protoSection) {
+      const rect = protoSection.getBoundingClientRect();
+      if (rect.top > window.innerHeight * 0.65 || rect.top < 140) {
+        const y = protoSection.getBoundingClientRect().top + window.scrollY - 155;
+        window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+      }
     }
+    return true;
+  };
+  $('heroDevDock')?.addEventListener('click', handleDevTabClick);
+
+  $('developmentAccordion').addEventListener('click', (e) => {
+    if (handleDevTabClick(e)) return;
 
     const tabBtn = e.target.closest('.dev-proto-tab');
     if (tabBtn) {

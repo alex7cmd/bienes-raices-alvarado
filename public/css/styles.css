@@ -224,10 +224,12 @@ html[data-theme="dark"] .dock-icon-circle {
 .dropdown-item.danger { color: #dc2626; }
 
 /* HERO (planos.qavalta.com inspired) */
+.hero-catalog-wrap { position: relative; }
 .hero-section {
-  position: relative; min-height: 100vh; padding-top: 64px;
+  position: relative; z-index: 20; min-height: 100vh; padding-top: 64px; padding-bottom: 112px;
   display: flex; flex-direction: column; justify-content: space-between;
   color: #fff; overflow: hidden;
+  box-shadow: 0 24px 48px rgba(10, 22, 40, 0.34);
 }
 .hero-slideshow {
   position: absolute; inset: 0; background-color: #0f172a; overflow: hidden;
@@ -243,7 +245,7 @@ html[data-theme="dark"] .dock-icon-circle {
 }
 .hero-slide-bar {
   position: relative; z-index: 2; max-width: 1320px; width: 100%; margin: 0 auto;
-  padding: 0 24px 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 0 24px 20px; display: flex; align-items: center; justify-content: space-between; gap: 16px;
 }
 .hero-slide-badge {
   font-size: 12.5px; font-weight: 600; letter-spacing: 0.4px;
@@ -574,10 +576,35 @@ html[data-theme="dark"] .dock-icon-circle {
 .proto-panel-map-head a { color: var(--accent); text-decoration: none; font-weight: 600; }
 .proto-panel-map iframe { width: 100%; height: 170px; border: none; display: block; }
 
+/* HERO STICKY SECOND MENU & EMERGING PANEL SHADOW */
+.hero-dev-dock {
+  position: sticky; top: 82px; z-index: 35;
+  max-width: var(--container-max); margin: -94px auto 0; padding: 0 24px;
+}
+.hero-dev-dock .unified-dev-tabs {
+  background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 16px;
+  box-shadow: 0 18px 38px rgba(10, 22, 40, 0.24);
+  padding: 10px 12px;
+}
+html[data-theme="dark"] .hero-dev-dock .unified-dev-tabs {
+  background: rgba(15, 23, 38, 0.92);
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
+}
+.hero-emerged-section {
+  position: relative; z-index: 10; padding-top: 34px;
+}
+.hero-emerged-section::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 34px;
+  background: linear-gradient(180deg, rgba(10, 22, 40, 0.16) 0%, transparent 100%);
+  pointer-events: none;
+}
+
 /* UNIFIED DEVELOPMENT TABS SHELL */
 .unified-dev-shell {
   border: 1px solid var(--border); border-radius: 18px; background: #fff;
-  box-shadow: var(--shadow); overflow: hidden;
+  box-shadow: 0 18px 40px rgba(10, 22, 40, 0.10); overflow: hidden;
 }
 .unified-dev-tabs {
   display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));

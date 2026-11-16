@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.6.5" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.6.6" />
 </head>
 <body>
   <!-- DOCK SUPERIOR FLOTANTE iOS 27 LIQUID GLASS -->
@@ -73,36 +73,34 @@
 
   <!-- PUBLIC VIEW -->
   <main id="publicView">
-    <!-- HERO CON ANIMACIÓN DE IMÁGENES DE DESARROLLOS -->
-    <section class="hero-section" id="top">
-      <div class="hero-slideshow" id="heroSlideshow" aria-hidden="true"></div>
-      <div class="hero-overlay"></div>
-      <div class="hero-content">
-        <p class="hero-eyebrow" id="heroEyebrow">DESARROLLOS RESIDENCIALES · PACHUCA</p>
-        <h1 class="hero-title" id="heroTitle">Encuentra el hogar que lo tiene todo.</h1>
-        <p class="hero-subtitle" id="heroSubtitle">Descubre el desarrollo perfecto para ti y tu familia.</p>
-        <div class="hero-cta-row">
-          <a href="#prototipos" class="btn-primary-pill">Ver desarrollos y prototipos →</a>
+    <div class="hero-catalog-wrap">
+      <!-- HERO CON ANIMACIÓN DE IMÁGENES DE DESARROLLOS -->
+      <section class="hero-section" id="top">
+        <div class="hero-slideshow" id="heroSlideshow" aria-hidden="true"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <p class="hero-eyebrow" id="heroEyebrow">DESARROLLOS RESIDENCIALES · PACHUCA</p>
+          <h1 class="hero-title" id="heroTitle">Encuentra el hogar que lo tiene todo.</h1>
+          <p class="hero-subtitle" id="heroSubtitle">Descubre el desarrollo perfecto para ti y tu familia.</p>
+          <div class="hero-cta-row">
+            <a href="#prototipos" class="btn-primary-pill">Ver desarrollos y prototipos →</a>
+          </div>
         </div>
-      </div>
 
-      <div class="hero-slide-bar" id="desarrollos">
-        <span class="hero-slide-badge" id="heroSlideLabel">Sorento · Qavalta Residencial</span>
-        <div class="hero-slide-dots" id="heroSlideDots"></div>
-      </div>
-    </section>
-
-    <!-- PROTOTIPOS POR DESARROLLO (PÍLDORAS DESPLEGABLES) -->
-    <section class="section-container" id="prototipos">
-      <div class="section-header">
-        <div>
-          <span class="section-kicker">CATÁLOGO RESIDENCIAL</span>
-          <h2>Nuestros Prototipos</h2>
+        <div class="hero-slide-bar" id="desarrollos">
+          <span class="hero-slide-badge" id="heroSlideLabel">Sorento · Qavalta Residencial</span>
+          <div class="hero-slide-dots" id="heroSlideDots"></div>
         </div>
-        <p class="section-helper">Selecciona un desarrollo para desplegar sus modelos y características</p>
-      </div>
-      <div class="dev-accordion-list" id="developmentAccordion"></div>
-    </section>
+      </section>
+
+      <!-- SEGUNDO MENÚ STICKY DE DESARROLLOS ANCLADO AL HERO -->
+      <div class="hero-dev-dock" id="heroDevDock"></div>
+
+      <!-- PROTOTIPOS POR DESARROLLO (EMERGE DEBAJO DEL HERO) -->
+      <section class="section-container hero-emerged-section" id="prototipos">
+        <div class="dev-accordion-list" id="developmentAccordion"></div>
+      </section>
+    </div>
 
     <!-- TU CASA EN PACHUCA ES INTELIGENTE -->
     <section class="section-container smart-section" aria-label="Casa inteligente">
@@ -645,6 +643,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.6.5"></script>
+  <script src="/js/app.js?v=1.6.6"></script>
 </body>
 </html>
