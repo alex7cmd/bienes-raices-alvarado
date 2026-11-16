@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.10.0" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.10.1-2" />
 </head>
 <body>
   <!-- DOCK SUPERIOR FLOTANTE iOS 27 LIQUID GLASS -->
@@ -521,14 +521,30 @@
       <!-- TAB 3: SITE & DEVELOPMENTS -->
       <div class="cms-panel hidden" id="cmsTabSite">
         <div class="cms-form-card">
-          <h3>Portada Principal (Home)</h3>
+          <div class="cms-edit-context">
+            <span class="cms-location-pill">Estás editando: Inicio → Banner principal</span>
+            <button type="button" class="btn-secondary" id="previewHomeSectionBtn">Ver esta sección en la página ↗</button>
+          </div>
+          <h3>Portada principal · Primera imagen del carrusel</h3>
+          <p class="cms-field-help cms-card-location" id="heroLocationHelp">Es el bloque grande al inicio de la página, detrás del título. Esta imagen cambia la primera diapositiva; las otras se editan en cada desarrollo.</p>
+          <figure class="cms-home-preview" aria-label="Vista previa de la portada principal">
+            <img id="cmsHeroPreviewImage" alt="Primera imagen del carrusel de inicio" decoding="async" />
+            <div class="cms-home-preview-content">
+              <span class="cms-preview-label">Vista previa · Inicio</span>
+              <span class="cms-home-preview-eyebrow" id="cmsHeroPreviewEyebrow"></span>
+              <strong id="cmsHeroPreviewTitle"></strong>
+              <p id="cmsHeroPreviewSubtitle"></p>
+              <small class="cms-preview-image-state hidden" id="cmsHeroPreviewImageState">Añade una imagen válida para previsualizarla.</small>
+            </div>
+          </figure>
+          <p class="cms-field-help cms-card-location">La vista previa muestra tus cambios. Pulsa Guardar portada para publicarlos. El botón de arriba abre la portada guardada.</p>
           <div class="form-grid">
-            <label>Texto superior (Eyebrow)<input type="text" id="editHeroEyebrow" /></label>
-            <label>Título principal<input type="text" id="editHeroTitle" /></label>
-            <label>Subtítulo<input type="text" id="editHeroSubtitle" /></label>
-            <label>Teléfono visible<input type="text" id="editPhoneDisplay" /></label>
-            <label>Imagen de fondo (URL o subir)<input type="text" id="editHeroImage" /></label>
-            <label>Subir nueva imagen de portada<input type="file" id="uploadHeroFile" accept="image/*" /></label>
+            <label>Texto pequeño sobre el título<input type="text" id="editHeroEyebrow" aria-describedby="heroTextHelp" /><small class="cms-field-help" id="heroTextHelp">Aparece en la parte superior del banner.</small></label>
+            <label>Título principal del banner<input type="text" id="editHeroTitle" /></label>
+            <label>Texto debajo del título<input type="text" id="editHeroSubtitle" /></label>
+            <label>Teléfono del pie de página<input type="text" id="editPhoneDisplay" aria-describedby="footerPhoneHelp" /><small class="cms-field-help" id="footerPhoneHelp">Se muestra en Contáctanos, al final de la página.</small></label>
+            <label>Primera imagen del carrusel (URL)<input type="text" id="editHeroImage" aria-describedby="heroLocationHelp" /></label>
+            <label>Subir primera imagen del carrusel<input type="file" id="uploadHeroFile" accept="image/*" /></label>
           </div>
           <button class="btn-primary" id="saveSiteBtn">Guardar Portada</button>
         </div>
@@ -661,6 +677,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.10.0" defer></script>
+  <script src="/js/app.js?v=1.10.1-2" defer></script>
 </body>
 </html>

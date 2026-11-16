@@ -77,3 +77,8 @@ Las cifras anteriores se verificaron en los archivos y en la interfaz local; el 
 
 ## Preparación de publicación solicitada posteriormente
 El usuario autorizó configurar la contraseña del administrador y publicar en alvarado.commandigital.biz. Se comprobó el despliegue automático de main en SiteGround y se añadió almacenamiento compartido entre builds con migración verificada de la base y las cargas. El respaldo previo de producción se descargó y verificó localmente. La publicación continúa pendiente de configurar ADMIN_PASSWORD y realizar el push. Ver IA/DESPLIEGUE.md.
+
+## Ajuste de interfaz 1.10.1
+- Confirmación de sincronización correcta: píldora fija superior, fondo verde claro, texto verde oscuro y cinco segundos de visibilidad; errores mantienen su aviso independiente.
+- Editor de portada: ubicación Inicio → Banner principal, vista previa que sigue los cambios del formulario, ayuda sobre la primera imagen del carrusel y teléfono del pie de página. Las tarjetas de desarrollos indican dónde aparecen sus imágenes.
+- La vista previa no guarda contenido; Guardar portada conserva la acción explícita de publicación.

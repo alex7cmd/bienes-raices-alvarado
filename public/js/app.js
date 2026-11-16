@@ -189,12 +189,13 @@ function setCardSlide(card, nextIdx) {
   if (counter) counter.textContent = `${idx + 1} / ${total}`;
 }
 
-function showToast(msg) {
+function showToast(msg, { syncSuccess = false } = {}) {
   const t = $('toast');
   t.textContent = msg;
+  t.classList.toggle('toast-sync-success', syncSuccess);
   t.classList.remove('hidden');
   clearTimeout(t._timer);
-  t._timer = setTimeout(() => t.classList.add('hidden'), 2800);
+  t._timer = setTimeout(() => t.classList.add('hidden'), syncSuccess ? 5000 : 2800);
 }
 
 async function api(url, options = {}) {
@@ -1345,6 +1346,32 @@ async function renderCmsPrototypesGrid() {
   `).join('');
 }
 
+function updateCmsHomePreview() {
+  const pairs = [
+    ['editHeroEyebrow', 'cmsHeroPreviewEyebrow'],
+    ['editHeroTitle', 'cmsHeroPreviewTitle'],
+    ['editHeroSubtitle', 'cmsHeroPreviewSubtitle']
+  ];
+  pairs.forEach(([field, preview]) => { $(preview).textContent = $(field).value; });
+  const image = $('cmsHeroPreviewImage');
+  const imageState = $('cmsHeroPreviewImageState');
+  const url = $('editHeroImage').value.trim();
+  const validUrl = (url.startsWith('/') && !url.startsWith('//')) || /^https?:\/\//i.test(url);
+  image.onload = () => { image.hidden = false; imageState.classList.add('hidden'); };
+  image.onerror = () => { image.hidden = true; imageState.classList.remove('hidden'); };
+  if (validUrl) {
+    if (image.getAttribute('src') !== url) {
+      image.hidden = false;
+      imageState.classList.add('hidden');
+      image.src = url;
+    }
+  } else {
+    image.removeAttribute('src');
+    image.hidden = true;
+    imageState.classList.remove('hidden');
+  }
+}
+
 async function renderAdminCms() {
   const { prototypes, developments, site } = state;
   const slug = state.cmsDevSlug || 'sorento';
@@ -1375,11 +1402,13 @@ async function renderAdminCms() {
   $('editHeroSubtitle').value = site.heroSubtitle;
   $('editPhoneDisplay').value = site.phoneDisplay;
   $('editHeroImage').value = site.heroImage;
+  updateCmsHomePreview();
 
   $('cmsDevsGrid').innerHTML = developments.map(d => `
     <div class="cms-form-card" data-cms-dev="${escapeHtml(d.id)}">
       <img src="${escapeHtml(d.image)}" class="cms-preview-img" alt="${escapeHtml(d.name)}" />
       <h3>Desarrollo: ${escapeHtml(d.name)}</h3>
+      <p class="cms-field-help cms-card-location">${d.id === 'sorento' ? 'Inicio → Información de Sorento. La primera foto del carrusel se edita arriba, en Portada principal.' : `Inicio → Carrusel e información de ${escapeHtml(d.name)}. La imagen cambia su diapositiva del carrusel.`}</p>
       <div class="form-grid">
         <label>Nombre<input type="text" class="d-name" value="${escapeHtml(d.name)}" /></label>
         <label>Precio desde (MXN)<input type="number" class="d-price" value="${escapeHtml(d.startingPrice)}" /></label>
@@ -1950,7 +1979,7 @@ function bindEvents() {
         await fetchDevMapData(state.cmsDevSlug || 'sorento', true);
         await renderAdminCms();
         renderPublicSite();
-        showToast('Sincronizado con planos.qavalta.com');
+        showToast('Sincronización completada correctamente', { syncSuccess: true });
       } catch (err) {
         showToast(err.message);
       } finally {
@@ -2010,12 +2039,29 @@ function bindEvents() {
     showToast(`Prototipo ${id} guardado`);
   }));
 
+  // Preview only: the draft stays in the form until Save is pressed.
+  ['editHeroEyebrow', 'editHeroTitle', 'editHeroSubtitle'].forEach(id => {
+    $(id).addEventListener('input', updateCmsHomePreview);
+  });
+  let heroPreviewTimer;
+  $('editHeroImage').addEventListener('input', () => {
+    clearTimeout(heroPreviewTimer);
+    heroPreviewTimer = setTimeout(updateCmsHomePreview, 250);
+  });
+  $('editHeroImage').addEventListener('change', updateCmsHomePreview);
+  $('previewHomeSectionBtn').addEventListener('click', () => {
+    showOnlyView('public');
+    setHeroSlide(0);
+    $('top').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
   // CMS Site & Developments updates
   $('uploadHeroFile').addEventListener('change', handleAsync(async (e) => {
     const file = e.target.files[0];
     if (!file) return;
     const res = await uploadMedia(file);
     $('editHeroImage').value = res.url;
+    updateCmsHomePreview();
     showToast('Imagen de portada subida. Haz clic en Guardar Portada.');
   }));
 
