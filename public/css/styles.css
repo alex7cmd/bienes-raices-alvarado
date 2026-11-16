@@ -1208,7 +1208,7 @@ html[data-theme="dark"] .footer-mini-prop:hover { background: rgba(255, 255, 255
   font-weight: 700; text-transform: uppercase; margin-bottom: 8px;
 }
 .lot-status-pill.disponible { background: #dcfce7; color: #166534; }
-.lot-status-pill.no_disponible { background: #fef3c7; color: #92400e; }
+.lot-status-pill.no_disponible, .lot-status-pill.no-disponible { background: #fef3c7; color: #92400e; }
 .lot-status-pill.vendido { background: #dbeafe; color: #1e40af; }
 .lot-detail-price { font-size: 24px; font-weight: 700; color: var(--accent); margin: 6px 0 12px; }
 .lot-specs-grid {
@@ -1575,4 +1575,10 @@ textarea { resize: vertical; }
   .footer-grid { grid-template-columns: 1fr; }
   .hero-content { padding: 48px 16px 24px; }
   .section-container { padding: 52px 16px; }
+}
+
+/* Avoid expensive offscreen animation for people who request reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
 }

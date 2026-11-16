@@ -1,7 +1,6 @@
 const fs = require('fs');
-const path = require('path');
 
-const DB_PATH = path.join(__dirname, 'db.json');
+const { DB_PATH, initializeStorage } = require('./storage');
 
 function buildInitialData() {
   const commonFeatures = [
@@ -499,37 +498,34 @@ function buildInitialData() {
 }
 
 function ensureDatabase() {
+  initializeStorage();
   if (!fs.existsSync(DB_PATH)) {
     const initial = buildInitialData();
+    initial.mapVersion = 3;
+    initial.catalogVersion = 3;
     fs.writeFileSync(DB_PATH, JSON.stringify(initial, null, 2), 'utf8');
-  } else {
-    const raw = fs.readFileSync(DB_PATH, 'utf8');
-    const parsed = JSON.parse(raw);
-    // Si es versión anterior (sin lots con angle o menos de 300 lotes o versión previa antes del ajuste de calles)
-    if (!parsed.lots || parsed.lots.length < 300 || !parsed.mapVersion || parsed.mapVersion < 3) {
-      const fresh = buildInitialData();
-      fresh.mapVersion = 3;
-      fresh.site = parsed.site || fresh.site;
-      fresh.developments = parsed.developments || fresh.developments;
-      fs.writeFileSync(DB_PATH, JSON.stringify(fresh, null, 2), 'utf8');
-    } else if (raw.includes('bienesraicesalvarado.com.mx/wp-content/')) {
-      const migrated = raw
-        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-1920x790.jpg', '/assets/images/hero.jpg')
-        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-525x328.jpg', '/assets/images/casa-1.jpg')
-        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114215-525x328.jpg', '/assets/images/casa-2.jpg')
-        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Moscatell-525x328.jpg', '/assets/images/casa-3.jpg')
-        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-525x328.jpg', '/assets/images/casa-4.jpg')
-        .replaceAll('https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3-525x328.png', '/assets/images/casa-5.png');
-      fs.writeFileSync(DB_PATH, migrated, 'utf8');
-    } else if (!parsed.catalogVersion || parsed.catalogVersion < 3) {
-      const fresh = buildInitialData();
-      parsed.developments = fresh.developments;
-      parsed.prototypes = fresh.prototypes;
-      parsed.catalogVersion = 3;
-      fs.writeFileSync(DB_PATH, JSON.stringify(parsed, null, 2), 'utf8');
+    return DB_PATH;
+  }
+
+  const raw = fs.readFileSync(DB_PATH, 'utf8');
+  const parsed = JSON.parse(raw);
+  // Migrate missing structure only: existing CMS content, leads and overrides are authoritative.
+  let fresh;
+  for (const field of ['site', 'developments', 'prototypes', 'lots']) {
+    if (!parsed[field]) {
+      fresh ||= buildInitialData();
+      parsed[field] = fresh[field];
     }
+  }
+  parsed.mapVersion = Math.max(Number(parsed.mapVersion) || 0, 3);
+  parsed.catalogVersion = Math.max(Number(parsed.catalogVersion) || 0, 3);
+  const next = JSON.stringify(parsed, null, 2);
+  if (next !== raw) {
+    const temporary = `${DB_PATH}.tmp`;
+    fs.writeFileSync(temporary, next, 'utf8');
+    fs.renameSync(temporary, DB_PATH);
   }
   return DB_PATH;
 }
 
-module.exports = { ensureDatabase, DB_PATH };
+module.exports = { ensureDatabase, DB_PATH, buildInitialData };

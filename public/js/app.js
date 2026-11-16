@@ -24,6 +24,47 @@ const state = {
 const mxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
 const $ = (id) => document.getElementById(id);
 
+function escapeHtml(value) {
+  return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+}
+
+function normalizeStatus(status) {
+  if (status === 'apartado') return 'reservado';
+  if (status === 'no_disponible') return 'no-disponible';
+  return ['disponible', 'reservado', 'vendido'].includes(status) ? status : 'no-disponible';
+}
+
+function handleAsync(handler) {
+  return (...args) => {
+    let result;
+    try { result = handler(...args); } catch (err) { showToast(err.message); return; }
+    return Promise.resolve(result).catch(err => {
+      console.error(err);
+      showToast(err.message || 'No se pudo completar la operación.');
+    });
+  };
+}
+
+// Reduce future image uploads before sending them; preserve GIF animation and video files.
+async function uploadMedia(file) {
+  let optimized = file;
+  if (['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+    const bitmap = await createImageBitmap(file, { imageOrientation: 'from-image' });
+    try {
+      const scale = Math.min(1, 1920 / Math.max(bitmap.width, bitmap.height));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(bitmap.width * scale));
+      canvas.height = Math.max(1, Math.round(bitmap.height * scale));
+      canvas.getContext('2d').drawImage(bitmap, 0, 0, canvas.width, canvas.height);
+      const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/webp', 0.85));
+      if (blob && blob.type === 'image/webp' && blob.size < file.size) optimized = new File([blob], file.name.replace(/\.[^.]+$/, '') + '.webp', { type: 'image/webp' });
+    } finally { bitmap.close(); }
+  }
+  const body = new FormData();
+  body.append('file', optimized);
+  return api('/api/admin/upload', { method: 'POST', body });
+}
+
 const SVG_PATHS = {
   shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
   trees: '<path d="M12 3l-5 7h3l-4 6h12l-4-6h3l-5-7z"/><path d="M12 16v5"/>',
@@ -56,13 +97,13 @@ function svgIcon(kind) {
   return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
 }
 
-function specBox(icon, label, value) {
+function specBox(icon, label, value, marker = '') {
   return `
-    <div class="lot-spec-box">
+    <div class="lot-spec-box" ${marker ? `data-spec="${escapeHtml(marker)}"` : ''}>
       <div class="spec-icon-wrap">${svgIcon(icon)}</div>
       <div class="spec-text-wrap">
-        <small>${label}</small>
-        <strong>${value}</strong>
+        <small>${escapeHtml(label)}</small>
+        <strong>${escapeHtml(value)}</strong>
       </div>
     </div>
   `;
@@ -95,64 +136,43 @@ const DEV_DETAILS = {
     description: 'Sorento es la privada premium de Qavalta Residencial: diseño arquitectónico sofisticado, acabados superiores y amenidades exclusivas para quienes valoran vivir bien al sur de Pachuca.',
     address: 'Privada Sorento, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
     mapQuery: 'Privada Sorento, Los Vinedos, Pachuca, Hidalgo',
-    lotesLabel: '262 lotes',
     amenidades: ['Acceso controlado', 'Áreas verdes', 'Juegos infantiles', 'Alberca climatizada', 'Cancha de pádel', 'Salón multiusos con terraza']
   },
   oporto: {
     description: 'Oporto forma parte de Qavalta Residencial al sur de Pachuca, con entorno seguro, familiar, servicios ocultos y amenidades pensadas para tranquilidad y plusvalía creciente.',
     address: 'Privada Oporto, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
     mapQuery: 'Privada Oporto, Los Vinedos, Pachuca, Hidalgo',
-    lotesLabel: '422 lotes',
     amenidades: ['Acceso controlado', 'Áreas verdes', 'Juegos infantiles', 'Ciclovía', 'Servicios ocultos']
   },
   ardenza: {
     description: 'Ardenza combina diseño contemporáneo, amenidades familiares y ubicación estratégica al sur de Pachuca para elegir el prototipo ideal según tu familia y presupuesto.',
     address: 'Privada Ardenza, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
     mapQuery: 'Privada Ardenza, Los Vinedos, Pachuca, Hidalgo',
-    lotesLabel: '285 lotes',
     amenidades: ['Acceso controlado', 'Áreas verdes', 'Juegos infantiles', 'Ciclovía', 'Servicios ocultos']
   },
   montalese: {
     description: 'Montalese es la privada moderna y funcional de Qavalta Residencial, equipada con amenidades únicas como Game Center, Jumping Park, Dog Park y parques lineales.',
     address: 'Privada Montalese, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
     mapQuery: 'Privada Montalese, Los Vinedos, Pachuca, Hidalgo',
-    lotesLabel: '392 lotes',
     amenidades: ['Game Center', 'Jumping park', 'Ciclovía', 'Servicios ocultos', 'Dog park', 'Parques lineales']
   },
   'torres-qavalta': {
     description: 'La primera etapa de Torres Qavalta reúne diseño vertical contemporáneo, departamentos Flat 1 y Flat 2, amenidades exclusivas y un estilo de vida urbano en Pachuca.',
     address: 'Torres Qavalta (Torre A), Qavalta Residencial, Pachuca, Hgo.',
     mapQuery: 'Qavalta Residencial, Los Vinedos, Pachuca, Hidalgo',
-    lotesLabel: '39 deptos · Torre A',
     amenidades: ['Acceso controlado', 'Elevadores', 'Áreas verdes', 'Salón multiusos', 'Vigilancia 24/7']
   },
   vittoria: {
     description: 'Descubre Vittoria, la privada de Qavalta con parque lineal, ciclovía, área para mascotas, canchas deportivas y espacios diseñados para comenzar una nueva etapa en familia.',
     address: 'Privada Vittoria, Blvd. Privadas de Viñedos, Qavalta Residencial, Pachuca, Hgo.',
     mapQuery: 'Privada Vittoria, Los Vinedos, Pachuca, Hidalgo',
-    lotesLabel: '473 lotes',
     amenidades: ['Parque Lineal', 'Ciclovía', 'Área para mascotas', 'Juegos infantiles', 'Canchas deportivas', 'Salón de usos múltiples']
   }
 };
 
-const FALLBACK_GALLERY_POOL = [
-  '/assets/images/casa-1.jpg',
-  '/assets/images/casa-2.jpg',
-  '/assets/images/casa-3.jpg',
-  '/assets/images/casa-4.jpg',
-  '/assets/images/casa-5.png',
-  '/assets/images/smart-1.jpg',
-  '/assets/images/smart-2.jpg'
-];
-
 function getProtoGallery(p) {
-  if (Array.isArray(p.gallery) && p.gallery.length > 0) return p.gallery;
-  const list = [p.image].filter(Boolean);
-  for (const img of FALLBACK_GALLERY_POOL) {
-    if (!list.includes(img)) list.push(img);
-    if (list.length >= 4) break;
-  }
-  return list;
+  const list = [p.image, ...(Array.isArray(p.gallery) ? p.gallery : [])].filter(Boolean);
+  return [...new Set(list)];
 }
 
 function setCardSlide(card, nextIdx) {
@@ -179,10 +199,12 @@ function showToast(msg) {
 
 async function api(url, options = {}) {
   const res = await fetch(url, {
-    headers: options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' },
-    ...options
+    ...options,
+    headers: { ...(options.body && !(options.body instanceof FormData) ? { 'Content-Type': 'application/json' } : {}), ...options.headers },
+    signal: options.signal || AbortSignal.timeout(15000)
   });
-  const data = await res.json();
+  let data;
+  try { data = await res.json(); } catch { throw new Error('El servidor devolvió una respuesta no válida. Intenta de nuevo.'); }
   if (!res.ok) throw new Error(data.error || 'Error en la solicitud');
   return data;
 }
@@ -228,8 +250,9 @@ function initThemeScheduler() {
 // --- INITIALIZATION ---
 async function init() {
   initThemeScheduler();
-  await Promise.all([loadPublicData(), checkAuth()]);
   bindEvents();
+  const results = await Promise.allSettled([loadPublicData(), checkAuth()]);
+  results.forEach(result => { if (result.status === 'rejected') showToast(result.reason.message); });
 }
 
 async function loadPublicData() {
@@ -257,16 +280,24 @@ const HERO_SLIDES = [
   { slug: 'vittoria', name: 'Vittoria', image: '/assets/images/hero-vittoria.webp' }
 ];
 
+function getHeroSlides() {
+  return HERO_SLIDES.map((slide, i) => ({ ...slide, image: (i === 0 && state.site?.heroImage) || state.developments.find(d => d.id === slide.slug)?.image || slide.image }));
+}
+
 function setHeroSlide(idx) {
-  const total = HERO_SLIDES.length;
+  const heroSlides = getHeroSlides();
+  const total = heroSlides.length;
   state.heroSlideIdx = ((idx % total) + total) % total;
   const slides = document.querySelectorAll('.hero-slide');
   const dots = document.querySelectorAll('.hero-slide-dot');
-  slides.forEach((el, i) => el.classList.toggle('active', i === state.heroSlideIdx));
+  slides.forEach((el, i) => {
+    el.classList.toggle('active', i === state.heroSlideIdx);
+    if (i === state.heroSlideIdx || i === (state.heroSlideIdx + 1) % total) el.style.backgroundImage = `url(${JSON.stringify(heroSlides[i].image)})`;
+  });
   dots.forEach((el, i) => el.classList.toggle('active', i === state.heroSlideIdx));
   const label = $('heroSlideLabel');
   if (label) {
-    const cur = HERO_SLIDES[state.heroSlideIdx];
+    const cur = heroSlides[state.heroSlideIdx];
     label.textContent = `${cur.name} · Qavalta Residencial`;
   }
 }
@@ -275,20 +306,20 @@ function initHeroSlideshow() {
   const container = $('heroSlideshow');
   const dotsEl = $('heroSlideDots');
   if (!container) return;
-  container.innerHTML = HERO_SLIDES.map((s, i) => `
-    <div class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image:url('${s.image}')"></div>
+  container.innerHTML = getHeroSlides().map((s, i) => `
+    <div class="hero-slide ${i === 0 ? 'active' : ''}"></div>
   `).join('');
   if (dotsEl) {
     dotsEl.innerHTML = HERO_SLIDES.map((s, i) => `
       <button type="button" class="hero-slide-dot ${i === 0 ? 'active' : ''}" data-hero-slide="${i}" aria-label="Ver ${s.name}" title="${s.name}"></button>
     `).join('');
-    dotsEl.addEventListener('click', (e) => {
+    dotsEl.onclick = (e) => {
       const btn = e.target.closest('.hero-slide-dot');
       if (!btn) return;
       setHeroSlide(Number(btn.dataset.heroSlide));
       if (state.heroSlideTimer) clearInterval(state.heroSlideTimer);
       state.heroSlideTimer = setInterval(() => setHeroSlide(state.heroSlideIdx + 1), 5200);
-    });
+    };
   }
   setHeroSlide(0);
   if (state.heroSlideTimer) clearInterval(state.heroSlideTimer);
@@ -313,10 +344,10 @@ function renderPublicSite() {
   const latestEl = $('footerLatestProps');
   if (latestEl) {
     latestEl.innerHTML = latest.map(p => `
-      <div class="footer-mini-prop" data-proto="${p.id}">
-        <img src="${p.image}" alt="${p.name}" loading="lazy" />
+      <div class="footer-mini-prop" data-proto="${escapeHtml(p.id)}">
+        <img src="${escapeHtml(p.image)}" alt="${escapeHtml(p.name)}" loading="lazy" />
         <div>
-          <strong>${p.name}</strong>
+          <strong>${escapeHtml(p.name)}</strong>
           <span>${mxn.format(p.price)}</span>
         </div>
       </div>
@@ -330,11 +361,11 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
   const activeIdx = Math.max(0, Math.min(slideIdx, gallery.length - 1));
   const isDepto = p.type === 'departamento' || (Array.isArray(p.developments) && p.developments.length === 1 && p.developments[0] === 'torres-qavalta');
   return `
-    <div class="proto-tab-panel" data-active-proto="${p.id}" data-slide-idx="${activeIdx}">
+    <div class="proto-tab-panel" data-active-proto="${escapeHtml(p.id)}" data-slide-idx="${activeIdx}">
       <div class="proto-panel-media">
         <div class="proto-panel-stage">
-          <img class="proto-panel-main-img" src="${gallery[activeIdx]}" alt="${p.name}" loading="lazy" />
-          <button type="button" class="proto-gallery-btn" data-proto-gallery="${p.id}" aria-label="Ver galería de ${p.name}">${svgIcon('gallery')} Ver galería</button>
+          <img class="proto-panel-main-img" src="${escapeHtml(gallery[activeIdx])}" alt="${escapeHtml(p.name)}" loading="lazy" />
+          <button type="button" class="proto-gallery-btn" data-proto-gallery="${escapeHtml(p.id)}" aria-label="Ver galería de ${escapeHtml(p.name)}">${svgIcon('gallery')} Ver galería</button>
           ${gallery.length > 1 ? `
             <span class="proto-photo-counter proto-panel-counter">${activeIdx + 1} / ${gallery.length}</span>
             <button type="button" class="proto-photo-arrow proto-photo-prev proto-panel-prev" aria-label="Foto anterior">‹</button>
@@ -345,19 +376,19 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
           <div class="proto-modal-thumbs proto-panel-thumbs">
             ${gallery.map((src, idx) => `
               <button type="button" class="proto-modal-thumb proto-panel-thumb ${idx === activeIdx ? 'active' : ''}" data-thumb-idx="${idx}" aria-label="Ver foto ${idx + 1}">
-                <img src="${src}" alt="${p.name} vista ${idx + 1}" loading="lazy" />
+                <img src="${escapeHtml(src)}" alt="${escapeHtml(p.name)} vista ${idx + 1}" loading="lazy" />
               </button>
             `).join('')}
           </div>
         ` : ''}
-        ${p.video ? `<video src="${p.video}" controls style="width:100%;border-radius:12px;max-height:220px;"></video>` : ''}
+        ${p.video ? `<video preload="none" src="${escapeHtml(p.video)}" controls style="width:100%;border-radius:12px;max-height:220px;"></video>` : ''}
         <div class="proto-panel-map">
           <div class="proto-panel-map-head">
             <span>${svgIcon('pin')} Ubicación · Qavalta Residencial, Pachuca</span>
             <a href="https://maps.google.com/?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo" target="_blank" rel="noopener">Abrir en Google Maps →</a>
           </div>
           <iframe
-            title="Mapa ${p.name}"
+            title="Mapa ${escapeHtml(p.name)}"
             src="https://maps.google.com/maps?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo&t=&z=15&ie=UTF8&iwloc=&output=embed"
             loading="lazy"
           ></iframe>
@@ -367,12 +398,12 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
       <div class="proto-panel-info">
         <div class="proto-panel-head">
           <div>
-            ${p.propertyId ? `<span class="proto-panel-id">ID ${p.propertyId}</span>` : ''}
-            <h3>${p.name}</h3>
+            ${p.propertyId ? `<span class="proto-panel-id">ID ${escapeHtml(p.propertyId)}</span>` : ''}
+            <h3>${escapeHtml(p.name)}</h3>
           </div>
           <strong class="proto-panel-price">${mxn.format(p.price)}</strong>
         </div>
-        <p class="proto-panel-desc">${p.description}</p>
+        <p class="proto-panel-desc">${escapeHtml(p.description)}</p>
 
         <div class="lot-specs-grid proto-panel-specs">
           ${specBox('area', isDepto ? 'Superficie' : 'Terreno', `${p.area} m²`)}
@@ -384,7 +415,7 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
         <div class="proto-panel-features">
           <span class="proto-panel-subtitle">Características y amenidades</span>
           <div class="proto-features-chips">
-            ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
+            ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${escapeHtml(f)}</span>`).join('')}
           </div>
         </div>
       </div>
@@ -418,7 +449,6 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
     description: activeDev.tagline || '',
     address: 'Qavalta Residencial, Pachuca, Hgo.',
     mapQuery: `Privada ${activeDev.name}, Los Vinedos, Pachuca, Hidalgo`,
-    lotesLabel: `${devProtos.length} prototipos`,
     amenidades: ['Acceso controlado', 'Áreas verdes']
   };
   const originEnc = encodeURIComponent(QAVALTA_OFFICE_ORIGIN);
@@ -433,9 +463,9 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
         const count = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(dev.id)).length;
         const isActive = dev.id === activeDev.id;
         return `
-          <button type="button" role="tab" class="unified-dev-tab ${isActive ? 'active' : ''}" aria-selected="${isActive}" data-dev-tab="${dev.id}">
+          <button type="button" role="tab" class="unified-dev-tab ${isActive ? 'active' : ''}" aria-selected="${isActive}" data-dev-tab="${escapeHtml(dev.id)}">
             <span class="unified-dev-tab-top">
-              <strong>${dev.name}</strong>
+              <strong>${escapeHtml(dev.name)}</strong>
               <span class="unified-dev-tab-count">${count}</span>
             </span>
             <small>Desde ${mxn.format(dev.startingPrice)}</small>
@@ -450,15 +480,15 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
     <div class="unified-dev-shell">
       ${dockEl ? '' : tabsHtml}
 
-      <div class="dev-pill-item open unified-dev-body" data-dev-pill="${activeDev.id}">
+      <div class="dev-pill-item open unified-dev-body" data-dev-pill="${escapeHtml(activeDev.id)}">
         <div class="dev-pill-body">
           <div class="dev-overview-card">
             <div class="dev-overview-info">
-              <span class="dev-overview-kicker">DESARROLLO SELECCIONADO · ${activeDev.name.toUpperCase()}</span>
+              <span class="dev-overview-kicker">DESARROLLO SELECCIONADO · ${escapeHtml(activeDev.name.toUpperCase())}</span>
               <p class="dev-overview-desc">${info.description}</p>
               <div class="dev-overview-details">
                 ${specBox('home', activeDev.id === 'torres-qavalta' ? 'Tipo' : 'Privada', activeDev.id === 'torres-qavalta' ? 'Departamentos' : activeDev.name)}
-                ${specBox('area', activeDev.id === 'torres-qavalta' ? 'Unidades' : 'Capacidad', info.lotesLabel)}
+                ${specBox('area', activeDev.id === 'torres-qavalta' ? 'Unidades' : 'Capacidad', 'Cargando plano…', 'capacity')}
                 ${specBox('tag', 'Desde', mxn.format(activeDev.startingPrice))}
                 ${specBox('gallery', 'Modelos', `${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}`)}
               </div>
@@ -467,10 +497,10 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
               <div class="dev-overview-addr">
                 <strong>${svgIcon('pin')} Dirección</strong>
                 <span>${info.address}</span>
-                <small class="dev-route-badge">${svgIcon('route')} Recorrido automático: Oficinas Qavalta → ${activeDev.name}</small>
+                <small class="dev-route-badge">${svgIcon('route')} Recorrido automático: Oficinas Qavalta → ${escapeHtml(activeDev.name)}</small>
               </div>
               <iframe
-                title="Ruta Oficinas Qavalta a ${activeDev.name}"
+                title="Ruta Oficinas Qavalta a ${escapeHtml(activeDev.name)}"
                 src="${embedRouteUrl}"
                 loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"
@@ -479,10 +509,10 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
             </div>
           </div>
 
-          <div class="dev-proto-tabs" role="tablist" aria-label="Prototipos de ${activeDev.name}">
+          <div class="dev-proto-tabs" role="tablist" aria-label="Prototipos de ${escapeHtml(activeDev.name)}">
             ${devProtos.map((p, idx) => `
-              <button type="button" role="tab" class="dev-proto-tab ${idx === 0 ? 'active' : ''}" aria-selected="${idx === 0}" data-proto-tab="${p.id}">
-                <span class="dev-proto-tab-name">${p.name}</span>
+              <button type="button" role="tab" class="dev-proto-tab ${idx === 0 ? 'active' : ''}" aria-selected="${idx === 0}" data-proto-tab="${escapeHtml(p.id)}">
+                <span class="dev-proto-tab-name">${escapeHtml(p.name)}</span>
                 <span class="dev-proto-tab-price">${mxn.format(p.price)}</span>
               </button>
             `).join('')}
@@ -492,11 +522,11 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
             ${firstProto ? renderPrototypeDetailPanel(firstProto, 0) : '<p class="muted">Sin prototipos disponibles.</p>'}
           </div>
 
-          <div class="dev-inline-map-section" data-inline-map="${activeDev.id}">
+          <div class="dev-inline-map-section" data-inline-map="${escapeHtml(activeDev.id)}">
             <div class="dev-inline-map-head">
               <div>
                 <span class="dev-inline-map-kicker">PLANO MAESTRO INTERACTIVO</span>
-                <h4>Mapa de lotes · ${activeDev.name}</h4>
+                <h4>Mapa de lotes · ${escapeHtml(activeDev.name)}</h4>
               </div>
               <div class="dev-inline-map-actions">
                 <div class="dev-inline-legend">
@@ -504,7 +534,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
                   <span><i class="dot reservado"></i> Apart. <strong data-c="reservado">-</strong></span>
                   <span><i class="dot vendido"></i> Vend. <strong data-c="vendido">-</strong></span>
                 </div>
-                <button type="button" class="dev-inline-fs-btn" data-open-fs-map="${activeDev.id}">⤢ Pantalla completa</button>
+                <button type="button" class="dev-inline-fs-btn" data-open-fs-map="${escapeHtml(activeDev.id)}">⤢ Pantalla completa</button>
               </div>
             </div>
             <div class="dev-inline-map-viewport">
@@ -517,7 +547,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
                 <svg class="dev-inline-svg" viewBox="0 0 9000 6600" xmlns="http://www.w3.org/2000/svg"></svg>
               </div>
             </div>
-            <div class="dev-inline-lot-bar hidden" data-inline-lot-bar="${activeDev.id}"></div>
+            <div class="dev-inline-lot-bar hidden" data-inline-lot-bar="${escapeHtml(activeDev.id)}"></div>
           </div>
         </div>
       </div>
@@ -534,7 +564,7 @@ function openPrototypeModal(protoId, initialIdx = 0) {
   $('protoModalContent').innerHTML = `
     <div class="proto-modal-gallery">
       <div class="proto-modal-stage">
-        <img id="protoModalMainImg" src="${gallery[activeIdx]}" alt="${p.name}" />
+        <img id="protoModalMainImg" src="${escapeHtml(gallery[activeIdx])}" alt="${escapeHtml(p.name)}" />
         <button type="button" class="proto-gallery-btn" id="protoModalFullscreenBtn" aria-label="Ver galería a pantalla completa">⤢ Pantalla completa</button>
         ${gallery.length > 1 ? `
           <span class="proto-photo-counter" id="protoModalCounter">${activeIdx + 1} / ${gallery.length}</span>
@@ -546,18 +576,18 @@ function openPrototypeModal(protoId, initialIdx = 0) {
         <div class="proto-modal-thumbs" id="protoModalThumbs">
           ${gallery.map((src, idx) => `
             <button type="button" class="proto-modal-thumb ${idx === activeIdx ? 'active' : ''}" data-thumb-idx="${idx}" aria-label="Miniatura ${idx + 1}">
-              <img src="${src}" alt="${p.name} ${idx + 1}" />
+              <img src="${escapeHtml(src)}" alt="${escapeHtml(p.name)} ${idx + 1}" />
             </button>
           `).join('')}
         </div>
       ` : ''}
     </div>
-    ${p.video ? `<video src="${p.video}" controls style="width:100%;border-radius:12px;margin-bottom:16px;max-height:220px;"></video>` : ''}
+    ${p.video ? `<video preload="none" src="${escapeHtml(p.video)}" controls style="width:100%;border-radius:12px;margin-bottom:16px;max-height:220px;"></video>` : ''}
     <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px;">
-      <h2 style="font-size:24px;">${p.name}</h2>
+      <h2 style="font-size:24px;">${escapeHtml(p.name)}</h2>
       <strong style="font-size:22px;color:var(--accent);">${mxn.format(p.price)}</strong>
     </div>
-    <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px;">${p.description}</p>
+    <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px;">${escapeHtml(p.description)}</p>
     <div class="lot-specs-grid" style="grid-template-columns:repeat(4,1fr);">
       ${specBox('area', 'Terreno', `${p.area} m²`)}
       ${specBox('bed', 'Recámaras', p.bedrooms)}
@@ -565,7 +595,7 @@ function openPrototypeModal(protoId, initialIdx = 0) {
       ${specBox('car', 'Estac.', p.parking)}
     </div>
     <div class="proto-features-chips" style="margin-bottom:16px;">
-      ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
+      ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${escapeHtml(f)}</span>`).join('')}
     </div>
     <div style="margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
@@ -573,13 +603,13 @@ function openPrototypeModal(protoId, initialIdx = 0) {
         <a href="https://maps.google.com/?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo" target="_blank" rel="noopener" style="font-size:12px;color:var(--accent);text-decoration:none;font-weight:600;">Abrir en Google Maps →</a>
       </div>
       <iframe
-        title="Mapa ${p.name}"
+        title="Mapa ${escapeHtml(p.name)}"
         src="https://maps.google.com/maps?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo&t=&z=15&ie=UTF8&iwloc=&output=embed"
         style="width:100%;height:190px;border:none;border-radius:12px;"
         loading="lazy"
       ></iframe>
     </div>
-    <a href="https://wa.me/${state.site.whatsapp}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:4px;">Solicitar información por WhatsApp →</a>
+    <a href="https://wa.me/${escapeHtml(state.site.whatsapp)}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:4px;">Solicitar información por WhatsApp →</a>
   `;
   if (gallery.length > 1) {
     const updateModalSlide = (nextIdx) => {
@@ -635,7 +665,7 @@ function openFullscreenGallery(protoId, initialIdx = 0) {
   $('fsGalleryPrice').textContent = mxn.format(p.price);
   $('fsGalleryThumbs').innerHTML = gallery.map((src, i) => `
     <button type="button" class="fs-gallery-thumb ${i === initialIdx ? 'active' : ''}" data-fs-idx="${i}" aria-label="Foto ${i + 1}">
-      <img src="${src}" alt="${p.name} ${i + 1}" />
+      <img src="${escapeHtml(src)}" alt="${escapeHtml(p.name)} ${i + 1}" />
     </button>
   `).join('');
   renderFullscreenSlide(initialIdx);
@@ -660,98 +690,29 @@ function showOnlyView(viewName) {
   }
 }
 
-const DEV_MAP_PROTOTYPES = {
-  sorento: [
-    { id: 'ruche', name: 'Ruche', price: 2600000, area: 105 },
-    { id: 'loureira', name: 'Loureira', price: 3200000, area: 123 },
-    { id: 'gracciano', name: 'Gracciano', price: 3600000, area: 140 },
-    { id: 'malvasia', name: 'Malvasia', price: 4450000, area: 242 }
-  ],
-  oporto: [
-    { id: 'areni', name: 'Areni', price: 1500000, area: 90 },
-    { id: 'areni-3r', name: 'Areni 3R', price: 1610000, area: 90 },
-    { id: 'brachetto', name: 'Brachetto', price: 1770000, area: 78 },
-    { id: 'moscatel', name: 'Moscatel', price: 1860000, area: 105 },
-    { id: 'carlina', name: 'Carlina', price: 2030000, area: 105 },
-    { id: 'castella', name: 'Castella', price: 2192000, area: 110 },
-    { id: 'montello', name: 'Montello', price: 2200000, area: 112 },
-    { id: 'belora', name: 'Belora', price: 2320000, area: 113 }
-  ],
-  ardenza: [
-    { id: 'brachetto', name: 'Brachetto', price: 1770000, area: 78 },
-    { id: 'moscatel', name: 'Moscatel', price: 1860000, area: 105 },
-    { id: 'carlina', name: 'Carlina', price: 1970000, area: 105 },
-    { id: 'castella', name: 'Castella', price: 2182000, area: 110 },
-    { id: 'montello', name: 'Montello', price: 2200000, area: 112 },
-    { id: 'ruche', name: 'Ruche', price: 2539000, area: 105 }
-  ],
-  montalese: [
-    { id: 'arveto', name: 'Arveto', price: 1660000, area: 90 },
-    { id: 'belat', name: 'Belat', price: 1865000, area: 80 },
-    { id: 'brachetto', name: 'Brachetto', price: 2000000, area: 78 },
-    { id: 'moscato', name: 'Moscato', price: 2230000, area: 105 },
-    { id: 'carlina', name: 'Carlina', price: 1970000, area: 105 },
-    { id: 'ruche', name: 'Ruche', price: 2600000, area: 105 }
-  ],
-  'torres-qavalta': [
-    { id: 'flat-1', name: 'Flat 1', price: 1544000, area: 68 },
-    { id: 'flat-2', name: 'Flat 2', price: 1743000, area: 84 }
-  ],
-  vittoria: [
-    { id: 'nebbiolo', name: 'Nebbiolo', price: 1550000, area: 75 },
-    { id: 'arveto', name: 'Arveto', price: 1660000, area: 90 },
-    { id: 'brachetto', name: 'Brachetto', price: 1847000, area: 78 },
-    { id: 'belat', name: 'Belat', price: 1892000, area: 80 },
-    { id: 'carlina', name: 'Carlina', price: 1970000, area: 105 },
-    { id: 'moscato', name: 'Moscato', price: 2050000, area: 105 }
-  ]
-};
-
 function getDevMapPrototypes(slug) {
-  const official = DEV_MAP_PROTOTYPES[slug];
-  if (official) {
-    return official.map(op => {
-      const local = state.prototypes.find(p => p.id === op.id || p.name.toLowerCase() === op.name.toLowerCase());
-      return {
-        ...local,
-        id: op.id,
-        name: op.name,
-        price: op.price || local?.price || 1550000,
-        area: op.area || local?.area || 90,
-        image: local?.image || '/assets/images/casa-2.jpg'
-      };
-    });
-  }
   return state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(slug));
 }
 
 function resolveLotPrototype(lot, slug) {
+  if (!lot.pr) return null;
   const pool = getDevMapPrototypes(slug);
-  if (lot.pr) {
-    const exact = pool.find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase())
-      || state.prototypes.find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase());
-    if (exact) return exact;
-    return { id: String(lot.pr).toLowerCase().replace(/\s+/g, '-'), name: lot.pr, price: lot.p || pool[0]?.price || 1500000, image: pool[0]?.image || '' };
-  }
-  if (!pool.length) return null;
-  const area = Number(lot.a) || 0;
-  if (area > 0) {
-    const minDiff = Math.min(...pool.map(p => Math.abs((p.area || 0) - area)));
-    const closest = pool.filter(p => Math.abs((p.area || 0) - area) <= minDiff + 6);
-    const seed = String(lot.id || '').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-    return closest[seed % closest.length];
-  }
-  const seed = String(lot.id || '').split('').reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-  return pool[seed % pool.length];
+  const exact = pool.find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase());
+  return exact || { id: String(lot.pr).toLowerCase().replace(/\s+/g, '-'), name: lot.pr, price: Number(lot.p) || 0, image: '' };
 }
 
+const devMapFetchedAt = new Map();
+const devMapPending = new Map();
 async function fetchDevMapData(slug, forceRefresh = false) {
-  if (!forceRefresh && state.devMapsCache[slug]) return state.devMapsCache[slug];
-  const res = await fetch(`/api/public/qavalta-map/${slug}${forceRefresh ? '?refresh=1' : ''}`);
-  if (!res.ok) throw new Error(`No se pudo cargar el plano de ${slug}`);
-  const data = await res.json();
-  state.devMapsCache[slug] = data;
-  return data;
+  if (!forceRefresh && state.devMapsCache[slug] && Date.now() - (devMapFetchedAt.get(slug) || 0) < 60000) return state.devMapsCache[slug];
+  if (devMapPending.has(slug)) return devMapPending.get(slug);
+  const pending = api(`/api/public/qavalta-map/${encodeURIComponent(slug)}${forceRefresh ? '?refresh=1' : ''}`).then(data => {
+    state.devMapsCache[slug] = data;
+    devMapFetchedAt.set(slug, Date.now());
+    return data;
+  }).finally(() => devMapPending.delete(slug));
+  devMapPending.set(slug, pending);
+  return pending;
 }
 
 function getMapCounts(lots) {
@@ -935,27 +896,27 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
 
   let bgMarkup = '';
   if (mapData.isTowerFloors && activeBg) {
-    bgMarkup = `<image href="${activeBg}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
+    bgMarkup = `<image href="${escapeHtml(activeBg)}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
   } else if (mapData.bg) {
-    bgMarkup = `<image href="${mapData.bg}?v=1.8.7" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
+    bgMarkup = `<image href="${escapeHtml(mapData.bg)}?v=1.10.0" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
   }
 
   const sw = mapData.isTowerFloors ? 12 : 9;
   const swSel = mapData.isTowerFloors ? 30 : 24;
 
   const lotsMarkup = activeLots.map(l => {
-    const stKey = l.s === 'apartado' ? 'reservado' : l.s;
+    const stKey = normalizeStatus(l.s);
     const st = colors[stKey] || colors['no-disponible'];
     const isSel = selectedLotId === l.id;
     const lotProto = resolveLotPrototype(l, mapData.slug);
-    const dimmedStatus = statusFilter !== 'all' && stKey !== statusFilter;
+    const dimmedStatus = statusFilter !== 'all' && stKey !== normalizeStatus(statusFilter);
     const dimmedProto = protoFilter !== 'all' && (!lotProto || lotProto.id !== protoFilter);
     const dimmed = dimmedStatus || dimmedProto;
     const op = dimmed ? '0.14' : '1';
-    const attrs = `class="qmap-lot ${isSel ? 'selected' : ''}" data-lot="${l.id}" fill="${st.fill}" stroke="${isSel ? '#ffffff' : st.stroke}" stroke-width="${isSel ? swSel : sw}" opacity="${op}"`;
+    const attrs = `class="qmap-lot ${isSel ? 'selected' : ''}" data-lot="${escapeHtml(l.id)}" fill="${st.fill}" stroke="${isSel ? '#ffffff' : st.stroke}" stroke-width="${isSel ? swSel : sw}" opacity="${op}"`;
     return l.t === 'g'
-      ? `<polygon points="${l.d}" ${attrs} />`
-      : `<path d="${l.d}" ${attrs} />`;
+      ? `<polygon points="${escapeHtml(l.d)}" ${attrs} />`
+      : `<path d="${escapeHtml(l.d)}" ${attrs} />`;
   }).join('');
 
   return `${bgMarkup}<g class="qmap-lots-layer">${lotsMarkup}</g>${buildMapLifeOverlay(mapData)}`;
@@ -968,6 +929,8 @@ async function loadInlineDevMap(slug, floorId = null) {
   if (!svg || (svg.dataset.loaded === slug && floorId === null)) return;
   try {
     const mapData = await fetchDevMapData(slug);
+    const capacity = section.closest('.dev-pill-body')?.querySelector('[data-spec="capacity"] strong');
+    if (capacity) capacity.textContent = `${mapData.lots.length} ${mapData.isTowerFloors ? 'unidades en plano' : 'lotes en plano'}`;
     const counts = getMapCounts(mapData.lots);
     ['disponible', 'reservado', 'vendido'].forEach(k => {
       const el = section.querySelector(`[data-c="${k}"]`);
@@ -1003,7 +966,7 @@ async function loadInlineDevMap(slug, floorId = null) {
 }
 
 async function openInteractiveMap(devSlug = null) {
-  if (devSlug) state.mapDevSlug = devSlug;
+  if (typeof devSlug === 'string' && state.developments.some(d => d.id === devSlug)) state.mapDevSlug = devSlug;
   else if (!state.mapDevSlug) state.mapDevSlug = 'sorento';
   state.selectedLotId = null;
   state.mapStatusFilter = 'all';
@@ -1023,7 +986,7 @@ async function openAdminCms() {
   state.prototypes = data.prototypes;
   state.developments = data.developments;
   state.counts = data.counts;
-  renderAdminCms();
+  await renderAdminCms();
   showOnlyView('admin');
 }
 
@@ -1092,10 +1055,10 @@ function renderMapAmenities(slug, activeIdx = 0) {
   container.innerHTML = `
     <div class="amen-split">
       <div class="amen-stage">
-        <img src="${photos[idx]}" alt="${dev.name} - ${activeAmenity}" id="amenStageImg" />
+        <img src="${escapeHtml(photos[idx])}" alt="${escapeHtml(dev.name)} - ${escapeHtml(activeAmenity)}" id="amenStageImg" />
         <div class="amen-stage-overlay">
-          <span class="amen-kicker">AMENIDADES REALES · ${dev.name.toUpperCase()}</span>
-          <h3 id="amenStageTitle">${activeAmenity}</h3>
+          <span class="amen-kicker">AMENIDADES REALES · ${escapeHtml(dev.name.toUpperCase())}</span>
+          <h3 id="amenStageTitle">${escapeHtml(activeAmenity)}</h3>
         </div>
         <span class="proto-photo-counter" id="amenCounter">${idx + 1} / ${photos.length}</span>
         <button type="button" class="proto-photo-arrow proto-photo-prev" id="amenPrevBtn" aria-label="Foto anterior">‹</button>
@@ -1105,15 +1068,15 @@ function renderMapAmenities(slug, activeIdx = 0) {
       <div class="amen-sidebar">
         <div class="amen-sidebar-head">
           <span class="section-kicker">ENTORNO Y ESTILO DE VIDA</span>
-          <h4>Amenidades de ${dev.name}</h4>
+          <h4>Amenidades de ${escapeHtml(dev.name)}</h4>
           <p>Explora las áreas reales del desarrollo seleccionando cada amenidad o fotografía.</p>
         </div>
         <div class="amen-list">
           ${amenidades.map((a, i) => `
             <button type="button" class="amen-list-item ${i === (idx % amenidades.length) ? 'active' : ''}" data-amen-idx="${i}">
               <span class="amen-list-icon">${featureIcon(a)}</span>
-              <span class="amen-list-text">${a}</span>
-              <img class="amen-list-thumb" src="${photos[i % photos.length]}" alt="${a}" loading="lazy" />
+              <span class="amen-list-text">${escapeHtml(a)}</span>
+              <img class="amen-list-thumb" src="${escapeHtml(photos[i % photos.length])}" alt="${escapeHtml(a)}" loading="lazy" />
             </button>
           `).join('')}
         </div>
@@ -1123,7 +1086,7 @@ function renderMapAmenities(slug, activeIdx = 0) {
     <div class="amen-filmstrip">
       ${photos.map((src, i) => `
         <button type="button" class="amen-thumb ${i === idx ? 'active' : ''}" data-amen-idx="${i}" aria-label="Foto amenidad ${i + 1}">
-          <img src="${src}" alt="${dev.name} amenidad ${i + 1}" loading="lazy" />
+          <img src="${escapeHtml(src)}" alt="${escapeHtml(dev.name)} amenidad ${i + 1}" loading="lazy" />
         </button>
       `).join('')}
     </div>
@@ -1141,6 +1104,7 @@ async function renderInteractiveMap() {
   const slug = state.mapDevSlug || 'sorento';
   const dev = state.developments.find(d => d.id === slug) || { id: slug, name: slug, startingPrice: 1382000 };
   const mapData = await fetchDevMapData(slug);
+  if (slug !== state.mapDevSlug) return;
   const counts = getMapCounts(mapData.lots);
 
   if ($('mapLocBadge')) $('mapLocBadge').textContent = `📍 Qavalta · ${dev.name}`;
@@ -1154,7 +1118,7 @@ async function renderInteractiveMap() {
           <svg viewBox="0 0 36 36" width="24" height="24" aria-hidden="true">
             <circle cx="18" cy="18" r="13" fill="none" stroke="currentColor" stroke-width="2.2" stroke-dasharray="64 16" stroke-linecap="round"/>
           </svg>
-          <span>${dev.name}</span>
+          <span>${escapeHtml(dev.name)}</span>
         </span>
       `;
     }
@@ -1168,14 +1132,14 @@ async function renderInteractiveMap() {
 
   if ($('mapDevPills')) {
     $('mapDevPills').innerHTML = state.developments.map(d => `
-      <button type="button" class="map-dev-pill ${d.id === slug ? 'active' : ''}" data-mdev="${d.id}">${d.name}</button>
+      <button type="button" class="map-dev-pill ${d.id === slug ? 'active' : ''}" data-mdev="${escapeHtml(d.id)}">${escapeHtml(d.name)}</button>
     `).join('');
   }
 
   const devProtos = getDevMapPrototypes(slug);
   $('mapProtoFilters').innerHTML = [
     `<button class="${state.mapProtoFilter === 'all' ? 'active' : ''}" data-mproto="all"><span>Todos los prototipos</span><small>${devProtos.length}</small></button>`,
-    ...devProtos.map(p => `<button class="${state.mapProtoFilter === p.id ? 'active' : ''}" data-mproto="${p.id}"><span>${p.name}</span><small>${mxn.format(p.price)}</small></button>`)
+    ...devProtos.map(p => `<button class="${state.mapProtoFilter === p.id ? 'active' : ''}" data-mproto="${escapeHtml(p.id)}"><span>${escapeHtml(p.name)}</span><small>${mxn.format(p.price)}</small></button>`)
   ].join('');
 
   if ($('mapStatusFilters')) {
@@ -1183,7 +1147,7 @@ async function renderInteractiveMap() {
       { id: 'all', label: 'Todos los lotes', count: mapData.lots.length, dot: '' },
       { id: 'disponible', label: 'Disponibles', count: counts.disponible, dot: 'disponible' },
       { id: 'reservado', label: 'Apartados', count: counts.reservado, dot: 'reservado' },
-      { id: 'no_disponible', label: 'No disponibles', count: counts.no_disponible, dot: 'no_disponible' },
+      { id: 'no-disponible', label: 'No disponibles', count: counts.no_disponible, dot: 'no_disponible' },
       { id: 'vendido', label: 'Vendidos', count: counts.vendido, dot: 'vendido' }
     ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}"><span class="status-filter-label">${f.dot ? `<span class="dot ${f.dot}"></span>` : ''}${f.label}</span><small>${f.count}</small></button>`).join('');
   }
@@ -1208,7 +1172,7 @@ async function renderInteractiveMap() {
         if (!btn) return;
         state.mapFloorId = Number(btn.dataset.mfloor);
         state.selectedLotId = null;
-        renderInteractiveMap();
+        handleAsync(renderInteractiveMap)();
       };
     } else {
       floorBar.classList.add('hidden');
@@ -1239,7 +1203,7 @@ function renderSelectedLotDetail() {
         <h3>Toca un lote o unidad</h3>
         <p>Selecciona cualquier lote en el plano para ver su manzana, superficie m², estatus y cotizar por WhatsApp.</p>
         <button type="button" class="btn-map-info-tour" id="mapEmptyInfoTourBtn">Info / Agendar Tour</button>
-        <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waEmptyMsg}" target="_blank" rel="noopener" class="btn-wa btn-wa-block" style="margin-top:8px;">
+        <a href="https://wa.me/${escapeHtml(state.site?.whatsapp || '525537560931')}?text=${waEmptyMsg}" target="_blank" rel="noopener" class="btn-wa btn-wa-block" style="margin-top:8px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.06 0C5.49 0 .16 5.33.16 11.9c0 2.1.55 4.15 1.59 5.96L0 24l6.31-1.65a11.88 11.88 0 0 0 5.75 1.47h.01c6.57 0 11.9-5.33 11.9-11.9 0-3.18-1.24-6.17-3.45-8.44Zm-8.46 18.33h-.01a9.87 9.87 0 0 1-5.03-1.38l-.36-.21-3.74.98 1-3.65-.24-.37a9.86 9.86 0 0 1-1.51-5.28c0-5.45 4.44-9.89 9.9-9.89 2.64 0 5.12 1.03 6.99 2.9a9.82 9.82 0 0 1 2.9 6.99c0 5.46-4.44 9.91-9.9 9.91Zm5.43-7.42c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.21 5.08 4.5.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.13-.27-.2-.57-.35Z"/></svg>
           WhatsApp · Solicita información
         </a>
@@ -1257,30 +1221,30 @@ function renderSelectedLotDetail() {
   if (!lot) return;
   const dev = state.developments.find(d => d.id === state.mapDevSlug);
   const protoMatch = resolveLotPrototype(lot, state.mapDevSlug);
-  const stKey = lot.s === 'apartado' ? 'reservado' : lot.s;
+  const stKey = normalizeStatus(lot.s);
   const statusLabel = {
     disponible: 'Disponible',
     reservado: 'Apartado',
     'no-disponible': 'No disponible',
     vendido: 'Vendido'
   }[stKey] || lot.s;
-  const priceDisplay = lot.p > 0 ? mxn.format(lot.p) : (protoMatch ? `Desde ${mxn.format(protoMatch.price)}` : `Desde ${mxn.format(dev?.startingPrice || 1500000)}`);
+  const priceDisplay = lot.p > 0 ? mxn.format(lot.p) : protoMatch?.price > 0 ? `Referencia del prototipo: ${mxn.format(protoMatch.price)}` : 'Precio por confirmar';
   const waMsg = encodeURIComponent(`Hola, me interesa información sobre ${lot.n} en ${dev?.name || state.mapDevSlug} (${lot.a} m²).`);
 
   container.innerHTML = `
     <div class="lot-detail-card">
-      ${protoMatch ? `<img src="${protoMatch.image}" alt="${lot.n}" />` : ''}
-      <span class="lot-status-pill ${stKey}">${statusLabel}</span>
-      <h3>${lot.n}</h3>
-      <p style="font-size:12px;color:var(--muted);">${dev?.name || ''} · Manzana / Nivel: ${lot.m || 'N/A'}</p>
+      ${protoMatch?.image ? `<img src="${escapeHtml(protoMatch.image)}" alt="${escapeHtml(lot.n)}" />` : ''}
+      <span class="lot-status-pill ${escapeHtml(stKey)}">${escapeHtml(statusLabel)}</span>
+      <h3>${escapeHtml(lot.n)}</h3>
+      <p style="font-size:12px;color:var(--muted);">${escapeHtml(dev?.name || '')} · Manzana / Nivel: ${escapeHtml(lot.m || 'N/A')}</p>
       <div class="lot-detail-price">${priceDisplay}</div>
       <div class="lot-specs-grid">
         ${specBox('area', 'Superficie', lot.a ? `${lot.a} m²` : 'N/A')}
         ${specBox('tag', 'Estatus', statusLabel)}
         ${specBox('home', 'Privada', dev?.name || state.mapDevSlug)}
-        ${specBox('gallery', 'Prototipo', lot.pr || (protoMatch?.name || 'A elegir'))}
+        ${specBox('gallery', 'Prototipo', lot.pr || protoMatch?.name || 'Sin asignar')}
       </div>
-      <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa btn-wa-block" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
+      <a href="https://wa.me/${escapeHtml(state.site?.whatsapp || '525537560931')}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa btn-wa-block" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
       <button type="button" class="btn-map-info-tour" id="mapLotInfoTourBtn">Info / Agendar Tour</button>
       ${state.isAdmin ? `
         <div class="map-admin-edit-box">
@@ -1296,7 +1260,7 @@ function renderSelectedLotDetail() {
           <label>Prototipo
             <select id="mapEditProto">
               <option value="">Sin asignar</option>
-              ${state.prototypes.map(p => `<option value="${p.name}" ${String(lot.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${p.name}</option>`).join('')}
+              ${getDevMapPrototypes(state.mapDevSlug).map(p => `<option value="${escapeHtml(p.name)}" ${String(lot.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('')}
             </select>
           </label>
           <button type="button" class="btn-primary full-width" id="mapSaveLotBtn">Guardar cambios en lote</button>
@@ -1310,7 +1274,7 @@ function renderSelectedLotDetail() {
     $('inquiryModal')?.classList.remove('hidden');
   });
   if (state.isAdmin && $('mapSaveLotBtn')) {
-    $('mapSaveLotBtn').addEventListener('click', async () => {
+    $('mapSaveLotBtn').addEventListener('click', handleAsync(async () => {
       const status = $('mapEditStatus').value;
       const prototipo = $('mapEditProto').value;
       await api(`/api/admin/qavalta-lots/${state.mapDevSlug}/${encodeURIComponent(lot.id)}`, {
@@ -1318,10 +1282,10 @@ function renderSelectedLotDetail() {
         body: JSON.stringify({ status, prototipo })
       });
       delete state.devMapsCache[state.mapDevSlug];
-      await fetchDevMapData(state.mapDevSlug, true);
+      await fetchDevMapData(state.mapDevSlug);
       await renderInteractiveMap();
       showToast(`${lot.n} actualizado`);
-    });
+    }));
   }
 }
 
@@ -1359,23 +1323,23 @@ async function renderCmsPrototypesGrid() {
   const badge = $('cmsProtoCountBadge');
   if (badge) badge.textContent = `${list.length} prototipo${list.length === 1 ? '' : 's'}`;
   if (!list.length) {
-    grid.innerHTML = `<div class="cms-form-card" style="grid-column:1/-1;text-align:center;color:var(--muted);">No se encontraron prototipos que coincidan con "${q}".</div>`;
+    grid.innerHTML = `<div class="cms-form-card" style="grid-column:1/-1;text-align:center;color:var(--muted);">No se encontraron prototipos que coincidan con "${escapeHtml(q)}".</div>`;
     return;
   }
   grid.innerHTML = list.map(p => `
-    <div class="cms-form-card" data-cms-proto="${p.id}">
-      <img src="${p.image}" class="cms-preview-img" alt="${p.name}" />
-      <h3>Prototipo: ${p.name}</h3>
+    <div class="cms-form-card" data-cms-proto="${escapeHtml(p.id)}">
+      <img src="${escapeHtml(p.image)}" class="cms-preview-img" alt="${escapeHtml(p.name)}" />
+      <h3>Prototipo: ${escapeHtml(p.name)}</h3>
       <div class="form-grid">
-        <label>Precio (MXN)<input type="number" class="p-price" value="${p.price}" /></label>
-        <label>Terreno (m²)<input type="number" class="p-area" value="${p.area}" /></label>
-        <label>Recámaras<input type="number" class="p-beds" value="${p.bedrooms}" /></label>
-        <label>Baños<input type="number" step="0.5" class="p-baths" value="${p.bathrooms}" /></label>
+        <label>Precio (MXN)<input type="number" class="p-price" value="${escapeHtml(p.price)}" /></label>
+        <label>Terreno (m²)<input type="number" class="p-area" value="${escapeHtml(p.area)}" /></label>
+        <label>Recámaras<input type="number" class="p-beds" value="${escapeHtml(p.bedrooms)}" /></label>
+        <label>Baños<input type="number" step="0.5" class="p-baths" value="${escapeHtml(p.bathrooms)}" /></label>
       </div>
-      <label style="margin-bottom:10px;">Descripción<textarea rows="2" class="p-desc">${p.description}</textarea></label>
-      <label style="margin-bottom:10px;">URL Imagen<input type="text" class="p-img" value="${p.image}" /></label>
+      <label style="margin-bottom:10px;">Descripción<textarea rows="2" class="p-desc">${escapeHtml(p.description)}</textarea></label>
+      <label style="margin-bottom:10px;">URL Imagen<input type="text" class="p-img" value="${escapeHtml(p.image)}" /></label>
       <label style="margin-bottom:10px;">Subir nueva imagen<input type="file" class="p-upload-img" accept="image/*" /></label>
-      <label style="margin-bottom:12px;">URL Video (opcional)<input type="text" class="p-video" value="${p.video || ''}" placeholder="https://... o sube archivo" /></label>
+      <label style="margin-bottom:12px;">URL Video (opcional)<input type="text" class="p-video" value="${escapeHtml(p.video || '')}" placeholder="https://... o sube archivo" /></label>
       <button class="btn-primary save-proto-btn">Guardar cambios</button>
     </div>
   `).join('');
@@ -1388,9 +1352,13 @@ async function renderAdminCms() {
   if ($('cmsDevSelect')) $('cmsDevSelect').value = slug;
 
   const mapData = await fetchDevMapData(slug);
+  if (slug !== state.cmsDevSlug) return;
   const counts = getMapCounts(mapData.lots);
   if ($('cmsSyncStatus')) {
-    $('cmsSyncStatus').textContent = `Fuente: ${mapData.source || 'planos.qavalta.com'} · ${mapData.lots.length} lotes/unidades`;
+    const sources = { 'planos.qavalta.com': 'Catálogo remoto', 'local-cache': 'Copia local', 'stale-cache': 'Última sincronización disponible' };
+    const label = sources[mapData.source] || 'Copia local';
+    $('cmsSyncStatus').textContent = `${label} · ${mapData.lots.length} lotes/unidades`;
+    $('cmsSyncBadge').textContent = label;
   }
 
   $('cmsLotStats').innerHTML = `
@@ -1409,15 +1377,15 @@ async function renderAdminCms() {
   $('editHeroImage').value = site.heroImage;
 
   $('cmsDevsGrid').innerHTML = developments.map(d => `
-    <div class="cms-form-card" data-cms-dev="${d.id}">
-      <img src="${d.image}" class="cms-preview-img" alt="${d.name}" />
-      <h3>Desarrollo: ${d.name}</h3>
+    <div class="cms-form-card" data-cms-dev="${escapeHtml(d.id)}">
+      <img src="${escapeHtml(d.image)}" class="cms-preview-img" alt="${escapeHtml(d.name)}" />
+      <h3>Desarrollo: ${escapeHtml(d.name)}</h3>
       <div class="form-grid">
-        <label>Nombre<input type="text" class="d-name" value="${d.name}" /></label>
-        <label>Precio desde (MXN)<input type="number" class="d-price" value="${d.startingPrice}" /></label>
+        <label>Nombre<input type="text" class="d-name" value="${escapeHtml(d.name)}" /></label>
+        <label>Precio desde (MXN)<input type="number" class="d-price" value="${escapeHtml(d.startingPrice)}" /></label>
       </div>
-      <label style="margin-bottom:10px;">Descripción corta<input type="text" class="d-tagline" value="${d.tagline}" /></label>
-      <label style="margin-bottom:10px;">URL Imagen<input type="text" class="d-img" value="${d.image}" /></label>
+      <label style="margin-bottom:10px;">Descripción corta<input type="text" class="d-tagline" value="${escapeHtml(d.tagline)}" /></label>
+      <label style="margin-bottom:10px;">URL Imagen<input type="text" class="d-img" value="${escapeHtml(d.image)}" /></label>
       <label style="margin-bottom:12px;">Subir nueva imagen<input type="file" class="d-upload-img" accept="image/*" /></label>
       <button class="btn-primary save-dev-btn">Guardar desarrollo</button>
     </div>
@@ -1431,23 +1399,23 @@ function renderCmsLotsTable() {
   const q = $('lotSearchInput').value.trim().toLowerCase();
   const statusF = $('lotStatusFilter').value;
   const filtered = mapData.lots.filter(l => {
-    const stKey = l.s === 'apartado' ? 'reservado' : l.s;
+    const stKey = normalizeStatus(l.s);
     const matchQ = !q || l.n.toLowerCase().includes(q) || l.id.toLowerCase().includes(q) || String(l.m).toLowerCase().includes(q) || String(l.pr).toLowerCase().includes(q);
     const matchS = statusF === 'all' || stKey === statusF;
     return matchQ && matchS;
   });
 
-  $('cmsLotsBody').innerHTML = filtered.slice(0, 150).map(l => {
-    const stKey = l.s === 'apartado' ? 'reservado' : l.s;
+  $('cmsLotsBody').innerHTML = filtered.map(l => {
+    const stKey = normalizeStatus(l.s);
     return `
-    <tr data-lot-row="${l.id}">
-      <td><strong>${l.n}</strong> <small style="color:var(--muted)">(${l.id})</small></td>
-      <td>${l.m || '-'}</td>
-      <td>${l.a ? `${l.a} m²` : '-'}</td>
+    <tr data-lot-row="${escapeHtml(l.id)}">
+      <td><strong>${escapeHtml(l.n)}</strong> <small style="color:var(--muted)">(${escapeHtml(l.id)})</small></td>
+      <td>${escapeHtml(l.m || '-')}</td>
+      <td>${l.a ? `${escapeHtml(l.a)} m²` : '-'}</td>
       <td>
         <select class="lot-proto-select">
           <option value="">Sin asignar</option>
-          ${state.prototypes.map(p => `<option value="${p.name}" ${String(l.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${p.name}</option>`).join('')}
+          ${getDevMapPrototypes(slug).map(p => `<option value="${escapeHtml(p.name)}" ${String(l.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('')}
         </select>
       </td>
       <td>
@@ -1480,7 +1448,7 @@ function bindEvents() {
 
   // Login modal -> go straight into Alvarado Studio on login
   $('closeLoginModal').addEventListener('click', () => $('loginModal').classList.add('hidden'));
-  $('loginForm').addEventListener('submit', async (e) => {
+  $('loginForm').addEventListener('submit', handleAsync(async (e) => {
     e.preventDefault();
     $('loginError').classList.add('hidden');
     try {
@@ -1499,17 +1467,17 @@ function bindEvents() {
       $('loginError').textContent = err.message;
       $('loginError').classList.remove('hidden');
     }
-  });
+  }));
 
   // Admin navigation
-  $('openMapBtn').addEventListener('click', openInteractiveMap);
-  $('openCmsBtn').addEventListener('click', openAdminCms);
-  $('cmsToMapBtn').addEventListener('click', openInteractiveMap);
+  $('openMapBtn').addEventListener('click', handleAsync(openInteractiveMap));
+  $('openCmsBtn').addEventListener('click', handleAsync(openAdminCms));
+  $('cmsToMapBtn').addEventListener('click', handleAsync(openInteractiveMap));
   $('exitMapBtn').addEventListener('click', () => showOnlyView('public'));
-  $('cmsToPublicBtn').addEventListener('click', async () => {
+  $('cmsToPublicBtn').addEventListener('click', handleAsync(async () => {
     await loadPublicData();
     showOnlyView('public');
-  });
+  }));
 
   const handleLogout = async () => {
     await api('/api/auth/logout', { method: 'POST' });
@@ -1517,8 +1485,8 @@ function bindEvents() {
     showOnlyView('public');
     showToast('Sesión cerrada');
   };
-  $('logoutBtn').addEventListener('click', handleLogout);
-  $('cmsLogoutBtn').addEventListener('click', handleLogout);
+  $('logoutBtn').addEventListener('click', handleAsync(handleLogout));
+  $('cmsLogoutBtn').addEventListener('click', handleAsync(handleLogout));
 
   // Fullscreen gallery listeners
   $('fsGalleryClose')?.addEventListener('click', closeFullscreenGallery);
@@ -1711,20 +1679,20 @@ function bindEvents() {
         mapSec.querySelectorAll('.qmap-lot').forEach(el => el.classList.remove('selected'));
         inlineLot.classList.add('selected');
         const bar = mapSec.querySelector('.dev-inline-lot-bar');
-        const stKey = lot.s === 'apartado' ? 'reservado' : lot.s;
+        const stKey = normalizeStatus(lot.s);
         const stLabel = { disponible: 'Disponible', reservado: 'Apartado', 'no-disponible': 'No disponible', vendido: 'Vendido' }[stKey] || lot.s;
         const devName = state.developments.find(d => d.id === slug)?.name || slug;
         const lotProto = resolveLotPrototype(lot, slug);
         const waMsg = encodeURIComponent(`Hola, me interesa información sobre ${lot.n} (${lotProto?.name || ''}) en ${devName} (${lot.a} m²).`);
         bar.innerHTML = `
           <div class="dev-inline-lot-info">
-            <span class="lot-status-pill ${stKey}">${stLabel}</span>
-            <strong>${lot.n}</strong>
-            <span>${svgIcon('area')} ${lot.a ? `${lot.a} m²` : 'N/A'}</span>
-            ${lotProto ? `<span>${svgIcon('home')} ${lotProto.name}</span>` : ''}
-            ${lotProto?.price ? `<span>${svgIcon('tag')} ${mxn.format(lotProto.price)}</span>` : ''}
+            <span class="lot-status-pill ${escapeHtml(stKey)}">${escapeHtml(stLabel)}</span>
+            <strong>${escapeHtml(lot.n)}</strong>
+            <span>${svgIcon('area')} ${lot.a ? `${escapeHtml(lot.a)} m²` : 'N/A'}</span>
+            ${lotProto ? `<span>${svgIcon('home')} ${escapeHtml(lotProto.name)}</span>` : ''}
+            ${lot.p > 0 ? `<span>${svgIcon('tag')} ${mxn.format(lot.p)}</span>` : ''}
           </div>
-          <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa-mini">Cotizar por WhatsApp →</a>
+          <a href="https://wa.me/${escapeHtml(state.site?.whatsapp || '525537560931')}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa-mini">Cotizar por WhatsApp →</a>
         `;
         bar.classList.remove('hidden');
       }
@@ -1789,7 +1757,7 @@ function bindEvents() {
       $('inqSubmitBtn').textContent = inquiryMode === 'tour' ? 'Agendar visita →' : 'Enviar solicitud →';
     });
   });
-  $('inquiryForm').addEventListener('submit', async (e) => {
+  $('inquiryForm').addEventListener('submit', handleAsync(async (e) => {
     e.preventDefault();
     const status = $('inqStatus');
     status.classList.add('hidden');
@@ -1808,8 +1776,9 @@ function bindEvents() {
       });
       $('inquiryForm').reset();
       status.textContent = inquiryMode === 'tour'
-        ? '¡Visita agendada! Nuestras asesoras confirmarán tu horario.'
+        ? '¡Solicitud de visita registrada! Nuestras asesoras confirmarán tu horario.'
         : '¡Solicitud enviada! En breve te contactamos.';
+      status.style.color = '';
       status.classList.remove('hidden');
       showToast('Solicitud registrada');
     } catch (err) {
@@ -1817,12 +1786,12 @@ function bindEvents() {
       status.textContent = err.message;
       status.classList.remove('hidden');
     }
-  });
+  }));
 
   // Public Contact Form
   const contactForm = $('contactForm');
   if (contactForm) {
-    contactForm.addEventListener('submit', async (e) => {
+    contactForm.addEventListener('submit', handleAsync(async (e) => {
       e.preventDefault();
       const status = $('contactStatus');
       status.classList.add('hidden');
@@ -1846,7 +1815,7 @@ function bindEvents() {
         status.textContent = err.message;
         status.classList.remove('hidden');
       }
-    });
+    }));
   }
 
   // Map interactions (Lot click, dev pills, status filter pills, tabs, zoom, pan)
@@ -1854,7 +1823,7 @@ function bindEvents() {
     const lotEl = e.target.closest('.qmap-lot');
     if (!lotEl) return;
     state.selectedLotId = lotEl.dataset.lot;
-    renderInteractiveMap();
+    handleAsync(renderInteractiveMap)();
   });
 
   if ($('mapDevPills')) {
@@ -1866,7 +1835,7 @@ function bindEvents() {
       state.mapStatusFilter = 'all';
       state.mapProtoFilter = 'all';
       resetZoom();
-      renderInteractiveMap();
+      handleAsync(renderInteractiveMap)();
     });
   }
 
@@ -1874,7 +1843,7 @@ function bindEvents() {
     const btn = e.target.closest('button[data-mproto]');
     if (!btn) return;
     state.mapProtoFilter = btn.dataset.mproto;
-    renderInteractiveMap();
+    handleAsync(renderInteractiveMap)();
   });
 
   if ($('mapStatusFilters')) {
@@ -1882,7 +1851,7 @@ function bindEvents() {
       const btn = e.target.closest('button[data-mstatus]');
       if (!btn) return;
       state.mapStatusFilter = btn.dataset.mstatus;
-      renderInteractiveMap();
+      handleAsync(renderInteractiveMap)();
     });
   }
 
@@ -1964,14 +1933,14 @@ function bindEvents() {
   $('cmsProtoDevFilter')?.addEventListener('change', renderCmsPrototypesGrid);
 
   if ($('cmsDevSelect')) {
-    $('cmsDevSelect').addEventListener('change', async (e) => {
+    $('cmsDevSelect').addEventListener('change', handleAsync(async (e) => {
       state.cmsDevSlug = e.target.value;
       await renderAdminCms();
-    });
+    }));
   }
 
   if ($('cmsSyncQavaltaBtn')) {
-    $('cmsSyncQavaltaBtn').addEventListener('click', async () => {
+    $('cmsSyncQavaltaBtn').addEventListener('click', handleAsync(async () => {
       try {
         $('cmsSyncQavaltaBtn').disabled = true;
         $('cmsSyncQavaltaBtn').textContent = 'Sincronizando...';
@@ -1988,11 +1957,11 @@ function bindEvents() {
         $('cmsSyncQavaltaBtn').disabled = false;
         $('cmsSyncQavaltaBtn').textContent = 'Sincronizar ahora';
       }
-    });
+    }));
   }
 
   // CMS Lot updates (saved as override & reflected on live maps)
-  $('cmsLotsBody').addEventListener('change', async (e) => {
+  $('cmsLotsBody').addEventListener('change', handleAsync(async (e) => {
     const row = e.target.closest('tr[data-lot-row]');
     if (!row) return;
     const slug = state.cmsDevSlug || 'sorento';
@@ -2004,30 +1973,28 @@ function bindEvents() {
       body: JSON.stringify({ status, prototipo })
     });
     delete state.devMapsCache[slug];
-    await fetchDevMapData(slug, true);
+    await fetchDevMapData(slug);
     await renderAdminCms();
     showToast(`Lote ${lotId} actualizado en ${slug}`);
-  });
+  }));
 
   // CMS Prototype updates & file uploads
-  $('cmsPrototypesGrid').addEventListener('change', async (e) => {
+  $('cmsPrototypesGrid').addEventListener('change', handleAsync(async (e) => {
     if (!e.target.classList.contains('p-upload-img')) return;
     const card = e.target.closest('[data-cms-proto]');
     const file = e.target.files[0];
     if (!file) return;
-    const fd = new FormData();
-    fd.append('file', file);
-    const res = await api('/api/admin/upload', { method: 'POST', body: fd });
+    const res = await uploadMedia(file);
     card.querySelector('.p-img').value = res.url;
     card.querySelector('.cms-preview-img').src = res.url;
     showToast('Imagen subida. Haz clic en Guardar cambios.');
-  });
+  }));
 
-  $('cmsPrototypesGrid').addEventListener('click', async (e) => {
+  $('cmsPrototypesGrid').addEventListener('click', handleAsync(async (e) => {
     if (!e.target.classList.contains('save-proto-btn')) return;
     const card = e.target.closest('[data-cms-proto]');
     const id = card.dataset.cmsProto;
-    await api(`/api/admin/prototypes/${id}`, {
+    const saved = await api(`/api/admin/prototypes/${id}`, {
       method: 'PATCH',
       body: JSON.stringify({
         price: card.querySelector('.p-price').value,
@@ -2039,21 +2006,20 @@ function bindEvents() {
         video: card.querySelector('.p-video').value
       })
     });
+    state.prototypes = state.prototypes.map(p => p.id === id ? saved.prototype : p);
     showToast(`Prototipo ${id} guardado`);
-  });
+  }));
 
   // CMS Site & Developments updates
-  $('uploadHeroFile').addEventListener('change', async (e) => {
+  $('uploadHeroFile').addEventListener('change', handleAsync(async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const fd = new FormData();
-    fd.append('file', file);
-    const res = await api('/api/admin/upload', { method: 'POST', body: fd });
+    const res = await uploadMedia(file);
     $('editHeroImage').value = res.url;
     showToast('Imagen de portada subida. Haz clic en Guardar Portada.');
-  });
+  }));
 
-  $('saveSiteBtn').addEventListener('click', async () => {
+  $('saveSiteBtn').addEventListener('click', handleAsync(async () => {
     await api('/api/admin/site', {
       method: 'PATCH',
       body: JSON.stringify({
@@ -2066,22 +2032,20 @@ function bindEvents() {
     });
     await loadPublicData();
     showToast('Portada actualizada');
-  });
+  }));
 
-  $('cmsDevsGrid').addEventListener('change', async (e) => {
+  $('cmsDevsGrid').addEventListener('change', handleAsync(async (e) => {
     if (!e.target.classList.contains('d-upload-img')) return;
     const card = e.target.closest('[data-cms-dev]');
     const file = e.target.files[0];
     if (!file) return;
-    const fd = new FormData();
-    fd.append('file', file);
-    const res = await api('/api/admin/upload', { method: 'POST', body: fd });
+    const res = await uploadMedia(file);
     card.querySelector('.d-img').value = res.url;
     card.querySelector('.cms-preview-img').src = res.url;
     showToast('Imagen subida. Haz clic en Guardar desarrollo.');
-  });
+  }));
 
-  $('cmsDevsGrid').addEventListener('click', async (e) => {
+  $('cmsDevsGrid').addEventListener('click', handleAsync(async (e) => {
     if (!e.target.classList.contains('save-dev-btn')) return;
     const card = e.target.closest('[data-cms-dev]');
     const id = card.dataset.cmsDev;
@@ -2096,7 +2060,7 @@ function bindEvents() {
     });
     await loadPublicData();
     showToast(`Desarrollo ${id} guardado`);
-  });
+  }));
 }
 
-init();
+init().catch(err => { console.error(err); showToast('No se pudo iniciar la página. Intenta recargar.'); });
