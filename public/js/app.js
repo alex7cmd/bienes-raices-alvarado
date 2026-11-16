@@ -866,17 +866,21 @@ function buildMapLifeOverlay(mapData) {
       </defs>
 
       ${cfg.grass.map(g => `
-        <g class="qmap-grass-tuft" transform="translate(${g.x}, ${g.y})">
-          <path d="M-28 8 Q-34 -14 -42 -22 M-8 10 Q-8 -16 -4 -26 M12 10 Q18 -14 26 -22 M28 8 Q36 -8 44 -14"
-            fill="none" stroke="#166534" stroke-width="4" stroke-linecap="round" opacity="0.38" />
+        <g transform="translate(${g.x}, ${g.y})">
+          <g class="qmap-grass-tuft">
+            <path d="M-28 8 Q-34 -14 -42 -22 M-8 10 Q-8 -16 -4 -26 M12 10 Q18 -14 26 -22 M28 8 Q36 -8 44 -14"
+              fill="none" stroke="#166534" stroke-width="4" stroke-linecap="round" opacity="0.38" />
+          </g>
         </g>
       `).join('')}
 
       ${cfg.trees.map(t => `
-        <g class="qmap-tree-sway" style="animation-delay:${t.d};" transform="translate(${t.x}, ${t.y})">
-          <circle cx="10" cy="14" r="${t.r}" fill="rgba(15,23,42,0.16)" />
-          <circle cx="0" cy="0" r="${t.r}" fill="url(#qmapTreeGrad)" stroke="#166534" stroke-width="4" opacity="0.92" />
-          <circle cx="${-t.r * 0.24}" cy="${-t.r * 0.22}" r="${t.r * 0.42}" fill="#bbf7d0" opacity="0.38" />
+        <g transform="translate(${t.x}, ${t.y})">
+          <g class="qmap-tree-sway" style="animation-delay:${t.d};">
+            <circle cx="10" cy="14" r="${t.r}" fill="rgba(15,23,42,0.16)" />
+            <circle cx="0" cy="0" r="${t.r}" fill="url(#qmapTreeGrad)" stroke="#166534" stroke-width="4" opacity="0.92" />
+            <circle cx="${-t.r * 0.24}" cy="${-t.r * 0.22}" r="${t.r * 0.42}" fill="#bbf7d0" opacity="0.38" />
+          </g>
         </g>
       `).join('')}
 
