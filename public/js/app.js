@@ -762,6 +762,86 @@ function getMapCounts(lots) {
   return c;
 }
 
+function buildMapLifeOverlay(mapData) {
+  if (mapData.isTowerFloors || !mapData.bg) return '';
+  const trees = [
+    { x: 3280, y: 3820, r: 95, d: '0s' },
+    { x: 3740, y: 4050, r: 108, d: '1.1s' },
+    { x: 5620, y: 3860, r: 102, d: '0.6s' },
+    { x: 6040, y: 4060, r: 92, d: '1.8s' },
+    { x: 4770, y: 2150, r: 84, d: '0.4s' },
+    { x: 4770, y: 3680, r: 88, d: '1.5s' },
+    { x: 4770, y: 5050, r: 82, d: '2.2s' }
+  ];
+  const grassSpots = [
+    { x: 3440, y: 3940 }, { x: 3620, y: 3810 }, { x: 5800, y: 3950 }, { x: 5940, y: 3820 }
+  ];
+  return `
+    <g class="qmap-life-layer" pointer-events="none">
+      <defs>
+        <radialGradient id="qmapTreeGrad" cx="38%" cy="35%" r="65%">
+          <stop offset="0%" stop-color="#86efac" />
+          <stop offset="55%" stop-color="#22c55e" />
+          <stop offset="100%" stop-color="#15803d" />
+        </radialGradient>
+        <g id="qmapCarShape">
+          <ellipse cx="2" cy="5" rx="54" ry="28" fill="rgba(15,23,42,0.22)" />
+          <rect x="-52" y="-24" width="104" height="48" rx="16" fill="currentColor" stroke="#0f172a" stroke-width="3" />
+          <rect x="-24" y="-18" width="50" height="36" rx="9" fill="#e2e8f0" opacity="0.9" />
+          <rect x="-12" y="-15" width="26" height="30" rx="6" fill="currentColor" />
+          <circle cx="46" cy="-14" r="4" fill="#fef08a" />
+          <circle cx="46" cy="14" r="4" fill="#fef08a" />
+        </g>
+        <g id="qmapWalkerShape">
+          <ellipse cx="0" cy="4" rx="18" ry="14" fill="rgba(15,23,42,0.18)" />
+          <ellipse cx="0" cy="0" rx="16" ry="11" fill="currentColor" />
+          <circle cx="2" cy="0" r="9" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" />
+          <circle cx="3" cy="0" r="6" fill="#334155" />
+        </g>
+      </defs>
+
+      ${grassSpots.map(g => `
+        <g class="qmap-grass-tuft" transform="translate(${g.x}, ${g.y})">
+          <path d="M-28 8 Q-34 -14 -42 -22 M-8 10 Q-8 -16 -4 -26 M12 10 Q18 -14 26 -22 M28 8 Q36 -8 44 -14"
+            fill="none" stroke="#166534" stroke-width="4" stroke-linecap="round" opacity="0.38" />
+        </g>
+      `).join('')}
+
+      ${trees.map(t => `
+        <g class="qmap-tree-sway" style="animation-delay:${t.d};" transform="translate(${t.x}, ${t.y})">
+          <circle cx="10" cy="14" r="${t.r}" fill="rgba(15,23,42,0.16)" />
+          <circle cx="0" cy="0" r="${t.r}" fill="url(#qmapTreeGrad)" stroke="#166534" stroke-width="4" opacity="0.92" />
+          <circle cx="${-t.r * 0.24}" cy="${-t.r * 0.22}" r="${t.r * 0.42}" fill="#bbf7d0" opacity="0.38" />
+        </g>
+      `).join('')}
+
+      <!-- 3 autos animados de forma sutil -->
+      <g color="#ffffff">
+        <use href="#qmapCarShape" />
+        <animateMotion dur="26s" repeatCount="indefinite" rotate="auto" path="M 4710 5650 L 4710 950" />
+      </g>
+      <g color="#1e3a5f">
+        <use href="#qmapCarShape" />
+        <animateMotion dur="31s" begin="-11s" repeatCount="indefinite" rotate="auto" path="M 4830 950 L 4830 5650" />
+      </g>
+      <g color="#d6b68a">
+        <use href="#qmapCarShape" />
+        <animateMotion dur="28s" begin="-6s" repeatCount="indefinite" rotate="auto" path="M 2150 3260 L 6850 3260" />
+      </g>
+
+      <!-- 2 personas caminando sutilmente -->
+      <g class="qmap-walker" color="#0ea5e9">
+        <use href="#qmapWalkerShape" />
+        <animateMotion dur="36s" repeatCount="indefinite" rotate="auto" path="M 3260 3980 L 3920 3980 L 3920 3800 L 3260 3800 Z" />
+      </g>
+      <g class="qmap-walker" color="#f97316">
+        <use href="#qmapWalkerShape" />
+        <animateMotion dur="40s" begin="-14s" repeatCount="indefinite" rotate="auto" path="M 5560 3840 L 6140 3840 L 6140 4040 L 5560 4040 Z" />
+      </g>
+    </g>
+  `;
+}
+
 function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all', protoFilter = 'all', floorId = null } = {}) {
   const colors = {
     disponible: { fill: 'rgba(16, 185, 129, 0.52)', stroke: '#047857' },
@@ -818,7 +898,7 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
       : `<path d="${l.d}" ${attrs} />`;
   }).join('');
 
-  return `${bgMarkup}<g class="qmap-lots-layer">${lotsMarkup}</g>`;
+  return `${bgMarkup}<g class="qmap-lots-layer">${lotsMarkup}</g>${buildMapLifeOverlay(mapData)}`;
 }
 
 async function loadInlineDevMap(slug, floorId = null) {

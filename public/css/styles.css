@@ -939,6 +939,22 @@ html[data-theme="dark"] .fin-logo img {
   width: 100%; height: 100%; transform-origin: center center; transition: transform 0.25s ease;
 }
 .dev-inline-svg { width: 100%; height: 100%; display: block; }
+@keyframes mapTreeBreeze {
+  0%, 100% { transform: rotate(-2.5deg) scale(1); }
+  50% { transform: rotate(2.8deg) scale(1.025); }
+}
+@keyframes mapGrassSway {
+  0%, 100% { transform: skewX(-4deg); }
+  50% { transform: skewX(5deg); }
+}
+.qmap-tree-sway {
+  transform-box: fill-box; transform-origin: center;
+  animation: mapTreeBreeze 5.4s ease-in-out infinite;
+}
+.qmap-grass-tuft {
+  transform-box: fill-box; transform-origin: bottom center;
+  animation: mapGrassSway 4.6s ease-in-out infinite;
+}
 .dev-inline-zoom-bar {
   position: sticky; top: 10px; left: 10px; z-index: 4; width: fit-content;
   display: flex; gap: 4px; padding: 4px; border-radius: 999px;
