@@ -181,32 +181,12 @@ function getScheduledTheme() {
   return hour >= 8 && hour < 18 ? 'light' : 'dark';
 }
 
-function applyTheme(theme) {
-  document.documentElement.dataset.theme = theme;
-  const btn = $('themeToggleBtn');
-  if (btn) {
-    btn.innerHTML = theme === 'dark'
-      ? '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>'
-      : '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>';
-    btn.title = theme === 'dark'
-      ? 'Modo oscuro activo (6:00 PM – 8:00 AM). Clic para cambiar a claro'
-      : 'Modo claro activo (8:00 AM – 6:00 PM). Clic para cambiar a oscuro';
-  }
-}
-
 function initThemeScheduler() {
-  const override = sessionStorage.getItem('alvarado_theme_override');
-  applyTheme(override || getScheduledTheme());
+  sessionStorage.removeItem('alvarado_theme_override');
+  document.documentElement.dataset.theme = getScheduledTheme();
   setInterval(() => {
-    if (!sessionStorage.getItem('alvarado_theme_override')) {
-      applyTheme(getScheduledTheme());
-    }
+    document.documentElement.dataset.theme = getScheduledTheme();
   }, 60 * 1000);
-  $('themeToggleBtn')?.addEventListener('click', () => {
-    const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-    sessionStorage.setItem('alvarado_theme_override', next);
-    applyTheme(next);
-  });
 }
 
 // --- INITIALIZATION ---
