@@ -760,7 +760,11 @@ html[data-theme="dark"] .dock-icon-circle {
   animation: financingLoop 24s linear infinite;
 }
 .financing-marquee:hover .financing-track { animation-play-state: paused; }
-.fin-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 12px; }
+.fin-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 16px; }
+.fin-logo img { height: 42px; width: auto; max-width: 170px; object-fit: contain; display: block; }
+html[data-theme="dark"] .fin-logo img {
+  background: rgba(255, 255, 255, 0.94); padding: 6px 12px; border-radius: 10px; height: 48px;
+}
 @keyframes financingLoop {
   0% { transform: translateX(0); }
   100% { transform: translateX(-50%); }
