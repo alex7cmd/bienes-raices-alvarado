@@ -2,7 +2,7 @@
 
 **Ubicación del proyecto:** `/Users/alejandrofernandez/Documents/bienes-raices-alvarado`  
 **Fecha de inicio:** 2026-11-15  
-**Última actualización:** 2026-11-16 (`v1.9.3`)  
+**Última actualización:** 2026-11-16 (`v1.9.8`)  
 **URL Demo en vivo:** `https://alvarado.commandigital.biz`  
 **Estado:** Demo funcional completa y sincronizada con `planos.qavalta.com` (lista para revisión final del cliente)
 
@@ -68,11 +68,13 @@ Rediseñar y reconstruir la plataforma web de **Bienes Raíces Alvarado (Qvalta 
   - [x] Identidad azul ejecutivo (`#1e5b8f`), favicon hexagonal oficial, logos transparentes de financiamiento en marquesina continua sin salto, y modo claro/oscuro automático + manual (sitio público y CMS).
   - [x] Hero con segundo menú sticky de desarrollos, ficha técnica lineal (`Icono | Etiqueta Valor`), amenidades adaptativas, galería horizontal y mapa de recorrido en Google Maps.
   - [x] Planos `.webp` calados sin fondo blanco exterior (con respaldo en `public/assets/maps/backup/`), logo de **Oporto** en cabecera de columna derecha, animaciones ligeras en mapa (autos en 2 carriles, peatones, pasto y arbolitos con brisa), ondas expansivas en estatus, paneo táctil móvil (embebido y pantalla completa) y `<select>` homologados.
+  - [x] Pulido del CMS (**Alvarado Studio**): sin desbordes horizontales en grids/tarjetas, descripción con crecimiento solo vertical y alto estándar (`92 px`), botón **Guardar cambios** al `100%` centrado, miniaturas cuadradas `1:1`, y buscador + filtro por desarrollo en tiempo real en **Prototipos y Precios**.
 - [ ] **Fase 7 (Producción / Dominio Final):** Conexión al dominio definitivo y validación final de contenidos con el cliente.
 
 ---
 
 ## 5. Pendientes del Cliente / Siguientes Pasos
+- [ ] Compartir el enlace de Figma (`https://www.figma.com/design/...`) para extraer el **SVG oficial de QAVALTA** y colocarlo en el Hero de la página pública.
 - [ ] Revisar en `https://alvarado.commandigital.biz` los 6 desarrollos, el modo claro/oscuro, la vista móvil y el panel **Alvarado Studio** (icono superior derecho).
 - [ ] Confirmar si se agregan logotipos individuales en la columna derecha del mapa para el resto de las privadas (como se hizo con **Oporto**).
 - [ ] Confirmar datos de contacto finales (WhatsApp, teléfono, correo y redes sociales) y dominio definitivo para apuntar SiteGround en producción.
