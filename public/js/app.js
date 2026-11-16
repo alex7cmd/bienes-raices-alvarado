@@ -511,17 +511,17 @@ function openPrototypeModal(protoId, initialIdx = 0) {
     </div>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px;">${p.description}</p>
     <div class="lot-specs-grid" style="grid-template-columns:repeat(4,1fr);">
-      <div class="lot-spec-box"><small>📐 Terreno</small><strong>${p.area} m²</strong></div>
-      <div class="lot-spec-box"><small>🛏️ Recámaras</small><strong>${p.bedrooms}</strong></div>
-      <div class="lot-spec-box"><small>🚿 Baños</small><strong>${p.bathrooms}</strong></div>
-      <div class="lot-spec-box"><small>🚗 Estac.</small><strong>${p.parking}</strong></div>
+      <div class="lot-spec-box"><small>${svgIcon('area')} Terreno</small><strong>${p.area} m²</strong></div>
+      <div class="lot-spec-box"><small>${svgIcon('bed')} Recámaras</small><strong>${p.bedrooms}</strong></div>
+      <div class="lot-spec-box"><small>${svgIcon('bath')} Baños</small><strong>${p.bathrooms}</strong></div>
+      <div class="lot-spec-box"><small>${svgIcon('car')} Estac.</small><strong>${p.parking}</strong></div>
     </div>
     <div class="proto-features-chips" style="margin-bottom:16px;">
       ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
     </div>
     <div style="margin-bottom:16px;">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <strong style="font-size:13px;">📍 Ubicación · Qavalta Residencial, Pachuca</strong>
+        <strong style="font-size:13px;">${svgIcon('pin')} Ubicación · Qavalta Residencial, Pachuca</strong>
         <a href="https://maps.google.com/?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo" target="_blank" rel="noopener" style="font-size:12px;color:var(--accent);text-decoration:none;font-weight:600;">Abrir en Google Maps →</a>
       </div>
       <iframe
@@ -608,6 +608,7 @@ function showOnlyView(viewName) {
   $('adminView').classList.toggle('hidden', viewName !== 'admin');
   $('adminDropdown').classList.add('hidden');
   if ($('floatingStack')) {
+    $('floatingStack').classList.toggle('hidden', viewName === 'admin');
     $('floatingStack').classList.toggle('on-map', viewName === 'map');
   }
 }
@@ -931,11 +932,11 @@ function renderCmsLotsTable() {
 
 // --- EVENTS ---
 function bindEvents() {
-  // Top-right User Icon
+  // Top-right User Icon -> go straight to Alvarado Studio when authenticated
   $('userIconBtn').addEventListener('click', (e) => {
     e.stopPropagation();
     if (state.isAdmin) {
-      $('adminDropdown').classList.toggle('hidden');
+      openAdminCms();
     } else {
       $('loginModal').classList.remove('hidden');
     }
@@ -944,7 +945,7 @@ function bindEvents() {
   document.addEventListener('click', () => $('adminDropdown').classList.add('hidden'));
   $('adminDropdown').addEventListener('click', (e) => e.stopPropagation());
 
-  // Login modal
+  // Login modal -> go straight into Alvarado Studio on login
   $('closeLoginModal').addEventListener('click', () => $('loginModal').classList.add('hidden'));
   $('loginForm').addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -959,8 +960,8 @@ function bindEvents() {
       });
       await checkAuth();
       $('loginModal').classList.add('hidden');
-      showToast('Sesión de Administrador iniciada');
-      $('adminDropdown').classList.remove('hidden');
+      showToast('Bienvenido a Alvarado Studio');
+      await openAdminCms();
     } catch (err) {
       $('loginError').textContent = err.message;
       $('loginError').classList.remove('hidden');

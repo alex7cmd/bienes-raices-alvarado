@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.2.5" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.2.6" />
 </head>
 <body>
   <!-- HEADER -->
@@ -425,26 +425,63 @@
     </div>
   </section>
 
-  <!-- ADMIN CMS VIEW (SEPARATE FROM PRESENTATION MAP) -->
+  <!-- ALVARADO STUDIO (GESTIÓN RESIDENCIAL) -->
   <section class="admin-cms-view hidden" id="adminView">
-    <div class="cms-topbar">
-      <div class="cms-title-group">
-        <span class="badge-admin">Panel Administrador (CMS)</span>
-        <span class="cms-note">Edición de contenido, precios y disponibilidad · Diseño bloqueado</span>
-      </div>
-      <div class="cms-actions">
-        <button class="btn-secondary" id="cmsToMapBtn">🗺️ Ver Plano Interactivo</button>
-        <button class="btn-secondary" id="cmsToPublicBtn">← Volver al Sitio</button>
-        <button class="btn-danger-outline" id="cmsLogoutBtn">Cerrar sesión</button>
-      </div>
-    </div>
+    <div class="cms-layout">
+      <aside class="cms-sidebar">
+        <div class="cms-brand">
+          <div class="cms-brand-mark">A</div>
+          <div>
+            <strong>Alvarado Studio</strong>
+            <small>Gestión Residencial</small>
+          </div>
+        </div>
 
-    <div class="cms-body">
-      <div class="cms-tabs">
-        <button class="cms-tab active" data-cmstab="lots">Control de Lotes (Plano)</button>
-        <button class="cms-tab" data-cmstab="prototypes">Prototipos (Precios e Imágenes)</button>
-        <button class="cms-tab" data-cmstab="site">Portada y Desarrollos</button>
-      </div>
+        <nav class="cms-sidebar-nav" aria-label="Navegación Alvarado Studio">
+          <span class="cms-nav-label">GESTIÓN</span>
+          <button class="cms-tab active" data-cmstab="lots">
+            <svg class="ui-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+            Control de Lotes
+          </button>
+          <button class="cms-tab" data-cmstab="prototypes">
+            <svg class="ui-icon" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
+            Prototipos y Precios
+          </button>
+          <button class="cms-tab" data-cmstab="site">
+            <svg class="ui-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+            Portada y Desarrollos
+          </button>
+
+          <span class="cms-nav-label" style="margin-top:16px;">VISTAS</span>
+          <button class="cms-side-action" id="cmsToMapBtn">
+            <svg class="ui-icon" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+            Plano Interactivo
+          </button>
+          <button class="cms-side-action" id="cmsToPublicBtn">
+            <svg class="ui-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Ver Sitio Público
+          </button>
+        </nav>
+
+        <div class="cms-sidebar-footer">
+          <div class="cms-user-pill">
+            <span class="cms-user-dot"></span>
+            <small id="cmsAdminEmail">admin@bienesraicesalvarado.com.mx</small>
+          </div>
+          <button class="cms-logout-btn" id="cmsLogoutBtn">Cerrar sesión</button>
+        </div>
+      </aside>
+
+      <div class="cms-main">
+        <div class="cms-topbar">
+          <div class="cms-title-group">
+            <h1 class="cms-page-title">Alvarado Studio</h1>
+            <span class="cms-note">Administración integral de inventario, precios y desarrollos · Qavalta</span>
+          </div>
+          <span class="cms-live-pill"><i class="cms-user-dot"></i> Sincronizado con planos.qavalta.com</span>
+        </div>
+
+        <div class="cms-body">
 
       <!-- TAB 1: LOTS -->
       <div class="cms-panel" id="cmsTabLots">
@@ -513,6 +550,8 @@
         </div>
         <h3 class="cms-subhead">Desarrollos Activos</h3>
         <div class="cms-cards-grid" id="cmsDevsGrid"></div>
+      </div>
+    </div>
       </div>
     </div>
   </section>
@@ -638,6 +677,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.2.5"></script>
+  <script src="/js/app.js?v=1.2.6"></script>
 </body>
 </html>
