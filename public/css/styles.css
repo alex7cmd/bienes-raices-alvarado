@@ -118,11 +118,33 @@ html[data-theme="dark"] .btn-secondary {
 }
 html[data-theme="dark"] .login-card input,
 html[data-theme="dark"] .cms-form-card input,
-html[data-theme="dark"] .cms-form-card textarea {
+html[data-theme="dark"] .cms-form-card textarea,
+html[data-theme="dark"] .cms-toolbar input,
+html[data-theme="dark"] .cms-toolbar select,
+html[data-theme="dark"] .cms-sync-controls select,
+html[data-theme="dark"] .cms-table select {
   background: var(--surface);
   color: var(--text);
   border-color: var(--border);
 }
+html[data-theme="dark"] .cms-layout,
+html[data-theme="dark"] .cms-main {
+  background: var(--bg);
+  color: var(--text);
+}
+html[data-theme="dark"] .cms-topbar,
+html[data-theme="dark"] .cms-sync-bar,
+html[data-theme="dark"] .stat-box,
+html[data-theme="dark"] .cms-table-wrap,
+html[data-theme="dark"] .cms-form-card {
+  background: var(--card-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+html[data-theme="dark"] .stat-box { border-top-color: var(--accent); }
+html[data-theme="dark"] .cms-table th { background: var(--surface); color: var(--text); }
+html[data-theme="dark"] .cms-table td { color: var(--text); border-bottom-color: var(--border); }
+html[data-theme="dark"] .cms-live-pill { background: rgba(22, 163, 74, 0.22); color: #86efac; }
 html[data-theme="dark"] .site-footer {
   background: #161412;
   border-top-color: var(--border);
