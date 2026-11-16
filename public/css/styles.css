@@ -614,17 +614,18 @@ html[data-theme="dark"] .dock-icon-circle {
 }
 .dev-overview-card {
   display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: center;
-  padding: 20px; margin: 16px 0 22px; border-radius: 14px;
+  padding: 26px 24px; margin: 16px 0 22px; border-radius: 14px;
   background: var(--surface); border: 1px solid var(--border);
 }
 .dev-overview-kicker {
-  display: block; font-size: 10.5px; font-weight: 700; letter-spacing: 1.3px;
-  color: var(--accent); margin-bottom: 6px;
+  display: block; font-size: 11px; font-weight: 700; letter-spacing: 1.3px;
+  color: var(--accent); margin-bottom: 8px;
 }
-.dev-overview-desc { font-size: 14px; color: var(--text); line-height: 1.65; margin-bottom: 14px; }
+.dev-overview-desc { font-size: 15px; color: var(--text); line-height: 1.7; margin-bottom: 18px; }
 .dev-overview-details {
-  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 0;
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 0;
 }
+.dev-overview-details .spec-text-wrap { padding: 11px 14px; }
 .dev-overview-map {
   background: #fff; border: 1px solid var(--border); border-radius: 12px; overflow: hidden;
   display: flex; flex-direction: column;
@@ -640,7 +641,7 @@ html[data-theme="dark"] .dock-icon-circle {
   font-size: 11px; font-weight: 600; color: #1d4ed8;
   background: #eff6ff; padding: 3px 9px; border-radius: 999px;
 }
-.dev-overview-map iframe { width: 100%; height: 190px; border: none; display: block; }
+.dev-overview-map iframe { width: 100%; height: 225px; border: none; display: block; }
 .dev-route-link {
   display: block; text-align: center; padding: 9px 12px; font-size: 12px; font-weight: 600;
   color: var(--accent); text-decoration: none; border-top: 1px solid var(--border); background: #fff;
