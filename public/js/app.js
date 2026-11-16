@@ -24,25 +24,56 @@ const state = {
 const mxn = new Intl.NumberFormat('es-MX', { style: 'currency', currency: 'MXN', maximumFractionDigits: 0 });
 const $ = (id) => document.getElementById(id);
 
+const SVG_PATHS = {
+  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>',
+  trees: '<path d="M12 3l-5 7h3l-4 6h12l-4-6h3l-5-7z"/><path d="M12 16v5"/>',
+  ball: '<circle cx="12" cy="12" r="9"/><path d="M12 3a14 14 0 0 0 0 18M3 12h18"/>',
+  bike: '<circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5V14l-3-3 4-3 2 3h2"/>',
+  users: '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
+  spark: '<path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/>',
+  paw: '<circle cx="11" cy="4" r="1.5"/><circle cx="18" cy="8" r="1.5"/><circle cx="4" cy="8" r="1.5"/><circle cx="15" cy="4" r="1.5"/><path d="M9 14c-1.5 0-3 1.5-3 3.5S7.5 20 9 20h6c1.5 0 3-1 3-2.5S16.5 14 15 14c-1.5 0-2-2-3-2s-1.5 2-3 2z"/>',
+  party: '<rect x="3" y="8" width="18" height="12" rx="2"/><path d="M7 8V6a5 5 0 0 1 10 0v2"/>',
+  pool: '<path d="M2 16c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><path d="M2 20c1.5 1 3 1 4.5 0s3-1 4.5 0 3 1 4.5 0 3-1 4.5 0"/><path d="M8 12V6a2 2 0 1 1 4 0v6"/>',
+  racket: '<circle cx="10" cy="10" r="6"/><path d="M14.5 14.5L21 21"/>',
+  gamepad: '<rect x="2" y="6" width="20" height="12" rx="4"/><path d="M6 12h4M8 10v4M15 11h.01M17 13h.01"/>',
+  bolt: '<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>',
+  leaf: '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+  elevator: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M9 12l3-3 3 3M9 15l3 3 3-3"/>',
+  area: '<path d="M3 7V3h4M21 7V3h-4M3 17v4h4M21 17v4h-4"/><rect x="7" y="7" width="10" height="10" rx="1"/>',
+  bed: '<path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9"/>',
+  bath: '<path d="M4 12h16a1 1 0 0 1 1 1v3a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4v-3a1 1 0 0 1 1-1z"/><path d="M6 12V5a2 2 0 0 1 2-2h3"/>',
+  car: '<path d="M5 17H3v-6l2-5h14l2 5v6h-2M7 17a2 2 0 1 0 4 0M13 17a2 2 0 1 0 4 0"/>',
+  pin: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>',
+  gallery: '<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',
+  home: '<path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/>',
+  tag: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><circle cx="7" cy="7" r="1.5"/>',
+  route: '<circle cx="6" cy="19" r="3"/><path d="M9 19h8.5a3.5 3.5 0 0 0 0-7h-11a3.5 3.5 0 0 1 0-7H15"/><circle cx="18" cy="5" r="3"/>',
+  expand: '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>'
+};
+
+function svgIcon(kind) {
+  const path = SVG_PATHS[kind] || SVG_PATHS.spark;
+  return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
+}
+
 function featureIcon(name) {
   const n = (name || '').toLowerCase();
-  if (n.includes('alberca')) return '🏊';
-  if (n.includes('pádel') || n.includes('padel')) return '🎾';
-  if (n.includes('game')) return '🎮';
-  if (n.includes('jumping')) return '🤸';
-  if (n.includes('oculto')) return '⚡';
-  if (n.includes('lineal')) return '🌿';
-  if (n.includes('elevador')) return '🛗';
-  if (n.includes('acceso') || n.includes('seguridad')) return '🛡️';
-  if (n.includes('verdes')) return '🌳';
-  if (n.includes('cancha')) return '⚽';
-  if (n.includes('ciclo')) return '🚲';
-  if (n.includes('familiar')) return '👨‍👩‍👧‍👦';
-  if (n.includes('juego')) return '🛝';
-  if (n.includes('canino') || n.includes('dog') || n.includes('mascota')) return '🐾';
-  if (n.includes('salón') || n.includes('salon') || n.includes('multiusos') || n.includes('múltiples')) return '🎉';
-  if (n.includes('vigilancia')) return '👮';
-  return '✨';
+  if (n.includes('alberca')) return svgIcon('pool');
+  if (n.includes('pádel') || n.includes('padel')) return svgIcon('racket');
+  if (n.includes('game')) return svgIcon('gamepad');
+  if (n.includes('jumping')) return svgIcon('spark');
+  if (n.includes('oculto')) return svgIcon('bolt');
+  if (n.includes('lineal')) return svgIcon('leaf');
+  if (n.includes('elevador')) return svgIcon('elevator');
+  if (n.includes('acceso') || n.includes('seguridad') || n.includes('vigilancia')) return svgIcon('shield');
+  if (n.includes('verdes')) return svgIcon('trees');
+  if (n.includes('cancha')) return svgIcon('ball');
+  if (n.includes('ciclo')) return svgIcon('bike');
+  if (n.includes('familiar')) return svgIcon('users');
+  if (n.includes('juego')) return svgIcon('spark');
+  if (n.includes('canino') || n.includes('dog') || n.includes('mascota')) return svgIcon('paw');
+  if (n.includes('salón') || n.includes('salon') || n.includes('multiusos') || n.includes('múltiples')) return svgIcon('party');
+  return svgIcon('spark');
 }
 
 const QAVALTA_OFFICE_ORIGIN = 'Unidad Estrategica Comercial Qavalta, Pachuca, Hidalgo';
@@ -252,7 +283,7 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
       <div class="proto-panel-media">
         <div class="proto-panel-stage">
           <img class="proto-panel-main-img" src="${gallery[activeIdx]}" alt="${p.name}" loading="lazy" />
-          <button type="button" class="proto-gallery-btn" data-proto-gallery="${p.id}" aria-label="Ver galería de ${p.name}">🖼️ Ver galería</button>
+          <button type="button" class="proto-gallery-btn" data-proto-gallery="${p.id}" aria-label="Ver galería de ${p.name}">${svgIcon('gallery')} Ver galería</button>
           ${gallery.length > 1 ? `
             <span class="proto-photo-counter proto-panel-counter">${activeIdx + 1} / ${gallery.length}</span>
             <button type="button" class="proto-photo-arrow proto-photo-prev proto-panel-prev" aria-label="Foto anterior">‹</button>
@@ -282,10 +313,10 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
         <p class="proto-panel-desc">${p.description}</p>
 
         <div class="lot-specs-grid proto-panel-specs">
-          <div class="lot-spec-box"><small>📐 Terreno</small><strong>${p.area} m²</strong></div>
-          <div class="lot-spec-box"><small>🛏️ Recámaras</small><strong>${p.bedrooms}</strong></div>
-          <div class="lot-spec-box"><small>🚿 Baños</small><strong>${p.bathrooms}</strong></div>
-          <div class="lot-spec-box"><small>🚗 Estac.</small><strong>${p.parking}</strong></div>
+          <div class="lot-spec-box"><small>${svgIcon('area')} Terreno</small><strong>${p.area} m²</strong></div>
+          <div class="lot-spec-box"><small>${svgIcon('bed')} Recámaras</small><strong>${p.bedrooms}</strong></div>
+          <div class="lot-spec-box"><small>${svgIcon('bath')} Baños</small><strong>${p.bathrooms}</strong></div>
+          <div class="lot-spec-box"><small>${svgIcon('car')} Estac.</small><strong>${p.parking}</strong></div>
         </div>
 
         <div class="proto-panel-features">
@@ -297,7 +328,7 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
 
         <div class="proto-panel-map">
           <div class="proto-panel-map-head">
-            <span>📍 Ubicación · Qavalta Residencial, Pachuca</span>
+            <span>${svgIcon('pin')} Ubicación · Qavalta Residencial, Pachuca</span>
             <a href="https://maps.google.com/?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo" target="_blank" rel="noopener">Abrir en Google Maps →</a>
           </div>
           <iframe
@@ -368,10 +399,10 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
                   <span class="dev-overview-kicker">DESCRIPCIÓN DEL DESARROLLO</span>
                   <p class="dev-overview-desc">${info.description}</p>
                   <div class="dev-overview-details">
-                    <div class="lot-spec-box"><small>🏘️ Privada</small><strong>${dev.name}</strong></div>
-                    <div class="lot-spec-box"><small>📐 Capacidad</small><strong>${info.lotesLabel}</strong></div>
-                    <div class="lot-spec-box"><small>💰 Desde</small><strong>${mxn.format(dev.startingPrice)}</strong></div>
-                    <div class="lot-spec-box"><small>🏡 Modelos</small><strong>${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}</strong></div>
+                    <div class="lot-spec-box"><small>${svgIcon('home')} Privada</small><strong>${dev.name}</strong></div>
+                    <div class="lot-spec-box"><small>${svgIcon('area')} Capacidad</small><strong>${info.lotesLabel}</strong></div>
+                    <div class="lot-spec-box"><small>${svgIcon('tag')} Desde</small><strong>${mxn.format(dev.startingPrice)}</strong></div>
+                    <div class="lot-spec-box"><small>${svgIcon('gallery')} Modelos</small><strong>${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}</strong></div>
                   </div>
                   <div class="dev-overview-amenities">
                     <span class="proto-panel-subtitle">Características de ${dev.name}</span>
@@ -382,9 +413,9 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
                 </div>
                 <div class="dev-overview-map">
                   <div class="dev-overview-addr">
-                    <strong>📍 Dirección</strong>
+                    <strong>${svgIcon('pin')} Dirección</strong>
                     <span>${info.address}</span>
-                    <small class="dev-route-badge">🚗 Recorrido automático: Oficinas Qavalta → ${dev.name}</small>
+                    <small class="dev-route-badge">${svgIcon('route')} Recorrido automático: Oficinas Qavalta → ${dev.name}</small>
                   </div>
                   <iframe
                     title="Ruta Oficinas Qavalta a ${dev.name}"
@@ -576,9 +607,9 @@ function showOnlyView(viewName) {
   }
 }
 
-async function fetchDevMapData(slug) {
-  if (state.devMapsCache[slug]) return state.devMapsCache[slug];
-  const res = await fetch(`/assets/maps/data/${slug}.json`);
+async function fetchDevMapData(slug, forceRefresh = false) {
+  if (!forceRefresh && state.devMapsCache[slug]) return state.devMapsCache[slug];
+  const res = await fetch(`/api/public/qavalta-map/${slug}${forceRefresh ? '?refresh=1' : ''}`);
   if (!res.ok) throw new Error(`No se pudo cargar el plano de ${slug}`);
   const data = await res.json();
   state.devMapsCache[slug] = data;
@@ -769,10 +800,10 @@ function renderSelectedLotDetail() {
       <p style="font-size:12px;color:var(--muted);">${dev?.name || ''} · Manzana / Nivel: ${lot.m || 'N/A'}</p>
       <div class="lot-detail-price">${priceDisplay}</div>
       <div class="lot-specs-grid">
-        <div class="lot-spec-box"><small>📐 Superficie</small><strong>${lot.a ? `${lot.a} m²` : 'N/A'}</strong></div>
-        <div class="lot-spec-box"><small>🏷️ Estatus</small><strong>${statusLabel}</strong></div>
-        <div class="lot-spec-box"><small>🏘️ Privada</small><strong>${dev?.name || state.mapDevSlug}</strong></div>
-        <div class="lot-spec-box"><small>🏡 Prototipo</small><strong>${lot.pr || (protoMatch?.name || 'A elegir')}</strong></div>
+        <div class="lot-spec-box"><small>${svgIcon('area')} Superficie</small><strong>${lot.a ? `${lot.a} m²` : 'N/A'}</strong></div>
+        <div class="lot-spec-box"><small>${svgIcon('tag')} Estatus</small><strong>${statusLabel}</strong></div>
+        <div class="lot-spec-box"><small>${svgIcon('home')} Privada</small><strong>${dev?.name || state.mapDevSlug}</strong></div>
+        <div class="lot-spec-box"><small>${svgIcon('gallery')} Prototipo</small><strong>${lot.pr || (protoMatch?.name || 'A elegir')}</strong></div>
       </div>
       <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
     </div>
@@ -793,13 +824,23 @@ function resetZoom() {
 }
 
 // --- ADMIN CMS RENDERING ---
-function renderAdminCms() {
-  const { lots, counts, prototypes, developments, site } = state;
+async function renderAdminCms() {
+  const { prototypes, developments, site } = state;
+  const slug = state.cmsDevSlug || 'sorento';
+  state.cmsDevSlug = slug;
+  if ($('cmsDevSelect')) $('cmsDevSelect').value = slug;
+
+  const mapData = await fetchDevMapData(slug);
+  const counts = getMapCounts(mapData.lots);
+  if ($('cmsSyncStatus')) {
+    $('cmsSyncStatus').textContent = `Fuente: ${mapData.source || 'planos.qavalta.com'} · ${mapData.lots.length} lotes/unidades`;
+  }
+
   $('cmsLotStats').innerHTML = `
-    <div class="stat-box"><small>Total de lotes</small><strong>${lots.length}</strong></div>
+    <div class="stat-box"><small>Total (${slug})</small><strong>${mapData.lots.length}</strong></div>
     <div class="stat-box"><small>Disponibles</small><strong style="color:var(--green)">${counts.disponible}</strong></div>
-    <div class="stat-box"><small>No disponibles</small><strong style="color:var(--amber)">${counts.no_disponible}</strong></div>
-    <div class="stat-box"><small>Vendidas / Ocupadas</small><strong style="color:var(--blue)">${counts.vendido}</strong></div>
+    <div class="stat-box"><small>Apartados</small><strong style="color:var(--amber)">${counts.reservado}</strong></div>
+    <div class="stat-box"><small>Vendidos</small><strong style="color:#ef4444">${counts.vendido}</strong></div>
   `;
 
   renderCmsLotsTable();
@@ -845,33 +886,42 @@ function renderAdminCms() {
 }
 
 function renderCmsLotsTable() {
+  const slug = state.cmsDevSlug || 'sorento';
+  const mapData = state.devMapsCache[slug];
+  if (!mapData) return;
   const q = $('lotSearchInput').value.trim().toLowerCase();
   const statusF = $('lotStatusFilter').value;
-  const filtered = state.lots.filter(l => {
-    const matchQ = !q || l.number.toLowerCase().includes(q) || l.id.toLowerCase().includes(q);
-    const matchS = statusF === 'all' || l.status === statusF;
+  const filtered = mapData.lots.filter(l => {
+    const stKey = l.s === 'apartado' ? 'reservado' : l.s;
+    const matchQ = !q || l.n.toLowerCase().includes(q) || l.id.toLowerCase().includes(q) || String(l.m).toLowerCase().includes(q) || String(l.pr).toLowerCase().includes(q);
+    const matchS = statusF === 'all' || stKey === statusF;
     return matchQ && matchS;
   });
 
-  $('cmsLotsBody').innerHTML = filtered.map(l => `
+  $('cmsLotsBody').innerHTML = filtered.slice(0, 150).map(l => {
+    const stKey = l.s === 'apartado' ? 'reservado' : l.s;
+    return `
     <tr data-lot-row="${l.id}">
-      <td><strong>#${l.number}</strong> <small style="color:var(--muted)">(${l.id})</small></td>
-      <td>Manzana ${l.manzana}</td>
-      <td>${l.street}</td>
+      <td><strong>${l.n}</strong> <small style="color:var(--muted)">(${l.id})</small></td>
+      <td>${l.m || '-'}</td>
+      <td>${l.a ? `${l.a} m²` : '-'}</td>
       <td>
         <select class="lot-proto-select">
-          ${state.prototypes.map(p => `<option value="${p.id}" ${p.id === l.prototypeId ? 'selected' : ''}>${p.name}</option>`).join('')}
+          <option value="">Sin asignar</option>
+          ${state.prototypes.map(p => `<option value="${p.name}" ${String(l.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${p.name}</option>`).join('')}
         </select>
       </td>
       <td>
         <select class="lot-status-select">
-          <option value="disponible" ${l.status === 'disponible' ? 'selected' : ''}>🟢 Disponible</option>
-          <option value="no_disponible" ${l.status === 'no_disponible' ? 'selected' : ''}>🟠 No disponible</option>
-          <option value="vendido" ${l.status === 'vendido' ? 'selected' : ''}>🔵 Vendido</option>
+          <option value="disponible" ${stKey === 'disponible' ? 'selected' : ''}>Disponible</option>
+          <option value="reservado" ${stKey === 'reservado' ? 'selected' : ''}>Apartado</option>
+          <option value="no-disponible" ${stKey === 'no-disponible' ? 'selected' : ''}>No disponible</option>
+          <option value="vendido" ${stKey === 'vendido' ? 'selected' : ''}>Vendido</option>
         </select>
       </td>
     </tr>
-  `).join('');
+  `;
+  }).join('');
 }
 
 // --- EVENTS ---
@@ -1263,22 +1313,50 @@ function bindEvents() {
   $('lotSearchInput').addEventListener('input', renderCmsLotsTable);
   $('lotStatusFilter').addEventListener('change', renderCmsLotsTable);
 
-  // CMS Lot updates
+  if ($('cmsDevSelect')) {
+    $('cmsDevSelect').addEventListener('change', async (e) => {
+      state.cmsDevSlug = e.target.value;
+      await renderAdminCms();
+    });
+  }
+
+  if ($('cmsSyncQavaltaBtn')) {
+    $('cmsSyncQavaltaBtn').addEventListener('click', async () => {
+      try {
+        $('cmsSyncQavaltaBtn').disabled = true;
+        $('cmsSyncQavaltaBtn').textContent = 'Sincronizando...';
+        const res = await api('/api/admin/qavalta-sync', { method: 'POST', body: JSON.stringify({}) });
+        if (Array.isArray(res.developments)) state.developments = res.developments;
+        state.devMapsCache = {};
+        await fetchDevMapData(state.cmsDevSlug || 'sorento', true);
+        await renderAdminCms();
+        renderPublicSite();
+        showToast('Sincronizado con planos.qavalta.com');
+      } catch (err) {
+        showToast(err.message);
+      } finally {
+        $('cmsSyncQavaltaBtn').disabled = false;
+        $('cmsSyncQavaltaBtn').textContent = 'Sincronizar ahora';
+      }
+    });
+  }
+
+  // CMS Lot updates (saved as override & reflected on live maps)
   $('cmsLotsBody').addEventListener('change', async (e) => {
     const row = e.target.closest('tr[data-lot-row]');
     if (!row) return;
+    const slug = state.cmsDevSlug || 'sorento';
     const lotId = row.dataset.lotRow;
     const status = row.querySelector('.lot-status-select').value;
-    const prototypeId = row.querySelector('.lot-proto-select').value;
-    await api(`/api/admin/lots/${lotId}`, {
-      method: 'PATCH',
-      body: JSON.stringify({ status, prototypeId })
+    const prototipo = row.querySelector('.lot-proto-select').value;
+    await api(`/api/admin/qavalta-lots/${slug}/${encodeURIComponent(lotId)}`, {
+      method: 'PUT',
+      body: JSON.stringify({ status, prototipo })
     });
-    const data = await api('/api/admin/lots');
-    state.lots = data.lots;
-    state.counts = data.counts;
-    renderAdminCms();
-    showToast(`Lote ${lotId} actualizado`);
+    delete state.devMapsCache[slug];
+    await fetchDevMapData(slug, true);
+    await renderAdminCms();
+    showToast(`Lote ${lotId} actualizado en ${slug}`);
   });
 
   // CMS Prototype updates & file uploads

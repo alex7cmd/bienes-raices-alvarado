@@ -211,7 +211,29 @@ body { overflow-x: hidden; }
 .dev-slider-btn:hover { background: var(--text); color: #fff; border-color: var(--text); }
 
 .proto-features-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
-.proto-chip { font-size: 11px; background: var(--surface); color: var(--muted); padding: 4px 9px; border-radius: 999px; border: 1px solid var(--border); }
+.proto-chip { font-size: 11px; background: var(--surface); color: var(--muted); padding: 4px 10px; border-radius: 999px; border: 1px solid var(--border); display: inline-flex; align-items: center; gap: 5px; }
+.ui-icon {
+  width: 14px; height: 14px; flex-shrink: 0;
+  stroke: currentColor; fill: none; stroke-width: 1.7;
+  stroke-linecap: round; stroke-linejoin: round; vertical-align: -2px;
+}
+.ui-icon-lg {
+  width: 20px; height: 20px; flex-shrink: 0;
+  stroke: currentColor; fill: none; stroke-width: 1.65;
+  stroke-linecap: round; stroke-linejoin: round;
+}
+.cms-sync-bar {
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 14px 18px; margin-bottom: 18px; border-radius: 12px;
+  background: #f8fafc; border: 1px solid var(--border);
+}
+.cms-sync-info { display: flex; flex-direction: column; gap: 2px; }
+.cms-sync-info strong { font-size: 14px; color: var(--text); }
+.cms-sync-info small { font-size: 12px; color: var(--muted); }
+.cms-sync-controls { display: flex; align-items: center; gap: 10px; }
+.cms-sync-controls select {
+  padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); background: #fff; font-size: 13px; font-weight: 600;
+}
 
 .prototypes-slider {
   display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory;

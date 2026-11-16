@@ -115,6 +115,135 @@ app.post('/api/auth/logout', (req, res) => {
   res.json({ ok: true });
 });
 
+// --- LIVE SYNC WITH PLANOS.QAVALTA.COM ---
+const QAVALTA_DEV_IDS = {
+  sorento: 1,
+  oporto: 2,
+  ardenza: 3,
+  montalese: 5,
+  'torres-qavalta': 6,
+  vittoria: 7
+};
+const qavaltaLiveCache = new Map();
+const QAVALTA_CACHE_TTL_MS = 60 * 1000;
+
+async function getQavaltaMapWithLiveSync(slug, forceRefresh = false) {
+  const safeSlug = String(slug || '').replace(/[^a-z0-9-]/gi, '').toLowerCase();
+  const baseFile = path.join(__dirname, 'public', 'assets', 'maps', 'data', `${safeSlug}.json`);
+  if (!fs.existsSync(baseFile)) return null;
+
+  const baseMap = JSON.parse(fs.readFileSync(baseFile, 'utf8'));
+  const cached = qavaltaLiveCache.get(safeSlug);
+  const now = Date.now();
+  let liveMap = null;
+  let source = 'local-cache';
+
+  if (!forceRefresh && cached && (now - cached.ts) < QAVALTA_CACHE_TTL_MS) {
+    liveMap = cached.bySvgId;
+    source = cached.source;
+  } else {
+    const qId = QAVALTA_DEV_IDS[safeSlug];
+    if (qId && safeSlug !== 'torres-qavalta') {
+      try {
+        const resp = await fetch(`https://planos.qavalta.com/api/desarrollos/${qId}/lotes`, {
+          signal: AbortSignal.timeout(5000)
+        });
+        if (resp.ok) {
+          const rows = await resp.json();
+          if (Array.isArray(rows) && rows.length > 0) {
+            liveMap = {};
+            for (const r of rows) {
+              if (r.svgId) liveMap[r.svgId] = r;
+            }
+            source = 'planos.qavalta.com';
+            qavaltaLiveCache.set(safeSlug, { ts: now, bySvgId: liveMap, source });
+          }
+        }
+      } catch (_) {
+        // Fallback silently to cached/local data
+      }
+    }
+  }
+
+  const db = readDB();
+  const overrides = (db.qavaltaLotOverrides && db.qavaltaLotOverrides[safeSlug]) || {};
+  const mergedLots = baseMap.lots.map(l => {
+    const live = liveMap ? liveMap[l.id] : null;
+    const ov = overrides[l.id] || null;
+    return {
+      ...l,
+      n: live?.nombre || l.n,
+      m: live?.manzana ?? l.m,
+      a: live?.area ?? l.a,
+      p: ov?.precio ?? (live?.precio ?? l.p),
+      s: ov?.status || live?.status || l.s,
+      pr: ov?.prototipo ?? (live?.prototipo || l.pr)
+    };
+  });
+
+  return {
+    ...baseMap,
+    lots: mergedLots,
+    source,
+    syncedAt: new Date().toISOString()
+  };
+}
+
+app.get('/api/public/qavalta-map/:slug', async (req, res) => {
+  try {
+    const payload = await getQavaltaMapWithLiveSync(req.params.slug, req.query.refresh === '1');
+    if (!payload) return res.status(404).json({ error: 'Mapa de desarrollo no encontrado.' });
+    res.json(payload);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/admin/qavalta-sync', requireAdmin, async (req, res) => {
+  try {
+    qavaltaLiveCache.clear();
+    const db = readDB();
+    if (req.body?.resetOverrides) {
+      db.qavaltaLotOverrides = {};
+    }
+    const resp = await fetch('https://planos.qavalta.com/api/desarrollos', {
+      signal: AbortSignal.timeout(6000)
+    });
+    if (resp.ok) {
+      const remoteDevs = await resp.json();
+      if (Array.isArray(remoteDevs)) {
+        for (const rd of remoteDevs) {
+          const local = db.developments.find(d => d.id === rd.slug);
+          if (local && rd.precioDesde) {
+            local.startingPrice = Number(rd.precioDesde);
+          }
+        }
+      }
+    }
+    writeDB(db);
+    res.json({ ok: true, syncedAt: new Date().toISOString(), developments: db.developments });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/admin/qavalta-lots/:slug/:lotId', requireAdmin, (req, res) => {
+  const safeSlug = String(req.params.slug || '').replace(/[^a-z0-9-]/gi, '').toLowerCase();
+  const lotId = String(req.params.lotId || '');
+  const db = readDB();
+  if (!db.qavaltaLotOverrides) db.qavaltaLotOverrides = {};
+  if (!db.qavaltaLotOverrides[safeSlug]) db.qavaltaLotOverrides[safeSlug] = {};
+  const { status, prototipo, precio } = req.body || {};
+  db.qavaltaLotOverrides[safeSlug][lotId] = {
+    ...(db.qavaltaLotOverrides[safeSlug][lotId] || {}),
+    ...(status ? { status } : {}),
+    ...(prototipo !== undefined ? { prototipo } : {}),
+    ...(precio !== undefined ? { precio: Number(precio) } : {})
+  };
+  writeDB(db);
+  res.json({ ok: true, override: db.qavaltaLotOverrides[safeSlug][lotId] });
+});
+
 // --- PUBLIC SITE DATA ---
 app.get('/api/public/site', (req, res) => {
   const db = readDB();
