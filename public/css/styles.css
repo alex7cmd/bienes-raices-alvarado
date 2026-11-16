@@ -44,10 +44,11 @@ html[data-theme="dark"] .site-header {
   border-bottom-color: var(--border);
 }
 html[data-theme="dark"] .brand-logo,
+html[data-theme="dark"] .brand-mark,
 html[data-theme="dark"] .footer-logo {
-  background: rgba(250, 248, 245, 0.94);
-  padding: 4px 10px;
-  border-radius: 10px;
+  background: transparent;
+  padding: 0;
+  filter: brightness(0) invert(1);
 }
 html[data-theme="dark"] .unified-dev-shell,
 html[data-theme="dark"] .dev-pill-item,
@@ -96,6 +97,12 @@ html[data-theme="dark"] .mode-tab.active {
 html[data-theme="dark"] .unified-dev-tab.active small,
 html[data-theme="dark"] .dev-proto-tab.active .dev-proto-tab-price {
   color: #1c1917;
+}
+html[data-theme="dark"] .btn-primary,
+html[data-theme="dark"] .btn-map-info-tour,
+html[data-theme="dark"] .stack-inquiry {
+  background: var(--accent);
+  color: #ffffff;
 }
 html[data-theme="dark"] .site-footer {
   background: #161412;
