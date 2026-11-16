@@ -360,75 +360,78 @@ function setPanelSlide(panel, protoId, nextIdx) {
   });
 }
 
-function renderDevelopmentAccordion(openDevId = 'oporto') {
+function renderDevelopmentAccordion(openDevId = 'sorento') {
   const container = $('developmentAccordion');
-  if (!container) return;
+  if (!container || !state.developments.length) return;
+  const activeDev = state.developments.find(d => d.id === openDevId) || state.developments[0];
+  const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(activeDev.id));
+  const firstProto = devProtos[0];
+  const info = DEV_DETAILS[activeDev.id] || {
+    description: activeDev.tagline || '',
+    address: 'Qavalta Residencial, Pachuca, Hgo.',
+    mapQuery: `Privada ${activeDev.name}, Los Vinedos, Pachuca, Hidalgo`,
+    lotesLabel: `${devProtos.length} prototipos`,
+    amenidades: ['Acceso controlado', 'Áreas verdes']
+  };
+  const originEnc = encodeURIComponent(QAVALTA_OFFICE_ORIGIN);
+  const destEnc = encodeURIComponent(info.mapQuery);
+  const embedRouteUrl = `https://maps.google.com/maps?saddr=${originEnc}&daddr=${destEnc}&output=embed`;
+  const dirRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${originEnc}&destination=${destEnc}`;
 
-  container.innerHTML = state.developments.map(dev => {
-    const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(dev.id));
-    const isOpen = dev.id === openDevId;
-    const firstProto = devProtos[0];
-    return `
-      <div class="dev-pill-item ${isOpen ? 'open' : ''}" data-dev-pill="${dev.id}">
-        <button type="button" class="dev-pill-trigger" aria-expanded="${isOpen}">
-          <div class="dev-pill-left">
-            <span class="dev-pill-title">${dev.name}</span>
-            <span class="dev-pill-meta">${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}</span>
-          </div>
-          <div class="dev-pill-right">
-            <span class="dev-pill-price">Desde ${mxn.format(dev.startingPrice)}</span>
-            <span class="dev-pill-arrow">▾</span>
-          </div>
-        </button>
-        <div class="dev-pill-body ${isOpen ? '' : 'hidden'}">
-          ${(() => {
-            const info = DEV_DETAILS[dev.id] || {
-              description: dev.tagline || '',
-              address: 'Qavalta Residencial, Pachuca, Hgo.',
-              mapQuery: `Privada ${dev.name}, Los Vinedos, Pachuca, Hidalgo`,
-              lotesLabel: `${devProtos.length} prototipos`,
-              amenidades: ['Acceso controlado', 'Áreas verdes']
-            };
-            const originEnc = encodeURIComponent(QAVALTA_OFFICE_ORIGIN);
-            const destEnc = encodeURIComponent(info.mapQuery);
-            const embedRouteUrl = `https://maps.google.com/maps?saddr=${originEnc}&daddr=${destEnc}&output=embed`;
-            const dirRouteUrl = `https://www.google.com/maps/dir/?api=1&origin=${originEnc}&destination=${destEnc}`;
-            return `
-              <div class="dev-overview-card">
-                <div class="dev-overview-info">
-                  <span class="dev-overview-kicker">DESCRIPCIÓN DEL DESARROLLO</span>
-                  <p class="dev-overview-desc">${info.description}</p>
-                  <div class="dev-overview-details">
-                    <div class="lot-spec-box"><small>${svgIcon('home')} Privada</small><strong>${dev.name}</strong></div>
-                    <div class="lot-spec-box"><small>${svgIcon('area')} Capacidad</small><strong>${info.lotesLabel}</strong></div>
-                    <div class="lot-spec-box"><small>${svgIcon('tag')} Desde</small><strong>${mxn.format(dev.startingPrice)}</strong></div>
-                    <div class="lot-spec-box"><small>${svgIcon('gallery')} Modelos</small><strong>${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}</strong></div>
-                  </div>
-                  <div class="dev-overview-amenities">
-                    <span class="proto-panel-subtitle">Características de ${dev.name}</span>
-                    <div class="proto-features-chips">
-                      ${info.amenidades.map(a => `<span class="proto-chip">${featureIcon(a)} ${a}</span>`).join('')}
-                    </div>
-                  </div>
-                </div>
-                <div class="dev-overview-map">
-                  <div class="dev-overview-addr">
-                    <strong>${svgIcon('pin')} Dirección</strong>
-                    <span>${info.address}</span>
-                    <small class="dev-route-badge">${svgIcon('route')} Recorrido automático: Oficinas Qavalta → ${dev.name}</small>
-                  </div>
-                  <iframe
-                    title="Ruta Oficinas Qavalta a ${dev.name}"
-                    src="${embedRouteUrl}"
-                    loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"
-                  ></iframe>
-                  <a href="${dirRouteUrl}" target="_blank" rel="noopener" class="dev-route-link">Ver recorrido completo en Google Maps →</a>
+  container.innerHTML = `
+    <div class="unified-dev-shell">
+      <div class="unified-dev-tabs" role="tablist" aria-label="Desarrollos residenciales">
+        ${state.developments.map(dev => {
+          const count = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(dev.id)).length;
+          const isActive = dev.id === activeDev.id;
+          return `
+            <button type="button" role="tab" class="unified-dev-tab ${isActive ? 'active' : ''}" aria-selected="${isActive}" data-dev-tab="${dev.id}">
+              <span class="unified-dev-tab-top">
+                <strong>${dev.name}</strong>
+                <span class="unified-dev-tab-count">${count}</span>
+              </span>
+              <small>Desde ${mxn.format(dev.startingPrice)}</small>
+            </button>
+          `;
+        }).join('')}
+      </div>
+
+      <div class="dev-pill-item open unified-dev-body" data-dev-pill="${activeDev.id}">
+        <div class="dev-pill-body">
+          <div class="dev-overview-card">
+            <div class="dev-overview-info">
+              <span class="dev-overview-kicker">DESARROLLO SELECCIONADO · ${activeDev.name.toUpperCase()}</span>
+              <p class="dev-overview-desc">${info.description}</p>
+              <div class="dev-overview-details">
+                <div class="lot-spec-box"><small>${svgIcon('home')} Privada</small><strong>${activeDev.name}</strong></div>
+                <div class="lot-spec-box"><small>${svgIcon('area')} Capacidad</small><strong>${info.lotesLabel}</strong></div>
+                <div class="lot-spec-box"><small>${svgIcon('tag')} Desde</small><strong>${mxn.format(activeDev.startingPrice)}</strong></div>
+                <div class="lot-spec-box"><small>${svgIcon('gallery')} Modelos</small><strong>${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}</strong></div>
+              </div>
+              <div class="dev-overview-amenities">
+                <span class="proto-panel-subtitle">Características de ${activeDev.name}</span>
+                <div class="proto-features-chips">
+                  ${info.amenidades.map(a => `<span class="proto-chip">${featureIcon(a)} ${a}</span>`).join('')}
                 </div>
               </div>
-            `;
-          })()}
-          <div class="dev-proto-tabs" role="tablist" aria-label="Prototipos de ${dev.name}">
+            </div>
+            <div class="dev-overview-map">
+              <div class="dev-overview-addr">
+                <strong>${svgIcon('pin')} Dirección</strong>
+                <span>${info.address}</span>
+                <small class="dev-route-badge">${svgIcon('route')} Recorrido automático: Oficinas Qavalta → ${activeDev.name}</small>
+              </div>
+              <iframe
+                title="Ruta Oficinas Qavalta a ${activeDev.name}"
+                src="${embedRouteUrl}"
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade"
+              ></iframe>
+              <a href="${dirRouteUrl}" target="_blank" rel="noopener" class="dev-route-link">Ver recorrido completo en Google Maps →</a>
+            </div>
+          </div>
+
+          <div class="dev-proto-tabs" role="tablist" aria-label="Prototipos de ${activeDev.name}">
             ${devProtos.map((p, idx) => `
               <button type="button" role="tab" class="dev-proto-tab ${idx === 0 ? 'active' : ''}" aria-selected="${idx === 0}" data-proto-tab="${p.id}">
                 <span class="dev-proto-tab-name">${p.name}</span>
@@ -436,14 +439,16 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
               </button>
             `).join('')}
           </div>
+
           <div class="dev-proto-panel-wrap">
             ${firstProto ? renderPrototypeDetailPanel(firstProto, 0) : '<p class="muted">Sin prototipos disponibles.</p>'}
           </div>
-          <div class="dev-inline-map-section" data-inline-map="${dev.id}">
+
+          <div class="dev-inline-map-section" data-inline-map="${activeDev.id}">
             <div class="dev-inline-map-head">
               <div>
                 <span class="dev-inline-map-kicker">PLANO MAESTRO INTERACTIVO</span>
-                <h4>Mapa de lotes · ${dev.name}</h4>
+                <h4>Mapa de lotes · ${activeDev.name}</h4>
               </div>
               <div class="dev-inline-map-actions">
                 <div class="dev-inline-legend">
@@ -451,7 +456,7 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
                   <span><i class="dot reservado"></i> Apart. <strong data-c="reservado">-</strong></span>
                   <span><i class="dot vendido"></i> Vend. <strong data-c="vendido">-</strong></span>
                 </div>
-                <button type="button" class="dev-inline-fs-btn" data-open-fs-map="${dev.id}">⤢ Pantalla completa</button>
+                <button type="button" class="dev-inline-fs-btn" data-open-fs-map="${activeDev.id}">⤢ Pantalla completa</button>
               </div>
             </div>
             <div class="dev-inline-map-viewport">
@@ -464,12 +469,12 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
                 <svg class="dev-inline-svg" viewBox="0 0 9000 6600" xmlns="http://www.w3.org/2000/svg"></svg>
               </div>
             </div>
-            <div class="dev-inline-lot-bar hidden" data-inline-lot-bar="${dev.id}"></div>
+            <div class="dev-inline-lot-bar hidden" data-inline-lot-bar="${activeDev.id}"></div>
           </div>
         </div>
       </div>
-    `;
-  }).join('');
+    </div>
+  `;
 }
 
 function openPrototypeModal(protoId, initialIdx = 0) {
@@ -1018,8 +1023,16 @@ function bindEvents() {
     trigger.setAttribute('aria-expanded', String(isOpen));
   });
 
-  // Expandable development pills + prototype tabs + downward detail panel
+  // Unified development tabs + prototype tabs + downward detail panel
   $('developmentAccordion').addEventListener('click', (e) => {
+    const devTabBtn = e.target.closest('.unified-dev-tab');
+    if (devTabBtn) {
+      const devId = devTabBtn.dataset.devTab;
+      renderDevelopmentAccordion(devId);
+      loadInlineDevMap(devId);
+      return;
+    }
+
     const tabBtn = e.target.closest('.dev-proto-tab');
     if (tabBtn) {
       const pill = tabBtn.closest('.dev-pill-item');

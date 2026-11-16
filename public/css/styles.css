@@ -403,7 +403,44 @@ body { overflow-x: hidden; }
 .proto-panel-map-head a { color: var(--accent); text-decoration: none; font-weight: 600; }
 .proto-panel-map iframe { width: 100%; height: 170px; border: none; display: block; }
 
-/* DEVELOPMENT OVERVIEW (DESCRIPCIÓN, DETALLES, CARACTERÍSTICAS Y RUTA MAPS) */
+/* UNIFIED DEVELOPMENT TABS SHELL */
+.unified-dev-shell {
+  border: 1px solid var(--border); border-radius: 18px; background: #fff;
+  box-shadow: var(--shadow); overflow: hidden;
+}
+.unified-dev-tabs {
+  display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 8px; padding: 14px 18px; background: var(--surface); border-bottom: 1px solid var(--border);
+}
+.unified-dev-tab {
+  text-align: left; padding: 12px 14px; border-radius: 12px;
+  border: 1px solid var(--border); background: #fff; color: var(--text);
+  cursor: pointer; transition: all 0.2s ease;
+  display: flex; flex-direction: column; gap: 4px;
+}
+.unified-dev-tab:hover { border-color: var(--text); transform: translateY(-1px); }
+.unified-dev-tab.active {
+  background: var(--text); color: #fff; border-color: var(--text);
+  box-shadow: 0 6px 18px rgba(18, 22, 25, 0.16);
+}
+.unified-dev-tab-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.unified-dev-tab-top strong { font-size: 14px; font-weight: 700; }
+.unified-dev-tab-count {
+  font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+  background: var(--surface); color: var(--muted);
+}
+.unified-dev-tab.active .unified-dev-tab-count { background: rgba(255,255,255,0.16); color: #fff; }
+.unified-dev-tab small { font-size: 11.5px; font-weight: 600; color: var(--accent); }
+.unified-dev-tab.active small { color: #d6b68a; }
+.unified-dev-body { border: none; border-radius: 0; box-shadow: none; }
+.unified-dev-body .dev-pill-body { border-top: none; padding-top: 8px; }
+
+@media (max-width: 992px) {
+  .unified-dev-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 600px) {
+  .unified-dev-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 12px; }
+}
 .dev-overview-card {
   display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: start;
   padding: 20px; margin: 16px 0 22px; border-radius: 14px;
