@@ -608,8 +608,7 @@ function showOnlyView(viewName) {
   $('adminView').classList.toggle('hidden', viewName !== 'admin');
   $('adminDropdown').classList.add('hidden');
   if ($('floatingStack')) {
-    $('floatingStack').classList.toggle('hidden', viewName === 'admin');
-    $('floatingStack').classList.toggle('on-map', viewName === 'map');
+    $('floatingStack').classList.toggle('hidden', viewName !== 'public');
   }
 }
 
@@ -772,13 +771,20 @@ function renderSelectedLotDetail() {
   const container = $('panelLotDetail');
   const mapData = state.devMapsCache[state.mapDevSlug];
   if (!state.selectedLotId || !mapData) {
+    const dev = state.developments.find(d => d.id === state.mapDevSlug);
     container.innerHTML = `
       <div class="empty-lot-state">
         <div class="empty-icon">🏠</div>
         <h3>Toca un lote o unidad</h3>
         <p>Selecciona cualquier lote en el plano para ver su manzana, superficie m², estatus y cotizar por WhatsApp.</p>
+        <button type="button" class="btn-map-info-tour" id="mapEmptyInfoTourBtn">Info / Agendar Tour</button>
       </div>
     `;
+    $('mapEmptyInfoTourBtn')?.addEventListener('click', () => {
+      if ($('inqMessage')) $('inqMessage').value = `Me gustaría agendar un tour o recibir información sobre ${dev?.name || state.mapDevSlug}.`;
+      $('inqStatus')?.classList.add('hidden');
+      $('inquiryModal')?.classList.remove('hidden');
+    });
     return;
   }
 
@@ -812,6 +818,7 @@ function renderSelectedLotDetail() {
         <div class="lot-spec-box"><small>${svgIcon('gallery')} Prototipo</small><strong>${lot.pr || (protoMatch?.name || 'A elegir')}</strong></div>
       </div>
       <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
+      <button type="button" class="btn-map-info-tour" id="mapLotInfoTourBtn">Info / Agendar Tour</button>
       ${state.isAdmin ? `
         <div class="map-admin-edit-box">
           <strong class="map-admin-edit-title">Edición rápida (Alvarado Studio)</strong>
@@ -834,6 +841,11 @@ function renderSelectedLotDetail() {
       ` : ''}
     </div>
   `;
+  $('mapLotInfoTourBtn')?.addEventListener('click', () => {
+    if ($('inqMessage')) $('inqMessage').value = `Me interesa ${lot.n} en ${dev?.name || state.mapDevSlug} (${lot.a} m²). Me gustaría agendar un tour o recibir más información.`;
+    $('inqStatus')?.classList.add('hidden');
+    $('inquiryModal')?.classList.remove('hidden');
+  });
   if (state.isAdmin && $('mapSaveLotBtn')) {
     $('mapSaveLotBtn').addEventListener('click', async () => {
       const status = $('mapEditStatus').value;

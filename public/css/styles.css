@@ -735,6 +735,12 @@ body { overflow-x: hidden; }
 .qmap-lot.selected { filter: drop-shadow(0 0 8px rgba(15, 23, 42, 0.5)); }
 .dot.reservado { background: #f59e0b; }
 .lot-status-pill.reservado { background: #fef3c7; color: #b45309; }
+.btn-map-info-tour {
+  width: 100%; margin-top: 8px; padding: 10px 16px; border-radius: 999px;
+  border: 1px solid var(--text); background: var(--text); color: #fff;
+  font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
+}
+.btn-map-info-tour:hover { opacity: 0.9; }
 .map-admin-edit-box {
   margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
   display: flex; flex-direction: column; gap: 10px;
