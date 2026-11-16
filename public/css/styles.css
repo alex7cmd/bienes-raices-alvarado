@@ -889,7 +889,7 @@ html[data-theme="dark"] .fin-logo img {
 .contact-form-col h2 { font-size: 30px; font-weight: 700; margin: 6px 0 10px; line-height: 1.15; }
 .contact-lead { font-size: 14px; color: var(--muted); line-height: 1.6; margin-bottom: 22px; }
 .contact-form { display: flex; flex-direction: column; gap: 12px; }
-.contact-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.contact-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
 .contact-form input, .contact-form textarea {
   width: 100%; padding: 12px 14px; border-radius: 10px; border: 1px solid var(--border);
   background: #fff; font-size: 14px; font-family: inherit; color: var(--text);
@@ -1383,13 +1383,14 @@ html[data-theme="dark"] .footer-mini-prop:hover { background: rgba(255, 255, 255
 .cms-table th { background: var(--surface); position: sticky; top: 0; font-weight: 600; }
 .cms-table select { padding: 6px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; }
 
-.cms-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 20px; }
-.cms-form-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 20px; }
+.cms-cards-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(340px, 100%), 1fr)); gap: 20px; }
+.cms-form-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 20px; min-width: 0; overflow: hidden; }
 .cms-form-card h3 { margin-bottom: 14px; font-size: 17px; }
 .cms-subhead { margin: 28px 0 14px; font-size: 18px; }
-.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
-.form-grid label, .cms-form-card label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-bottom: 14px; }
+.form-grid label, .cms-form-card label { display: flex; flex-direction: column; gap: 5px; font-size: 12px; font-weight: 600; color: var(--muted); min-width: 0; }
 .cms-form-card input, .cms-form-card textarea {
+  width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box;
   padding: 9px 11px; border: 1px solid var(--border); border-radius: 8px; font-size: 13px; color: var(--text); font-family: inherit;
 }
 .cms-preview-img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; margin-bottom: 12px; background: var(--surface); }
@@ -1476,7 +1477,7 @@ html[data-theme="dark"] .footer-mini-prop:hover { background: rgba(255, 255, 255
   font-size: 13.5px; font-family: inherit; background: #fff;
 }
 .tour-fields { display: flex; flex-direction: column; gap: 10px; }
-.tour-datetime-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.tour-datetime-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .tour-fields label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); }
 .tour-modality-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .modality-btn {
