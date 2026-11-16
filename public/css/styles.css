@@ -922,14 +922,16 @@ html[data-theme="dark"] .fin-logo img {
 .dot.reservado { background: #f59e0b; }
 .lot-status-pill.reservado { background: #fef3c7; color: #b45309; }
 .btn-map-info-tour {
-  width: 100%; margin-top: 8px; padding: 10px 16px; border-radius: 999px;
+  width: 100%; height: 44px; margin-top: 8px; padding: 0 18px; border-radius: 999px;
   border: 1px solid var(--text); background: var(--text); color: #fff;
-  font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
+  font-size: 13.5px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
 .btn-map-info-tour:hover { opacity: 0.9; }
 .btn-wa-block {
-  width: 100% !important; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  font-size: 13px;
+  width: 100% !important; height: 44px; padding: 0 18px !important;
+  display: inline-flex !important; align-items: center; justify-content: center; gap: 8px;
+  font-size: 13.5px; font-weight: 600;
 }
 .map-admin-edit-box {
   margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);

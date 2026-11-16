@@ -1128,7 +1128,7 @@ function renderSelectedLotDetail() {
         ${specBox('home', 'Privada', dev?.name || state.mapDevSlug)}
         ${specBox('gallery', 'Prototipo', lot.pr || (protoMatch?.name || 'A elegir'))}
       </div>
-      <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
+      <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa btn-wa-block" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
       <button type="button" class="btn-map-info-tour" id="mapLotInfoTourBtn">Info / Agendar Tour</button>
       ${state.isAdmin ? `
         <div class="map-admin-edit-box">
