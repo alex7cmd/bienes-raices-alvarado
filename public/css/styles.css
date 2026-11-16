@@ -801,18 +801,19 @@ html[data-theme="dark"] .hero-dev-dock .unified-dev-tabs {
   -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
 }
 .financing-track {
-  display: flex; align-items: center; width: max-content; gap: 64px;
+  display: flex; align-items: center; width: max-content; gap: 0;
+  will-change: transform;
   animation: financingLoop 24s linear infinite;
 }
 .financing-marquee:hover .financing-track { animation-play-state: paused; }
-.fin-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 16px; }
+.fin-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 36px; }
 .fin-logo img { height: 42px; width: auto; max-width: 170px; object-fit: contain; display: block; }
 html[data-theme="dark"] .fin-logo img {
   background: rgba(255, 255, 255, 0.94); padding: 6px 12px; border-radius: 10px; height: 48px;
 }
 @keyframes financingLoop {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0% { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 /* CONTACT FORM + MAP SECTION */
