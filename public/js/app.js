@@ -812,8 +812,42 @@ function renderSelectedLotDetail() {
         <div class="lot-spec-box"><small>${svgIcon('gallery')} Prototipo</small><strong>${lot.pr || (protoMatch?.name || 'A elegir')}</strong></div>
       </div>
       <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
+      ${state.isAdmin ? `
+        <div class="map-admin-edit-box">
+          <strong class="map-admin-edit-title">Edición rápida (Alvarado Studio)</strong>
+          <label>Estatus
+            <select id="mapEditStatus">
+              <option value="disponible" ${stKey === 'disponible' ? 'selected' : ''}>Disponible</option>
+              <option value="reservado" ${stKey === 'reservado' ? 'selected' : ''}>Apartado</option>
+              <option value="no-disponible" ${stKey === 'no-disponible' ? 'selected' : ''}>No disponible</option>
+              <option value="vendido" ${stKey === 'vendido' ? 'selected' : ''}>Vendido</option>
+            </select>
+          </label>
+          <label>Prototipo
+            <select id="mapEditProto">
+              <option value="">Sin asignar</option>
+              ${state.prototypes.map(p => `<option value="${p.name}" ${String(lot.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${p.name}</option>`).join('')}
+            </select>
+          </label>
+          <button type="button" class="btn-primary full-width" id="mapSaveLotBtn">Guardar cambios en lote</button>
+        </div>
+      ` : ''}
     </div>
   `;
+  if (state.isAdmin && $('mapSaveLotBtn')) {
+    $('mapSaveLotBtn').addEventListener('click', async () => {
+      const status = $('mapEditStatus').value;
+      const prototipo = $('mapEditProto').value;
+      await api(`/api/admin/qavalta-lots/${state.mapDevSlug}/${encodeURIComponent(lot.id)}`, {
+        method: 'PUT',
+        body: JSON.stringify({ status, prototipo })
+      });
+      delete state.devMapsCache[state.mapDevSlug];
+      await fetchDevMapData(state.mapDevSlug, true);
+      await renderInteractiveMap();
+      showToast(`${lot.n} actualizado`);
+    });
+  }
 }
 
 // --- ZOOM & PAN ---

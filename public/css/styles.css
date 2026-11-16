@@ -735,6 +735,13 @@ body { overflow-x: hidden; }
 .qmap-lot.selected { filter: drop-shadow(0 0 8px rgba(15, 23, 42, 0.5)); }
 .dot.reservado { background: #f59e0b; }
 .lot-status-pill.reservado { background: #fef3c7; color: #b45309; }
+.map-admin-edit-box {
+  margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
+  display: flex; flex-direction: column; gap: 10px;
+}
+.map-admin-edit-title { font-size: 12px; font-weight: 700; color: var(--text); text-transform: uppercase; letter-spacing: 0.5px; }
+.map-admin-edit-box label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; font-weight: 600; color: var(--muted); }
+.map-admin-edit-box select { padding: 8px 10px; border-radius: 8px; border: 1px solid var(--border); font-size: 13px; background: #fff; }
 .map-from-price { text-align: right; line-height: 1.1; }
 .map-from-price small { display: block; font-size: 10px; color: var(--muted); letter-spacing: 1px; }
 .map-from-price strong { font-size: 16px; }
