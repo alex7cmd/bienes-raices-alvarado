@@ -1,12 +1,15 @@
 :root {
-  /* Colores */
-  --bg: #ffffff;
-  --surface: #f8fafc;
-  --text: #0f172a;
-  --muted: #64748b;
-  --border: #e2e8f0;
-  --accent: #e11d48;
-  --accent-hover: #be123c;
+  /* Paleta Oficial Bienes Raíces Alvarado (extraída del logo) */
+  --bg: #faf8f5;
+  --card-bg: #ffffff;
+  --surface: #f3ede4;
+  --text: #1c1917;
+  --muted: #6b625b;
+  --border: #e6ddd0;
+  --accent: #ad7759;
+  --accent-hover: #8f5e43;
+  --accent-soft: #bc8e83;
+  --gold: #e3d3b9;
   --green: #16a34a;
   --amber: #d97706;
   --blue: #2563eb;
@@ -18,8 +21,95 @@
   --space-sm: 12px;
   --space-md: 20px;
   --space-lg: 32px;
-  --transition: 0.2s ease;
-  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+  --transition: 0.25s ease;
+  --shadow: 0 10px 30px rgba(28, 25, 23, 0.08);
+}
+
+html[data-theme="dark"] {
+  --bg: #11100e;
+  --card-bg: #1b1916;
+  --surface: #24211d;
+  --text: #f5f0ea;
+  --muted: #aca39a;
+  --border: #332e28;
+  --accent: #c78c6b;
+  --accent-hover: #dba282;
+  --accent-soft: #bc8e83;
+  --gold: #e3d3b9;
+  --shadow: 0 12px 34px rgba(0, 0, 0, 0.45);
+}
+
+html[data-theme="dark"] .site-header {
+  background: rgba(20, 18, 16, 0.9);
+  border-bottom-color: var(--border);
+}
+html[data-theme="dark"] .brand-logo,
+html[data-theme="dark"] .footer-logo {
+  background: rgba(250, 248, 245, 0.94);
+  padding: 4px 10px;
+  border-radius: 10px;
+}
+html[data-theme="dark"] .unified-dev-shell,
+html[data-theme="dark"] .dev-pill-item,
+html[data-theme="dark"] .dev-pill-body,
+html[data-theme="dark"] .unified-dev-tab,
+html[data-theme="dark"] .dev-overview-map,
+html[data-theme="dark"] .dev-route-link,
+html[data-theme="dark"] .dev-inline-fs-btn,
+html[data-theme="dark"] .dev-proto-tab,
+html[data-theme="dark"] .proto-panel-map-head,
+html[data-theme="dark"] .transport-info-card,
+html[data-theme="dark"] .contact-card,
+html[data-theme="dark"] .contact-form input,
+html[data-theme="dark"] .contact-form textarea,
+html[data-theme="dark"] .financing-marquee,
+html[data-theme="dark"] .modal-card,
+html[data-theme="dark"] .modal-close,
+html[data-theme="dark"] .inquiry-tab,
+html[data-theme="dark"] .inquiry-form input,
+html[data-theme="dark"] .inquiry-form select,
+html[data-theme="dark"] .inquiry-form textarea,
+html[data-theme="dark"] .modality-btn,
+html[data-theme="dark"] .btn-outline-action,
+html[data-theme="dark"] .icon-user-btn,
+html[data-theme="dark"] .admin-dropdown,
+html[data-theme="dark"] .map-topbar,
+html[data-theme="dark"] .map-side-panel,
+html[data-theme="dark"] .map-dev-pill,
+html[data-theme="dark"] .map-legend-pill,
+html[data-theme="dark"] .map-hint-pill,
+html[data-theme="dark"] .map-zoom-controls,
+html[data-theme="dark"] .lot-spec-box,
+html[data-theme="dark"] .lot-detail-card {
+  background: var(--card-bg);
+  color: var(--text);
+  border-color: var(--border);
+}
+html[data-theme="dark"] .unified-dev-tab.active,
+html[data-theme="dark"] .dev-proto-tab.active,
+html[data-theme="dark"] .map-dev-pill.active,
+html[data-theme="dark"] .mode-tab.active {
+  background: var(--accent);
+  color: #11100e;
+  border-color: var(--accent);
+}
+html[data-theme="dark"] .unified-dev-tab.active small,
+html[data-theme="dark"] .dev-proto-tab.active .dev-proto-tab-price {
+  color: #1c1917;
+}
+html[data-theme="dark"] .site-footer {
+  background: #161412;
+  border-top-color: var(--border);
+}
+html[data-theme="dark"] .social-box {
+  background: var(--surface);
+  color: var(--text);
+}
+html[data-theme="dark"] .transport-hero-card {
+  background: linear-gradient(135deg, #211e1b 0%, #191714 100%);
+}
+html[data-theme="dark"] .fullscreen-map-view {
+  background: #141210;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -853,9 +943,10 @@ body { overflow-x: hidden; }
   position: sticky; top: 0; height: 100vh;
 }
 .cms-brand { display: flex; align-items: center; gap: 12px; padding: 0 8px 22px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.header-actions { display: flex; align-items: center; gap: 8px; }
 .cms-brand-mark {
   width: 38px; height: 38px; border-radius: 10px;
-  background: linear-gradient(135deg, #c23333 0%, #8a1f1f 100%);
+  background: linear-gradient(135deg, #ad7759 0%, #7c4f38 100%);
   color: #fff; font-weight: 800; font-size: 18px; display: grid; place-items: center;
 }
 .cms-brand strong { display: block; font-size: 15px; color: #fff; letter-spacing: -0.2px; }
