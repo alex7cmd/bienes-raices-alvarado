@@ -801,6 +801,115 @@ async function openAdminCms() {
 }
 
 // --- INTERACTIVE SVG MAP (REDRAWN PER DEVELOPMENT + FULLSCREEN) ---
+const AMENITIES_GALLERY = {
+  sorento: [
+    '/assets/images/amenidades/sorento-1.webp',
+    '/assets/images/amenidades/sorento-2.webp',
+    '/assets/images/amenidades/sorento-3.webp',
+    '/assets/images/amenidades/sorento-4.webp',
+    '/assets/images/amenidades/sorento-5.webp',
+    '/assets/images/amenidades/sorento-6.webp',
+    '/assets/images/amenidades/sorento-7.webp',
+    '/assets/images/amenidades/sorento-8.webp',
+    '/assets/images/amenidades/sorento-9.webp'
+  ],
+  oporto: [
+    '/assets/images/amenidades/oporto-1.webp',
+    '/assets/images/amenidades/oporto-2.webp',
+    '/assets/images/amenidades/oporto-3.webp',
+    '/assets/images/amenidades/oporto-4.webp',
+    '/assets/images/amenidades/oporto-5.webp',
+    '/assets/images/amenidades/oporto-6.webp',
+    '/assets/images/amenidades/oporto-7.webp'
+  ],
+  ardenza: [
+    '/assets/images/amenidades/ardenza-1.webp',
+    '/assets/images/amenidades/ardenza-2.webp',
+    '/assets/images/amenidades/ardenza-3.webp',
+    '/assets/images/amenidades/ardenza-4.webp',
+    '/assets/images/amenidades/ardenza-5.webp'
+  ],
+  montalese: [
+    '/assets/images/amenidades/montalese-1.webp',
+    '/assets/images/amenidades/montalese-2.webp',
+    '/assets/images/amenidades/montalese-3.webp',
+    '/assets/images/amenidades/montalese-4.webp',
+    '/assets/images/amenidades/montalese-5.webp'
+  ],
+  'torres-qavalta': [
+    '/assets/images/hero-torres-qavalta.webp',
+    '/assets/images/amenidades/sorento-1.webp',
+    '/assets/images/amenidades/vittoria-1.webp',
+    '/assets/images/amenidades/oporto-1.webp'
+  ],
+  vittoria: [
+    '/assets/images/amenidades/vittoria-1.webp',
+    '/assets/images/amenidades/vittoria-2.webp',
+    '/assets/images/amenidades/vittoria-3.webp',
+    '/assets/images/amenidades/vittoria-4.webp',
+    '/assets/images/amenidades/vittoria-5.webp',
+    '/assets/images/amenidades/vittoria-6.webp'
+  ]
+};
+
+function renderMapAmenities(slug, activeIdx = 0) {
+  const container = $('amenitiesShowcase');
+  if (!container) return;
+  const dev = state.developments.find(d => d.id === slug) || { name: slug };
+  const info = DEV_DETAILS[slug] || { amenidades: ['Acceso controlado', 'Áreas verdes', 'Juegos infantiles'] };
+  const amenidades = info.amenidades || [];
+  const photos = AMENITIES_GALLERY[slug] || AMENITIES_GALLERY.vittoria;
+  const idx = ((activeIdx % photos.length) + photos.length) % photos.length;
+  const activeAmenity = amenidades[idx % Math.max(1, amenidades.length)] || dev.name;
+
+  container.innerHTML = `
+    <div class="amen-split">
+      <div class="amen-stage">
+        <img src="${photos[idx]}" alt="${dev.name} - ${activeAmenity}" id="amenStageImg" />
+        <div class="amen-stage-overlay">
+          <span class="amen-kicker">AMENIDADES REALES · ${dev.name.toUpperCase()}</span>
+          <h3 id="amenStageTitle">${activeAmenity}</h3>
+        </div>
+        <span class="proto-photo-counter" id="amenCounter">${idx + 1} / ${photos.length}</span>
+        <button type="button" class="proto-photo-arrow proto-photo-prev" id="amenPrevBtn" aria-label="Foto anterior">‹</button>
+        <button type="button" class="proto-photo-arrow proto-photo-next" id="amenNextBtn" aria-label="Foto siguiente">›</button>
+      </div>
+
+      <div class="amen-sidebar">
+        <div class="amen-sidebar-head">
+          <span class="section-kicker">ENTORNO Y ESTILO DE VIDA</span>
+          <h4>Amenidades de ${dev.name}</h4>
+          <p>Explora las áreas reales del desarrollo seleccionando cada amenidad o fotografía.</p>
+        </div>
+        <div class="amen-list">
+          ${amenidades.map((a, i) => `
+            <button type="button" class="amen-list-item ${i === (idx % amenidades.length) ? 'active' : ''}" data-amen-idx="${i}">
+              <span class="amen-list-icon">${featureIcon(a)}</span>
+              <span class="amen-list-text">${a}</span>
+              <img class="amen-list-thumb" src="${photos[i % photos.length]}" alt="${a}" loading="lazy" />
+            </button>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+
+    <div class="amen-filmstrip">
+      ${photos.map((src, i) => `
+        <button type="button" class="amen-thumb ${i === idx ? 'active' : ''}" data-amen-idx="${i}" aria-label="Foto amenidad ${i + 1}">
+          <img src="${src}" alt="${dev.name} amenidad ${i + 1}" loading="lazy" />
+        </button>
+      `).join('')}
+    </div>
+  `;
+
+  const setAmenIdx = (next) => renderMapAmenities(slug, next);
+  $('amenPrevBtn')?.addEventListener('click', () => setAmenIdx(idx - 1));
+  $('amenNextBtn')?.addEventListener('click', () => setAmenIdx(idx + 1));
+  container.querySelectorAll('[data-amen-idx]').forEach(btn => {
+    btn.addEventListener('click', () => setAmenIdx(Number(btn.dataset.amenIdx)));
+  });
+}
+
 async function renderInteractiveMap() {
   const slug = state.mapDevSlug || 'sorento';
   const dev = state.developments.find(d => d.id === slug) || { id: slug, name: slug, startingPrice: 1382000 };
@@ -844,6 +953,7 @@ async function renderInteractiveMap() {
     statusFilter: state.mapStatusFilter,
     protoFilter: state.mapProtoFilter
   });
+  renderMapAmenities(slug, 0);
   renderSelectedLotDetail();
 }
 

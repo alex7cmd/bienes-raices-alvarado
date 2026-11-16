@@ -1,0 +1,45 @@
+{
+  "sorento": [
+    "/assets/images/amenidades/sorento-1.webp",
+    "/assets/images/amenidades/sorento-2.webp",
+    "/assets/images/amenidades/sorento-3.webp",
+    "/assets/images/amenidades/sorento-4.webp",
+    "/assets/images/amenidades/sorento-5.webp",
+    "/assets/images/amenidades/sorento-6.webp",
+    "/assets/images/amenidades/sorento-7.webp",
+    "/assets/images/amenidades/sorento-8.webp",
+    "/assets/images/amenidades/sorento-9.webp"
+  ],
+  "oporto": [
+    "/assets/images/amenidades/oporto-1.webp",
+    "/assets/images/amenidades/oporto-2.webp",
+    "/assets/images/amenidades/oporto-3.webp",
+    "/assets/images/amenidades/oporto-4.webp",
+    "/assets/images/amenidades/oporto-5.webp",
+    "/assets/images/amenidades/oporto-6.webp",
+    "/assets/images/amenidades/oporto-7.webp"
+  ],
+  "ardenza": [
+    "/assets/images/amenidades/ardenza-1.webp",
+    "/assets/images/amenidades/ardenza-2.webp",
+    "/assets/images/amenidades/ardenza-3.webp",
+    "/assets/images/amenidades/ardenza-4.webp",
+    "/assets/images/amenidades/ardenza-5.webp"
+  ],
+  "montalese": [
+    "/assets/images/amenidades/montalese-1.webp",
+    "/assets/images/amenidades/montalese-2.webp",
+    "/assets/images/amenidades/montalese-3.webp",
+    "/assets/images/amenidades/montalese-4.webp",
+    "/assets/images/amenidades/montalese-5.webp"
+  ],
+  "vittoria": [
+    "/assets/images/amenidades/vittoria-1.webp",
+    "/assets/images/amenidades/vittoria-2.webp",
+    "/assets/images/amenidades/vittoria-3.webp",
+    "/assets/images/amenidades/vittoria-4.webp",
+    "/assets/images/amenidades/vittoria-5.webp",
+    "/assets/images/amenidades/vittoria-6.webp"
+  ],
+  "torres-qavalta": []
+}
