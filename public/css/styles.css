@@ -923,6 +923,10 @@ html[data-theme="dark"] .dock-icon-circle {
   font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
 }
 .btn-map-info-tour:hover { opacity: 0.9; }
+.btn-wa-block {
+  width: 100% !important; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  font-size: 13px;
+}
 .map-admin-edit-box {
   margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border);
   display: flex; flex-direction: column; gap: 10px;
