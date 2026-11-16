@@ -1477,11 +1477,7 @@ html[data-theme="dark"] .fin-logo img {
   .panel-proto-filters button small { font-size: 10.5px; }
   .map-zoom-controls { right: 12px; top: 54px; }
   .map-hint-pill { display: none; }
-  .map-legend-pill {
-    display: flex; left: 50%; bottom: calc(33vh + 16px);
-    max-width: calc(100% - 24px); flex-wrap: wrap; justify-content: center;
-    gap: 10px 14px; padding: 8px 14px; font-size: 11.5px;
-  }
+  .map-legend-pill { display: none; }
   .form-grid, .contact-form-grid { grid-template-columns: 1fr; }
   .contact-card { padding: 22px; }
 }
