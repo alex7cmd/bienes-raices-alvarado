@@ -762,20 +762,85 @@ function getMapCounts(lots) {
   return c;
 }
 
+const MAP_LIFE_CONFIG = {
+  sorento: {
+    cars: [
+      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 5440 5550 L 5440 900' },
+      { color: '#1e3a5f', dur: '32s', begin: '-11s', path: 'M 5780 900 L 5780 5550' },
+      { color: '#d6b68a', dur: '26s', begin: '-6s', path: 'M 2050 4910 L 4650 4910' }
+    ],
+    walkers: [
+      { color: '#0ea5e9', dur: '36s', begin: '0s', path: 'M 2550 3820 L 3350 3820 L 3350 4040 L 2550 4040 Z' },
+      { color: '#f97316', dur: '40s', begin: '-14s', path: 'M 6900 3800 L 7620 3800 L 7620 4020 L 6900 4020 Z' }
+    ],
+    trees: [
+      { x: 5610, y: 1850, r: 78, d: '0s' }, { x: 5610, y: 3150, r: 82, d: '1.1s' },
+      { x: 5610, y: 4450, r: 76, d: '0.6s' }, { x: 2450, y: 3920, r: 88, d: '1.6s' },
+      { x: 7750, y: 3920, r: 86, d: '2.1s' }
+    ],
+    grass: [{ x: 2950, y: 3930 }, { x: 7260, y: 3910 }]
+  },
+  oporto: {
+    cars: [
+      { color: '#ffffff', dur: '26s', begin: '0s', path: 'M 1050 5340 L 4900 5340' },
+      { color: '#1e3a5f', dur: '30s', begin: '-9s', path: 'M 5400 4440 L 3800 4440' },
+      { color: '#d6b68a', dur: '24s', begin: '-5s', path: 'M 3360 6100 L 3360 5360' }
+    ],
+    walkers: [
+      { color: '#0ea5e9', dur: '34s', begin: '0s', path: 'M 3050 4050 L 3450 4050 L 3450 4250 L 3050 4250 Z' },
+      { color: '#f97316', dur: '38s', begin: '-12s', path: 'M 1600 5260 L 2450 5260 L 2450 5310 L 1600 5310 Z' }
+    ],
+    trees: [{ x: 3150, y: 4140, r: 84, d: '0.2s' }, { x: 3360, y: 4140, r: 78, d: '1.4s' }],
+    grass: [{ x: 3250, y: 4180 }]
+  },
+  ardenza: {
+    cars: [
+      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 4320 5900 L 4320 2800' },
+      { color: '#1e3a5f', dur: '30s', begin: '-10s', path: 'M 1350 5580 L 4100 5580' },
+      { color: '#d6b68a', dur: '26s', begin: '-6s', path: 'M 4100 5100 L 1350 5100' }
+    ],
+    walkers: [
+      { color: '#0ea5e9', dur: '36s', begin: '0s', path: 'M 2200 5520 L 3000 5520 L 3000 5560 L 2200 5560 Z' },
+      { color: '#f97316', dur: '40s', begin: '-15s', path: 'M 4260 4400 L 4260 3600' }
+    ],
+    trees: [{ x: 4320, y: 4000, r: 78, d: '0.4s' }, { x: 4320, y: 4700, r: 82, d: '1.5s' }],
+    grass: [{ x: 4280, y: 4350 }]
+  },
+  montalese: {
+    cars: [
+      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 950 5280 L 5400 5280' },
+      { color: '#1e3a5f', dur: '31s', begin: '-11s', path: 'M 5400 4180 L 950 4180' },
+      { color: '#d6b68a', dur: '25s', begin: '-5s', path: 'M 3020 5950 L 3020 3550' }
+    ],
+    walkers: [
+      { color: '#0ea5e9', dur: '34s', begin: '0s', path: 'M 2880 4600 L 3160 4600 L 3160 4900 L 2880 4900 Z' },
+      { color: '#f97316', dur: '38s', begin: '-14s', path: 'M 2100 5220 L 2900 5220 L 2900 5255 L 2100 5255 Z' }
+    ],
+    trees: [{ x: 3020, y: 4720, r: 84, d: '0.3s' }, { x: 3020, y: 5050, r: 78, d: '1.3s' }],
+    grass: [{ x: 3020, y: 4880 }]
+  },
+  vittoria: {
+    cars: [
+      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 4020 5250 L 4020 1550' },
+      { color: '#1e3a5f', dur: '32s', begin: '-11s', path: 'M 4620 1550 L 4620 5250' },
+      { color: '#d6b68a', dur: '26s', begin: '-6s', path: 'M 1400 5220 L 3650 5220' }
+    ],
+    walkers: [
+      { color: '#0ea5e9', dur: '36s', begin: '0s', path: 'M 4160 3050 L 4420 3050 L 4420 3350 L 4160 3350 Z' },
+      { color: '#f97316', dur: '40s', begin: '-14s', path: 'M 5050 4150 L 5850 4150 L 5850 4200 L 5050 4200 Z' }
+    ],
+    trees: [
+      { x: 4320, y: 2150, r: 78, d: '0s' }, { x: 4320, y: 3200, r: 88, d: '1.1s' },
+      { x: 4320, y: 4250, r: 80, d: '1.8s' }
+    ],
+    grass: [{ x: 4290, y: 3180 }, { x: 4320, y: 2650 }]
+  }
+};
+
 function buildMapLifeOverlay(mapData) {
   if (mapData.isTowerFloors || !mapData.bg) return '';
-  const trees = [
-    { x: 3280, y: 3820, r: 95, d: '0s' },
-    { x: 3740, y: 4050, r: 108, d: '1.1s' },
-    { x: 5620, y: 3860, r: 102, d: '0.6s' },
-    { x: 6040, y: 4060, r: 92, d: '1.8s' },
-    { x: 4770, y: 2150, r: 84, d: '0.4s' },
-    { x: 4770, y: 3680, r: 88, d: '1.5s' },
-    { x: 4770, y: 5050, r: 82, d: '2.2s' }
-  ];
-  const grassSpots = [
-    { x: 3440, y: 3940 }, { x: 3620, y: 3810 }, { x: 5800, y: 3950 }, { x: 5940, y: 3820 }
-  ];
+  const cfg = MAP_LIFE_CONFIG[mapData.slug];
+  if (!cfg) return '';
   return `
     <g class="qmap-life-layer" pointer-events="none">
       <defs>
@@ -785,29 +850,29 @@ function buildMapLifeOverlay(mapData) {
           <stop offset="100%" stop-color="#15803d" />
         </radialGradient>
         <g id="qmapCarShape">
-          <ellipse cx="2" cy="5" rx="54" ry="28" fill="rgba(15,23,42,0.22)" />
-          <rect x="-52" y="-24" width="104" height="48" rx="16" fill="currentColor" stroke="#0f172a" stroke-width="3" />
-          <rect x="-24" y="-18" width="50" height="36" rx="9" fill="#e2e8f0" opacity="0.9" />
-          <rect x="-12" y="-15" width="26" height="30" rx="6" fill="currentColor" />
-          <circle cx="46" cy="-14" r="4" fill="#fef08a" />
-          <circle cx="46" cy="14" r="4" fill="#fef08a" />
+          <ellipse cx="2" cy="5" rx="48" ry="25" fill="rgba(15,23,42,0.22)" />
+          <rect x="-46" y="-21" width="92" height="42" rx="14" fill="currentColor" stroke="#0f172a" stroke-width="3" />
+          <rect x="-20" y="-15" width="44" height="30" rx="8" fill="#e2e8f0" opacity="0.9" />
+          <rect x="-10" y="-12" width="22" height="24" rx="5" fill="currentColor" />
+          <circle cx="40" cy="-12" r="3.5" fill="#fef08a" />
+          <circle cx="40" cy="12" r="3.5" fill="#fef08a" />
         </g>
         <g id="qmapWalkerShape">
-          <ellipse cx="0" cy="4" rx="18" ry="14" fill="rgba(15,23,42,0.18)" />
-          <ellipse cx="0" cy="0" rx="16" ry="11" fill="currentColor" />
-          <circle cx="2" cy="0" r="9" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" />
-          <circle cx="3" cy="0" r="6" fill="#334155" />
+          <ellipse cx="0" cy="4" rx="16" ry="12" fill="rgba(15,23,42,0.18)" />
+          <ellipse cx="0" cy="0" rx="14" ry="10" fill="currentColor" />
+          <circle cx="2" cy="0" r="8" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" />
+          <circle cx="3" cy="0" r="5" fill="#334155" />
         </g>
       </defs>
 
-      ${grassSpots.map(g => `
+      ${cfg.grass.map(g => `
         <g class="qmap-grass-tuft" transform="translate(${g.x}, ${g.y})">
           <path d="M-28 8 Q-34 -14 -42 -22 M-8 10 Q-8 -16 -4 -26 M12 10 Q18 -14 26 -22 M28 8 Q36 -8 44 -14"
             fill="none" stroke="#166534" stroke-width="4" stroke-linecap="round" opacity="0.38" />
         </g>
       `).join('')}
 
-      ${trees.map(t => `
+      ${cfg.trees.map(t => `
         <g class="qmap-tree-sway" style="animation-delay:${t.d};" transform="translate(${t.x}, ${t.y})">
           <circle cx="10" cy="14" r="${t.r}" fill="rgba(15,23,42,0.16)" />
           <circle cx="0" cy="0" r="${t.r}" fill="url(#qmapTreeGrad)" stroke="#166534" stroke-width="4" opacity="0.92" />
@@ -815,29 +880,19 @@ function buildMapLifeOverlay(mapData) {
         </g>
       `).join('')}
 
-      <!-- 3 autos animados de forma sutil -->
-      <g color="#ffffff">
-        <use href="#qmapCarShape" />
-        <animateMotion dur="26s" repeatCount="indefinite" rotate="auto" path="M 4710 5650 L 4710 950" />
-      </g>
-      <g color="#1e3a5f">
-        <use href="#qmapCarShape" />
-        <animateMotion dur="31s" begin="-11s" repeatCount="indefinite" rotate="auto" path="M 4830 950 L 4830 5650" />
-      </g>
-      <g color="#d6b68a">
-        <use href="#qmapCarShape" />
-        <animateMotion dur="28s" begin="-6s" repeatCount="indefinite" rotate="auto" path="M 2150 3260 L 6850 3260" />
-      </g>
+      ${cfg.cars.map(c => `
+        <g color="${c.color}">
+          <use href="#qmapCarShape" />
+          <animateMotion dur="${c.dur}" begin="${c.begin}" repeatCount="indefinite" rotate="auto" path="${c.path}" />
+        </g>
+      `).join('')}
 
-      <!-- 2 personas caminando sutilmente -->
-      <g class="qmap-walker" color="#0ea5e9">
-        <use href="#qmapWalkerShape" />
-        <animateMotion dur="36s" repeatCount="indefinite" rotate="auto" path="M 3260 3980 L 3920 3980 L 3920 3800 L 3260 3800 Z" />
-      </g>
-      <g class="qmap-walker" color="#f97316">
-        <use href="#qmapWalkerShape" />
-        <animateMotion dur="40s" begin="-14s" repeatCount="indefinite" rotate="auto" path="M 5560 3840 L 6140 3840 L 6140 4040 L 5560 4040 Z" />
-      </g>
+      ${cfg.walkers.map(w => `
+        <g class="qmap-walker" color="${w.color}">
+          <use href="#qmapWalkerShape" />
+          <animateMotion dur="${w.dur}" begin="${w.begin}" repeatCount="indefinite" rotate="auto" path="${w.path}" />
+        </g>
+      `).join('')}
     </g>
   `;
 }
