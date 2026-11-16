@@ -56,6 +56,18 @@ function svgIcon(kind) {
   return `<svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true">${path}</svg>`;
 }
 
+function specBox(icon, label, value) {
+  return `
+    <div class="lot-spec-box">
+      <div class="spec-icon-wrap">${svgIcon(icon)}</div>
+      <div class="spec-text-wrap">
+        <small>${label}</small>
+        <strong>${value}</strong>
+      </div>
+    </div>
+  `;
+}
+
 function featureIcon(name) {
   const n = (name || '').toLowerCase();
   if (n.includes('alberca')) return svgIcon('pool');
@@ -328,10 +340,10 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
         <p class="proto-panel-desc">${p.description}</p>
 
         <div class="lot-specs-grid proto-panel-specs">
-          <div class="lot-spec-box"><small>${svgIcon('area')} Terreno</small><strong>${p.area} m²</strong></div>
-          <div class="lot-spec-box"><small>${svgIcon('bed')} Recámaras</small><strong>${p.bedrooms}</strong></div>
-          <div class="lot-spec-box"><small>${svgIcon('bath')} Baños</small><strong>${p.bathrooms}</strong></div>
-          <div class="lot-spec-box"><small>${svgIcon('car')} Estac.</small><strong>${p.parking}</strong></div>
+          ${specBox('area', 'Terreno', `${p.area} m²`)}
+          ${specBox('bed', 'Recámaras', p.bedrooms)}
+          ${specBox('bath', 'Baños', p.bathrooms)}
+          ${specBox('car', 'Estac.', p.parking)}
         </div>
 
         <div class="proto-panel-features">
@@ -418,10 +430,10 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
               <span class="dev-overview-kicker">DESARROLLO SELECCIONADO · ${activeDev.name.toUpperCase()}</span>
               <p class="dev-overview-desc">${info.description}</p>
               <div class="dev-overview-details">
-                <div class="lot-spec-box"><small>${svgIcon('home')} Privada</small><strong>${activeDev.name}</strong></div>
-                <div class="lot-spec-box"><small>${svgIcon('area')} Capacidad</small><strong>${info.lotesLabel}</strong></div>
-                <div class="lot-spec-box"><small>${svgIcon('tag')} Desde</small><strong>${mxn.format(activeDev.startingPrice)}</strong></div>
-                <div class="lot-spec-box"><small>${svgIcon('gallery')} Modelos</small><strong>${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}</strong></div>
+                ${specBox('home', 'Privada', activeDev.name)}
+                ${specBox('area', 'Capacidad', info.lotesLabel)}
+                ${specBox('tag', 'Desde', mxn.format(activeDev.startingPrice))}
+                ${specBox('gallery', 'Modelos', `${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}`)}
               </div>
               <div class="dev-overview-amenities">
                 <span class="proto-panel-subtitle">Características de ${activeDev.name}</span>
@@ -526,10 +538,10 @@ function openPrototypeModal(protoId, initialIdx = 0) {
     </div>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px;">${p.description}</p>
     <div class="lot-specs-grid" style="grid-template-columns:repeat(4,1fr);">
-      <div class="lot-spec-box"><small>${svgIcon('area')} Terreno</small><strong>${p.area} m²</strong></div>
-      <div class="lot-spec-box"><small>${svgIcon('bed')} Recámaras</small><strong>${p.bedrooms}</strong></div>
-      <div class="lot-spec-box"><small>${svgIcon('bath')} Baños</small><strong>${p.bathrooms}</strong></div>
-      <div class="lot-spec-box"><small>${svgIcon('car')} Estac.</small><strong>${p.parking}</strong></div>
+      ${specBox('area', 'Terreno', `${p.area} m²`)}
+      ${specBox('bed', 'Recámaras', p.bedrooms)}
+      ${specBox('bath', 'Baños', p.bathrooms)}
+      ${specBox('car', 'Estac.', p.parking)}
     </div>
     <div class="proto-features-chips" style="margin-bottom:16px;">
       ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
@@ -827,10 +839,10 @@ function renderSelectedLotDetail() {
       <p style="font-size:12px;color:var(--muted);">${dev?.name || ''} · Manzana / Nivel: ${lot.m || 'N/A'}</p>
       <div class="lot-detail-price">${priceDisplay}</div>
       <div class="lot-specs-grid">
-        <div class="lot-spec-box"><small>${svgIcon('area')} Superficie</small><strong>${lot.a ? `${lot.a} m²` : 'N/A'}</strong></div>
-        <div class="lot-spec-box"><small>${svgIcon('tag')} Estatus</small><strong>${statusLabel}</strong></div>
-        <div class="lot-spec-box"><small>${svgIcon('home')} Privada</small><strong>${dev?.name || state.mapDevSlug}</strong></div>
-        <div class="lot-spec-box"><small>${svgIcon('gallery')} Prototipo</small><strong>${lot.pr || (protoMatch?.name || 'A elegir')}</strong></div>
+        ${specBox('area', 'Superficie', lot.a ? `${lot.a} m²` : 'N/A')}
+        ${specBox('tag', 'Estatus', statusLabel)}
+        ${specBox('home', 'Privada', dev?.name || state.mapDevSlug)}
+        ${specBox('gallery', 'Prototipo', lot.pr || (protoMatch?.name || 'A elegir'))}
       </div>
       <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
       <button type="button" class="btn-map-info-tour" id="mapLotInfoTourBtn">Info / Agendar Tour</button>
