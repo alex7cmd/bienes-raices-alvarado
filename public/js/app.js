@@ -724,7 +724,19 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
       <text x="757" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 1 (68 m²)</text>
     `;
   } else if (mapData.bg) {
-    bgMarkup = `<image href="${mapData.bg}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
+    bgMarkup = `
+      <defs>
+        <linearGradient id="fadeL" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <linearGradient id="fadeR" x1="100%" y1="0%" x2="0%" y2="0%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <linearGradient id="fadeT" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <linearGradient id="fadeB" x1="0%" y1="100%" x2="0%" y2="0%"><stop offset="0%" stop-color="#ffffff" stop-opacity="1"/><stop offset="100%" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+      </defs>
+      <image href="${mapData.bg}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />
+      <rect x="0" y="0" width="420" height="${mapData.h}" fill="url(#fadeL)" pointer-events="none" />
+      <rect x="${mapData.w - 420}" y="0" width="420" height="${mapData.h}" fill="url(#fadeR)" pointer-events="none" />
+      <rect x="0" y="0" width="${mapData.w}" height="340" fill="url(#fadeT)" pointer-events="none" />
+      <rect x="0" y="${mapData.h - 340}" width="${mapData.w}" height="340" fill="url(#fadeB)" pointer-events="none" />
+    `;
   }
 
   const sw = mapData.isTower ? 2 : 9;
