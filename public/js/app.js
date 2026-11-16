@@ -659,11 +659,76 @@ function showOnlyView(viewName) {
   }
 }
 
+const DEV_MAP_PROTOTYPES = {
+  sorento: [
+    { id: 'ruche', name: 'Ruche', price: 2600000, area: 105 },
+    { id: 'loureira', name: 'Loureira', price: 3200000, area: 123 },
+    { id: 'gracciano', name: 'Gracciano', price: 3600000, area: 140 },
+    { id: 'malvasia', name: 'Malvasia', price: 4450000, area: 242 }
+  ],
+  oporto: [
+    { id: 'areni', name: 'Areni', price: 1500000, area: 90 },
+    { id: 'areni-3r', name: 'Areni 3R', price: 1610000, area: 90 },
+    { id: 'brachetto', name: 'Brachetto', price: 1770000, area: 78 },
+    { id: 'moscatel', name: 'Moscatel', price: 1860000, area: 105 },
+    { id: 'carlina', name: 'Carlina', price: 2030000, area: 105 },
+    { id: 'castella', name: 'Castella', price: 2192000, area: 110 },
+    { id: 'montello', name: 'Montello', price: 2200000, area: 112 },
+    { id: 'belora', name: 'Belora', price: 2320000, area: 113 }
+  ],
+  ardenza: [
+    { id: 'brachetto', name: 'Brachetto', price: 1770000, area: 78 },
+    { id: 'moscatel', name: 'Moscatel', price: 1860000, area: 105 },
+    { id: 'carlina', name: 'Carlina', price: 1970000, area: 105 },
+    { id: 'castella', name: 'Castella', price: 2182000, area: 110 },
+    { id: 'montello', name: 'Montello', price: 2200000, area: 112 },
+    { id: 'ruche', name: 'Ruche', price: 2539000, area: 105 }
+  ],
+  montalese: [
+    { id: 'arveto', name: 'Arveto', price: 1660000, area: 90 },
+    { id: 'belat', name: 'Belat', price: 1865000, area: 80 },
+    { id: 'brachetto', name: 'Brachetto', price: 2000000, area: 78 },
+    { id: 'moscato', name: 'Moscato', price: 2230000, area: 105 },
+    { id: 'carlina', name: 'Carlina', price: 1970000, area: 105 },
+    { id: 'ruche', name: 'Ruche', price: 2600000, area: 105 }
+  ],
+  'torres-qavalta': [
+    { id: 'flat-1', name: 'Flat 1', price: 1544000, area: 68 },
+    { id: 'flat-2', name: 'Flat 2', price: 1743000, area: 84 }
+  ],
+  vittoria: [
+    { id: 'nebbiolo', name: 'Nebbiolo', price: 1550000, area: 75 },
+    { id: 'arveto', name: 'Arveto', price: 1660000, area: 90 },
+    { id: 'brachetto', name: 'Brachetto', price: 1847000, area: 78 },
+    { id: 'belat', name: 'Belat', price: 1892000, area: 80 },
+    { id: 'carlina', name: 'Carlina', price: 1970000, area: 105 },
+    { id: 'moscato', name: 'Moscato', price: 2050000, area: 105 }
+  ]
+};
+
+function getDevMapPrototypes(slug) {
+  const official = DEV_MAP_PROTOTYPES[slug];
+  if (official) {
+    return official.map(op => {
+      const local = state.prototypes.find(p => p.id === op.id || p.name.toLowerCase() === op.name.toLowerCase());
+      return {
+        ...local,
+        id: op.id,
+        name: op.name,
+        price: op.price || local?.price || 1550000,
+        area: op.area || local?.area || 90,
+        image: local?.image || '/assets/images/casa-2.jpg'
+      };
+    });
+  }
+  return state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(slug));
+}
+
 function resolveLotPrototype(lot, slug) {
-  const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(slug));
-  const pool = devProtos.length ? devProtos : state.prototypes;
+  const pool = getDevMapPrototypes(slug);
   if (lot.pr) {
-    const exact = state.prototypes.find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase());
+    const exact = pool.find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase())
+      || state.prototypes.find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase());
     if (exact) return exact;
     return { id: String(lot.pr).toLowerCase().replace(/\s+/g, '-'), name: lot.pr, price: lot.p || pool[0]?.price || 1500000, image: pool[0]?.image || '' };
   }
@@ -956,19 +1021,19 @@ async function renderInteractiveMap() {
     `).join('');
   }
 
-  const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(slug));
+  const devProtos = getDevMapPrototypes(slug);
   $('mapProtoFilters').innerHTML = [
-    `<button class="${state.mapProtoFilter === 'all' ? 'active' : ''}" data-mproto="all">Todos</button>`,
-    ...devProtos.map(p => `<button class="${state.mapProtoFilter === p.id ? 'active' : ''}" data-mproto="${p.id}">${p.name}</button>`)
+    `<button class="${state.mapProtoFilter === 'all' ? 'active' : ''}" data-mproto="all"><span>Todos los prototipos</span><small>${devProtos.length}</small></button>`,
+    ...devProtos.map(p => `<button class="${state.mapProtoFilter === p.id ? 'active' : ''}" data-mproto="${p.id}"><span>${p.name}</span><small>${mxn.format(p.price)}</small></button>`)
   ].join('');
 
   if ($('mapStatusFilters')) {
     $('mapStatusFilters').innerHTML = [
-      { id: 'all', label: `Todos (${mapData.lots.length})` },
-      { id: 'disponible', label: `Disponibles (${counts.disponible})` },
-      { id: 'reservado', label: `Apartados (${counts.reservado})` },
-      { id: 'vendido', label: `Vendidos (${counts.vendido})` }
-    ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}">${f.label}</button>`).join('');
+      { id: 'all', label: 'Todos los lotes', count: mapData.lots.length },
+      { id: 'disponible', label: 'Disponibles', count: counts.disponible },
+      { id: 'reservado', label: 'Apartados', count: counts.reservado },
+      { id: 'vendido', label: 'Vendidos', count: counts.vendido }
+    ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}"><span>${f.label}</span><small>${f.count}</small></button>`).join('');
   }
 
   if ($('mapView')) $('mapView').classList.toggle('is-tower-bg', Boolean(mapData.isTowerFloors));
