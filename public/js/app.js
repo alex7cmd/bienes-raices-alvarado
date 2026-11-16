@@ -1518,6 +1518,52 @@ function bindEvents() {
     trigger.setAttribute('aria-expanded', String(isOpen));
   });
 
+  // Inline map pan (mouse + touch when zoomed)
+  let inlineDrag = null;
+  const startInlinePan = (clientX, clientY, target) => {
+    const vpInline = target.closest('.dev-inline-map-viewport');
+    if (!vpInline || target.closest('.dev-inline-zoom-bar')) return null;
+    const wrap = vpInline.querySelector('.dev-inline-svg-wrap');
+    if (!wrap) return null;
+    const sc = Number(wrap.dataset.scale || 1);
+    if (sc <= 1) return null;
+    return {
+      wrap,
+      sc,
+      startX: clientX - Number(wrap.dataset.panX || 0),
+      startY: clientY - Number(wrap.dataset.panY || 0),
+      moved: false
+    };
+  };
+  $('developmentAccordion').addEventListener('mousedown', (e) => {
+    inlineDrag = startInlinePan(e.clientX, e.clientY, e.target);
+  });
+  window.addEventListener('mousemove', (e) => {
+    if (!inlineDrag) return;
+    const px = e.clientX - inlineDrag.startX;
+    const py = e.clientY - inlineDrag.startY;
+    inlineDrag.moved = true;
+    inlineDrag.wrap.dataset.panX = String(px);
+    inlineDrag.wrap.dataset.panY = String(py);
+    inlineDrag.wrap.style.transform = `translate(${px}px, ${py}px) scale(${inlineDrag.sc})`;
+  });
+  window.addEventListener('mouseup', () => { inlineDrag = null; });
+  $('developmentAccordion').addEventListener('touchstart', (e) => {
+    if (e.touches.length !== 1) return;
+    inlineDrag = startInlinePan(e.touches[0].clientX, e.touches[0].clientY, e.target);
+  }, { passive: true });
+  $('developmentAccordion').addEventListener('touchmove', (e) => {
+    if (!inlineDrag || e.touches.length !== 1) return;
+    e.preventDefault();
+    const px = e.touches[0].clientX - inlineDrag.startX;
+    const py = e.touches[0].clientY - inlineDrag.startY;
+    inlineDrag.wrap.dataset.panX = String(px);
+    inlineDrag.wrap.dataset.panY = String(py);
+    inlineDrag.wrap.style.transform = `translate(${px}px, ${py}px) scale(${inlineDrag.sc})`;
+  }, { passive: false });
+  $('developmentAccordion').addEventListener('touchend', () => { inlineDrag = null; });
+  $('developmentAccordion').addEventListener('touchcancel', () => { inlineDrag = null; });
+
   // Unified development tabs (sticky hero dock + panel) + prototype tabs
   const handleDevTabClick = (e) => {
     const devTabBtn = e.target.closest('.unified-dev-tab');
@@ -1598,15 +1644,22 @@ function bindEvents() {
     if (zoomBtn) {
       e.stopPropagation();
       const mapSec = zoomBtn.closest('.dev-inline-map-section');
+      const vpInline = mapSec?.querySelector('.dev-inline-map-viewport');
       const wrap = mapSec?.querySelector('.dev-inline-svg-wrap');
       if (!wrap) return;
       let sc = Number(wrap.dataset.scale || 1);
+      let px = Number(wrap.dataset.panX || 0);
+      let py = Number(wrap.dataset.panY || 0);
       const act = zoomBtn.dataset.iz;
       if (act === 'in') sc = Math.min(2.6, +(sc + 0.35).toFixed(2));
       else if (act === 'out') sc = Math.max(1, +(sc - 0.35).toFixed(2));
-      else sc = 1;
+      else { sc = 1; px = 0; py = 0; }
+      if (sc === 1) { px = 0; py = 0; }
       wrap.dataset.scale = String(sc);
-      wrap.style.transform = `scale(${sc})`;
+      wrap.dataset.panX = String(px);
+      wrap.dataset.panY = String(py);
+      wrap.style.transform = `translate(${px}px, ${py}px) scale(${sc})`;
+      if (vpInline) vpInline.classList.toggle('is-zoomed', sc > 1);
       return;
     }
 
