@@ -346,7 +346,18 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
             `).join('')}
           </div>
         ` : ''}
-        ${p.video ? `<video src="${p.video}" controls style="width:100%;border-radius:12px;margin-top:12px;max-height:220px;"></video>` : ''}
+        ${p.video ? `<video src="${p.video}" controls style="width:100%;border-radius:12px;max-height:220px;"></video>` : ''}
+        <div class="proto-panel-map">
+          <div class="proto-panel-map-head">
+            <span>${svgIcon('pin')} Ubicación · Qavalta Residencial, Pachuca</span>
+            <a href="https://maps.google.com/?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo" target="_blank" rel="noopener">Abrir en Google Maps →</a>
+          </div>
+          <iframe
+            title="Mapa ${p.name}"
+            src="https://maps.google.com/maps?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            loading="lazy"
+          ></iframe>
+        </div>
       </div>
 
       <div class="proto-panel-info">
@@ -371,18 +382,6 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
           <div class="proto-features-chips">
             ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${f}</span>`).join('')}
           </div>
-        </div>
-
-        <div class="proto-panel-map">
-          <div class="proto-panel-map-head">
-            <span>${svgIcon('pin')} Ubicación · Qavalta Residencial, Pachuca</span>
-            <a href="https://maps.google.com/?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo" target="_blank" rel="noopener">Abrir en Google Maps →</a>
-          </div>
-          <iframe
-            title="Mapa ${p.name}"
-            src="https://maps.google.com/maps?q=Unidad+Estrategica+Comercial+Qavalta,+Pachuca,+Hidalgo&t=&z=15&ie=UTF8&iwloc=&output=embed"
-            loading="lazy"
-          ></iframe>
         </div>
 
         <a href="https://wa.me/${state.site.whatsapp}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa">Solicitar información por WhatsApp →</a>
