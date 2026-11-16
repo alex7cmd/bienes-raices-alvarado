@@ -82,3 +82,8 @@ El usuario autorizó configurar la contraseña del administrador y publicar en a
 - Confirmación de sincronización correcta: píldora fija superior, fondo verde claro, texto verde oscuro y cinco segundos de visibilidad; errores mantienen su aviso independiente.
 - Editor de portada: ubicación Inicio → Banner principal, vista previa que sigue los cambios del formulario, ayuda sobre la primera imagen del carrusel y teléfono del pie de página. Las tarjetas de desarrollos indican dónde aparecen sus imágenes.
 - La vista previa no guarda contenido; Guardar portada conserva la acción explícita de publicación.
+
+## Contexto y vista previa de prototipos — 1.10.2
+El CMS muestra una vista previa de imagen, precio, descripción, superficie, recámaras, baños y video por prototipo. Indica los desarrollos en los que aparece y aclara que Guardar actualiza la ficha compartida. Los borradores no modifican el catálogo publicado. Portada muestra seis miniaturas numeradas: la primera corresponde a su formulario y las otras llevan al campo de imagen del desarrollo.
+
+También se eliminó la pausa de logos de financiamiento al pasar el mouse y se aumentaron los indicadores de cantidad de prototipos a círculos de 36 píxeles con números de 17 píxeles.

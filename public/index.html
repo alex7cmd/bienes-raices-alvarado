@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.10.1-2" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.10.2-2" />
 </head>
 <body>
   <!-- DOCK SUPERIOR FLOTANTE iOS 27 LIQUID GLASS -->
@@ -521,11 +521,16 @@
       <!-- TAB 3: SITE & DEVELOPMENTS -->
       <div class="cms-panel hidden" id="cmsTabSite">
         <div class="cms-form-card">
+          <section class="cms-carousel-overview" aria-labelledby="cmsCarouselHeading">
+            <h3 id="cmsCarouselHeading">Carrusel de inicio · 6 imágenes</h3>
+            <p class="cms-field-help cms-card-location">Estas son las seis imágenes guardadas. Aquí editas la número 1. Selecciona otra miniatura para ir a su campo de edición en el desarrollo correspondiente.</p>
+            <div class="cms-carousel-grid" id="cmsCarouselOverview"></div>
+          </section>
           <div class="cms-edit-context">
             <span class="cms-location-pill">Estás editando: Inicio → Banner principal</span>
             <button type="button" class="btn-secondary" id="previewHomeSectionBtn">Ver esta sección en la página ↗</button>
           </div>
-          <h3>Portada principal · Primera imagen del carrusel</h3>
+          <h3>Imagen 1 de 6 · Portada principal</h3>
           <p class="cms-field-help cms-card-location" id="heroLocationHelp">Es el bloque grande al inicio de la página, detrás del título. Esta imagen cambia la primera diapositiva; las otras se editan en cada desarrollo.</p>
           <figure class="cms-home-preview" aria-label="Vista previa de la portada principal">
             <img id="cmsHeroPreviewImage" alt="Primera imagen del carrusel de inicio" decoding="async" />
@@ -677,6 +682,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.10.1-2" defer></script>
+  <script src="/js/app.js?v=1.10.2-2" defer></script>
 </body>
 </html>

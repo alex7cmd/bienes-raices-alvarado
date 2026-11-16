@@ -1304,6 +1304,79 @@ function resetZoom() {
 }
 
 // --- ADMIN CMS RENDERING ---
+function renderCmsPrototypePreview(p) {
+  const isApartment = p.type === 'departamento' || p.developments?.includes('torres-qavalta');
+  return `
+    <section class="cms-prototype-preview" aria-label="Vista previa de la ficha de ${escapeHtml(p.name)}">
+      <span class="cms-proto-preview-label">Vista previa de la ficha pública</span>
+      <img src="${escapeHtml(p.image)}" class="cms-preview-img" alt="${escapeHtml(p.name)}" loading="lazy" />
+      <p class="cms-field-help hidden" data-proto-preview="image-error">Añade una imagen válida para previsualizarla.</p>
+      <div class="cms-proto-preview-heading">
+        <strong>${escapeHtml(p.name)}</strong>
+        <strong data-proto-preview="price">${mxn.format(p.price)}</strong>
+      </div>
+      <p class="cms-proto-preview-description" data-proto-preview="description">${escapeHtml(p.description)}</p>
+      <div class="cms-proto-preview-specs">
+        <span>${isApartment ? 'Superficie' : 'Terreno'}<strong data-proto-preview="area">${escapeHtml(p.area)} m²</strong></span>
+        <span>Recámaras<strong data-proto-preview="bedrooms">${escapeHtml(p.bedrooms)}</strong></span>
+        <span>Baños<strong data-proto-preview="bathrooms">${escapeHtml(p.bathrooms)}</strong></span>
+      </div>
+      <video class="cms-proto-preview-video ${p.video ? '' : 'hidden'}" data-proto-preview="video" ${p.video ? `src="${escapeHtml(p.video)}"` : ''} controls preload="none" aria-label="Video del prototipo ${escapeHtml(p.name)}"></video>
+    </section>
+  `;
+}
+
+function updateCmsPrototypePreview(card) {
+  const read = selector => card.querySelector(selector).value;
+  const setText = (key, value) => { card.querySelector(`[data-proto-preview="${key}"]`).textContent = value; };
+  const numericLabel = (value, suffix = '') => value.trim() !== '' && Number.isFinite(Number(value)) && Number(value) >= 0 ? `${value}${suffix}` : 'Por definir';
+  const price = read('.p-price');
+  setText('price', price.trim() !== '' && Number.isFinite(Number(price)) && Number(price) >= 0 ? mxn.format(Number(price)) : 'Precio por definir');
+  setText('description', read('.p-desc'));
+  setText('area', numericLabel(read('.p-area'), ' m²'));
+  setText('bedrooms', numericLabel(read('.p-beds')));
+  setText('bathrooms', numericLabel(read('.p-baths')));
+  const safeUrl = value => (value.startsWith('/') && !value.startsWith('//')) || /^https?:\/\//i.test(value);
+  const image = card.querySelector('.cms-preview-img');
+  const warning = card.querySelector('[data-proto-preview="image-error"]');
+  image.onload = () => { image.classList.remove('hidden'); warning.classList.add('hidden'); };
+  image.onerror = () => { image.classList.add('hidden'); warning.classList.remove('hidden'); };
+  const imageUrl = read('.p-img').trim();
+  if (safeUrl(imageUrl)) {
+    if (image.getAttribute('src') !== imageUrl) {
+      image.src = imageUrl;
+      image.classList.remove('hidden');
+      warning.classList.add('hidden');
+    }
+  } else {
+    image.removeAttribute('src');
+    image.classList.add('hidden');
+    warning.classList.remove('hidden');
+  }
+  const video = card.querySelector('[data-proto-preview="video"]');
+  const videoUrl = read('.p-video').trim();
+  if (safeUrl(videoUrl)) {
+    if (video.getAttribute('src') !== videoUrl) video.src = videoUrl;
+    video.classList.remove('hidden');
+  } else {
+    video.pause();
+    video.removeAttribute('src');
+    video.classList.add('hidden');
+  }
+}
+
+function renderCmsCarouselOverview() {
+  const grid = $('cmsCarouselOverview');
+  if (!grid) return;
+  grid.innerHTML = getHeroSlides().map((slide, index) => `
+    <button type="button" class="cms-carousel-slide ${index === 0 ? 'is-current' : ''}" data-edit-carousel-slide="${escapeHtml(slide.slug)}" aria-label="${index === 0 ? 'Editar imagen 1 de portada' : `Editar imagen ${index + 1} de ${escapeHtml(slide.name)}`}">
+      <img src="${escapeHtml(slide.image)}" alt="Imagen ${index + 1}: ${escapeHtml(slide.name)}" loading="lazy" />
+      <strong>${index + 1}. ${index === 0 ? 'Portada principal' : escapeHtml(slide.name)}</strong>
+      <small>${index === 0 ? 'Estás editando esta imagen ↓' : `Editar en ${escapeHtml(slide.name)} ↓`}</small>
+    </button>
+  `).join('');
+}
+
 async function renderCmsPrototypesGrid() {
   const grid = $('cmsPrototypesGrid');
   if (!grid) return;
@@ -1329,8 +1402,17 @@ async function renderCmsPrototypesGrid() {
   }
   grid.innerHTML = list.map(p => `
     <div class="cms-form-card" data-cms-proto="${escapeHtml(p.id)}">
-      <img src="${escapeHtml(p.image)}" class="cms-preview-img" alt="${escapeHtml(p.name)}" />
       <h3>Prototipo: ${escapeHtml(p.name)}</h3>
+      <span class="cms-location-pill">Estás editando: ficha de ${escapeHtml(p.name)}</span>
+      <p class="cms-field-help cms-proto-location-title">Se muestra en la página de inicio, dentro de:</p>
+      <div class="cms-proto-location-chips">
+        ${(p.developments || []).map(id => {
+          const development = state.developments.find(d => d.id === id);
+          return `<span>${escapeHtml(development?.name || id)} → ${escapeHtml(p.name)}</span>`;
+        }).join('') || '<span>Sin desarrollo asignado</span>'}
+      </div>
+      ${renderCmsPrototypePreview(p)}
+      <p class="cms-field-help cms-card-location">Esta vista cambia mientras editas. Guardar cambios actualiza la ficha en todos los desarrollos indicados.</p>
       <div class="form-grid">
         <label>Precio (MXN)<input type="number" class="p-price" value="${escapeHtml(p.price)}" /></label>
         <label>Terreno (m²)<input type="number" class="p-area" value="${escapeHtml(p.area)}" /></label>
@@ -1403,6 +1485,7 @@ async function renderAdminCms() {
   $('editPhoneDisplay').value = site.phoneDisplay;
   $('editHeroImage').value = site.heroImage;
   updateCmsHomePreview();
+  renderCmsCarouselOverview();
 
   $('cmsDevsGrid').innerHTML = developments.map(d => `
     <div class="cms-form-card" data-cms-dev="${escapeHtml(d.id)}">
@@ -2007,6 +2090,28 @@ function bindEvents() {
     showToast(`Lote ${lotId} actualizado en ${slug}`);
   }));
 
+  // Card previews update drafts without modifying the published catalog.
+  $('cmsPrototypesGrid').addEventListener('input', (event) => {
+    const card = event.target.closest('[data-cms-proto]');
+    if (!card) return;
+    clearTimeout(card._previewTimer);
+    if (event.target.matches('.p-img, .p-video')) {
+      card._previewTimer = setTimeout(() => { if (card.isConnected) updateCmsPrototypePreview(card); }, 250);
+    } else {
+      updateCmsPrototypePreview(card);
+    }
+  });
+  $('cmsCarouselOverview').addEventListener('click', (event) => {
+    const button = event.target.closest('[data-edit-carousel-slide]');
+    if (!button) return;
+    const slug = button.dataset.editCarouselSlide;
+    const input = slug === HERO_SLIDES[0].slug ? $('editHeroImage') : [...document.querySelectorAll('[data-cms-dev]')].find(card => card.dataset.cmsDev === slug)?.querySelector('.d-img');
+    if (input) {
+      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      input.focus({ preventScroll: true });
+    }
+  });
+
   // CMS Prototype updates & file uploads
   $('cmsPrototypesGrid').addEventListener('change', handleAsync(async (e) => {
     if (!e.target.classList.contains('p-upload-img')) return;
@@ -2015,7 +2120,7 @@ function bindEvents() {
     if (!file) return;
     const res = await uploadMedia(file);
     card.querySelector('.p-img').value = res.url;
-    card.querySelector('.cms-preview-img').src = res.url;
+    updateCmsPrototypePreview(card);
     showToast('Imagen subida. Haz clic en Guardar cambios.');
   }));
 

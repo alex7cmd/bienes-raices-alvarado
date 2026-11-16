@@ -688,7 +688,9 @@ html[data-theme="dark"] .hero-dev-dock .unified-dev-tabs {
 .unified-dev-tab-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
 .unified-dev-tab-top strong { font-size: 14px; font-weight: 700; }
 .unified-dev-tab-count {
-  font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 36px; height: 36px; flex-shrink: 0; padding: 0;
+  font-size: 17px; line-height: 1; font-weight: 700; border-radius: 50%;
   background: var(--surface); color: var(--muted);
 }
 .unified-dev-tab.active .unified-dev-tab-count { background: rgba(255,255,255,0.16); color: #fff; }
@@ -869,7 +871,6 @@ html[data-theme="dark"] .hero-dev-dock .unified-dev-tabs {
   will-change: transform;
   animation: financingLoop 24s linear infinite;
 }
-.financing-marquee:hover .financing-track { animation-play-state: paused; }
 .fin-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 36px; }
 .fin-logo img { height: 42px; width: auto; max-width: 170px; object-fit: contain; display: block; }
 html[data-theme="dark"] .fin-logo img {
@@ -1416,6 +1417,30 @@ textarea { resize: vertical; }
 .cms-home-preview-content > strong { max-width: 680px; font-size: clamp(22px, 3vw, 32px); line-height: 1.2; color: #fff; }
 .cms-home-preview-content > p { max-width: 660px; font-size: 14px; line-height: 1.5; color: #fff; }
 .cms-preview-image-state { color: #fff; font-size: 12px; }
+
+/* Draft previews identify the public prototype and its shared developments. */
+.cms-proto-location-title { margin: 10px 0 6px; }
+.cms-proto-location-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.cms-proto-location-chips > span { max-width: 100%; overflow-wrap: anywhere; background: var(--surface); color: var(--muted); border-radius: 8px; padding: 5px 8px; font-size: 11px; }
+.cms-prototype-preview { overflow: hidden; border: 1px solid var(--border); background: var(--surface); border-radius: 12px; padding: 12px; margin: 14px 0 10px; overflow-wrap: anywhere; }
+.cms-proto-preview-label { display: block; color: var(--muted); font-size: 10px; font-weight: 600; letter-spacing: .7px; text-transform: uppercase; margin-bottom: 10px; }
+.cms-prototype-preview .cms-preview-img { aspect-ratio: 16 / 10; border-radius: 8px; margin-bottom: 12px; }
+.cms-proto-preview-heading { display: flex; flex-wrap: wrap; gap: 6px 12px; justify-content: space-between; align-items: baseline; }
+.cms-proto-preview-heading > strong { color: var(--text); font-size: 17px; }
+.cms-proto-preview-heading > [data-proto-preview="price"] { color: var(--accent); font-size: 16px; }
+.cms-proto-preview-description { margin: 10px 0; color: var(--muted); font-size: 12px; line-height: 1.55; }
+.cms-proto-preview-specs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.cms-proto-preview-specs > span { font-size: 10px; color: var(--muted); }
+.cms-proto-preview-specs strong { display: block; margin-top: 3px; font-size: 13px; color: var(--text); }
+.cms-proto-preview-video { display: block; width: 100%; max-height: 180px; margin-top: 12px; border-radius: 8px; }
+.cms-carousel-overview { margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.cms-carousel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(135px, 100%), 1fr)); gap: 10px; }
+.cms-carousel-slide { min-width: 0; overflow: hidden; text-align: left; padding: 8px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; }
+.cms-carousel-slide.is-current { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.cms-carousel-slide img { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px; margin-bottom: 8px; }
+.cms-carousel-slide strong, .cms-carousel-slide small { display: block; overflow-wrap: anywhere; }
+.cms-carousel-slide strong { font-size: 12px; }
+.cms-carousel-slide small { color: var(--muted); font-size: 10px; margin-top: 4px; line-height: 1.4; }
 
 /* BUTTONS & MODALS */
 .btn-primary {
