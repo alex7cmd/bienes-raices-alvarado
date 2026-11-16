@@ -1086,14 +1086,12 @@ function bindEvents() {
     else if (e.key === 'ArrowRight') renderFullscreenSlide(fsGalleryState.idx + 1);
   });
 
-  // Transport direct collapsible pill
+  // Transport direct collapsible pill (smooth CSS accordion)
   $('transportPillTrigger')?.addEventListener('click', () => {
     const pill = $('transportPill');
-    const body = $('transportPillBody');
     const trigger = $('transportPillTrigger');
-    if (!pill || !body || !trigger) return;
+    if (!pill || !trigger) return;
     const isOpen = pill.classList.toggle('open');
-    body.classList.toggle('hidden', !isOpen);
     trigger.setAttribute('aria-expanded', String(isOpen));
   });
 
