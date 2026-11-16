@@ -1013,12 +1013,17 @@ html[data-theme="dark"] .dock-icon-circle {
 }
 .panel-header h2 { font-size: 24px; font-weight: 700; margin-bottom: 6px; }
 .panel-sub { font-size: 11px; letter-spacing: 1.4px; color: var(--muted); font-weight: 600; margin-bottom: 10px; }
-.panel-proto-filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.panel-proto-filters { display: flex; flex-direction: column; gap: 6px; margin-top: 8px; }
 .panel-proto-filters button {
-  padding: 5px 10px; font-size: 11px; font-weight: 600; border-radius: 999px;
-  border: 1px solid var(--border); background: #fff; cursor: pointer; color: var(--muted);
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 8px 12px; font-size: 12.5px; font-weight: 600; border-radius: 10px;
+  border: 1px solid var(--border); background: var(--surface); cursor: pointer; color: var(--text);
+  transition: all 0.18s ease;
 }
-.panel-proto-filters button.active { background: var(--text); color: #fff; border-color: var(--text); }
+.panel-proto-filters button small { font-size: 11px; color: var(--muted); font-weight: 600; }
+.panel-proto-filters button:hover { border-color: var(--accent); }
+.panel-proto-filters button.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.panel-proto-filters button.active small { color: rgba(255,255,255,0.85); }
 
 .panel-lot-detail { flex: 1; display: flex; flex-direction: column; }
 .empty-lot-state {
