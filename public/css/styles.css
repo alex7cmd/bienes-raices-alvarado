@@ -172,6 +172,9 @@ html[data-theme="dark"] .dock-icon-circle {
   stroke: currentColor; fill: none; stroke-width: 1.75;
   stroke-linecap: round; stroke-linejoin: round;
 }
+.dock-svg.dock-wa-icon {
+  fill: currentColor; stroke: none;
+}
 .dock-link:hover {
   background: rgba(173, 119, 89, 0.12);
   color: var(--accent);
