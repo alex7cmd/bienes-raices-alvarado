@@ -8,6 +8,11 @@ const state = {
   adminEmail: null,
   selectedLotId: null,
   mapProtoFilter: 'all',
+  mapDevSlug: 'sorento',
+  mapStatusFilter: 'all',
+  devMapsCache: {},
+  heroSlideTimer: null,
+  heroSlideIdx: 0,
   zoom: 1,
   panX: 0,
   panY: 0,
@@ -107,31 +112,66 @@ async function checkAuth() {
   $('adminEmailLabel').textContent = state.adminEmail || '';
 }
 
+const HERO_SLIDES = [
+  { slug: 'sorento', name: 'Sorento', image: '/assets/images/hero-sorento.webp' },
+  { slug: 'oporto', name: 'Oporto', image: '/assets/images/hero-oporto.webp' },
+  { slug: 'ardenza', name: 'Ardenza', image: '/assets/images/hero-ardenza.webp' },
+  { slug: 'montalese', name: 'Montalese', image: '/assets/images/hero-montalese.webp' },
+  { slug: 'torres-qavalta', name: 'Torres Qavalta', image: '/assets/images/hero-torres-qavalta.webp' },
+  { slug: 'vittoria', name: 'Vittoria', image: '/assets/images/hero-vittoria.webp' }
+];
+
+function setHeroSlide(idx) {
+  const total = HERO_SLIDES.length;
+  state.heroSlideIdx = ((idx % total) + total) % total;
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots = document.querySelectorAll('.hero-slide-dot');
+  slides.forEach((el, i) => el.classList.toggle('active', i === state.heroSlideIdx));
+  dots.forEach((el, i) => el.classList.toggle('active', i === state.heroSlideIdx));
+  const label = $('heroSlideLabel');
+  if (label) {
+    const cur = HERO_SLIDES[state.heroSlideIdx];
+    label.textContent = `${cur.name} · Qavalta Residencial`;
+  }
+}
+
+function initHeroSlideshow() {
+  const container = $('heroSlideshow');
+  const dotsEl = $('heroSlideDots');
+  if (!container) return;
+  container.innerHTML = HERO_SLIDES.map((s, i) => `
+    <div class="hero-slide ${i === 0 ? 'active' : ''}" style="background-image:url('${s.image}')"></div>
+  `).join('');
+  if (dotsEl) {
+    dotsEl.innerHTML = HERO_SLIDES.map((s, i) => `
+      <button type="button" class="hero-slide-dot ${i === 0 ? 'active' : ''}" data-hero-slide="${i}" aria-label="Ver ${s.name}" title="${s.name}"></button>
+    `).join('');
+    dotsEl.addEventListener('click', (e) => {
+      const btn = e.target.closest('.hero-slide-dot');
+      if (!btn) return;
+      setHeroSlide(Number(btn.dataset.heroSlide));
+      if (state.heroSlideTimer) clearInterval(state.heroSlideTimer);
+      state.heroSlideTimer = setInterval(() => setHeroSlide(state.heroSlideIdx + 1), 5200);
+    });
+  }
+  setHeroSlide(0);
+  if (state.heroSlideTimer) clearInterval(state.heroSlideTimer);
+  state.heroSlideTimer = setInterval(() => setHeroSlide(state.heroSlideIdx + 1), 5200);
+}
+
 // --- RENDER PUBLIC SITE ---
 function renderPublicSite() {
-  const { site, developments, prototypes } = state;
+  const { site, prototypes } = state;
   $('heroEyebrow').textContent = site.eyebrow;
   $('heroTitle').textContent = site.heroTitle;
   $('heroSubtitle').textContent = site.heroSubtitle;
-  $('heroBg').style.backgroundImage = `url('${site.heroImage}')`;
+  initHeroSlideshow();
   $('footerPhone').textContent = site.phoneDisplay;
   $('footerPhone').href = `tel:${site.phoneDisplay.replace(/\s+/g, '')}`;
   $('footerWa').href = `https://wa.me/${site.whatsapp}`;
 
-  $('developmentsGrid').innerHTML = developments.map(d => `
-    <div class="dev-card" data-dev="${d.id}">
-      <img src="${d.image}" alt="${d.name}" loading="lazy" />
-      <div class="dev-card-overlay">
-        <div>
-          <div class="dev-card-name">${d.name}</div>
-          <small style="color:rgba(255,255,255,.78);font-size:11px;">Desde ${mxn.format(d.startingPrice)}</small>
-        </div>
-        <button class="dev-ver-btn">Ver →</button>
-      </div>
-    </div>
-  `).join('');
-
-  renderDevelopmentAccordion('oporto');
+  renderDevelopmentAccordion('sorento');
+  loadInlineDevMap('sorento');
 
   const latest = [prototypes.find(p => p.id === 'moscatel'), prototypes.find(p => p.id === 'belat')].filter(Boolean);
   const latestEl = $('footerLatestProps');
@@ -269,6 +309,33 @@ function renderDevelopmentAccordion(openDevId = 'oporto') {
           </div>
           <div class="dev-proto-panel-wrap">
             ${firstProto ? renderPrototypeDetailPanel(firstProto, 0) : '<p class="muted">Sin prototipos disponibles.</p>'}
+          </div>
+          <div class="dev-inline-map-section" data-inline-map="${dev.id}">
+            <div class="dev-inline-map-head">
+              <div>
+                <span class="dev-inline-map-kicker">PLANO MAESTRO INTERACTIVO</span>
+                <h4>Mapa de lotes · ${dev.name}</h4>
+              </div>
+              <div class="dev-inline-map-actions">
+                <div class="dev-inline-legend">
+                  <span><i class="dot disponible"></i> Disp. <strong data-c="disponible">-</strong></span>
+                  <span><i class="dot reservado"></i> Apart. <strong data-c="reservado">-</strong></span>
+                  <span><i class="dot vendido"></i> Vend. <strong data-c="vendido">-</strong></span>
+                </div>
+                <button type="button" class="dev-inline-fs-btn" data-open-fs-map="${dev.id}">⤢ Pantalla completa</button>
+              </div>
+            </div>
+            <div class="dev-inline-map-viewport">
+              <div class="dev-inline-zoom-bar">
+                <button type="button" class="dev-iz-btn" data-iz="in" title="Acercar">+</button>
+                <button type="button" class="dev-iz-btn" data-iz="out" title="Alejar">−</button>
+                <button type="button" class="dev-iz-btn" data-iz="reset" title="Restablecer">⟲</button>
+              </div>
+              <div class="dev-inline-svg-wrap" data-scale="1">
+                <svg class="dev-inline-svg" viewBox="0 0 9000 6600" xmlns="http://www.w3.org/2000/svg"></svg>
+              </div>
+            </div>
+            <div class="dev-inline-lot-bar hidden" data-inline-lot-bar="${dev.id}"></div>
           </div>
         </div>
       </div>
@@ -411,20 +478,107 @@ function showOnlyView(viewName) {
   }
 }
 
-async function openInteractiveMap() {
-  if (!state.isAdmin) {
-    $('loginModal').classList.remove('hidden');
-    return;
+async function fetchDevMapData(slug) {
+  if (state.devMapsCache[slug]) return state.devMapsCache[slug];
+  const res = await fetch(`/assets/maps/data/${slug}.json`);
+  if (!res.ok) throw new Error(`No se pudo cargar el plano de ${slug}`);
+  const data = await res.json();
+  state.devMapsCache[slug] = data;
+  return data;
+}
+
+function getMapCounts(lots) {
+  const c = { disponible: 0, reservado: 0, no_disponible: 0, vendido: 0 };
+  for (const l of lots) {
+    const s = (l.s || '').toLowerCase();
+    if (s === 'disponible') c.disponible++;
+    else if (s === 'reservado' || s === 'apartado') c.reservado++;
+    else if (s === 'vendido') c.vendido++;
+    else c.no_disponible++;
   }
-  const data = await api('/api/admin/lots');
-  state.lots = data.lots;
-  state.prototypes = data.prototypes;
-  state.counts = data.counts;
+  return c;
+}
+
+function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all' } = {}) {
+  const colors = {
+    disponible: { fill: 'rgba(16, 185, 129, 0.52)', stroke: '#047857' },
+    reservado: { fill: 'rgba(245, 158, 11, 0.58)', stroke: '#b45309' },
+    vendido: { fill: 'rgba(239, 68, 68, 0.50)', stroke: '#b91c1c' },
+    'no-disponible': { fill: 'rgba(100, 116, 139, 0.42)', stroke: '#475569' }
+  };
+
+  let bgMarkup = '';
+  if (mapData.isTower) {
+    // Architectural elevation backdrop for Torres Qavalta (960x620)
+    bgMarkup = `
+      <rect x="0" y="0" width="960" height="620" fill="#f1f5f9" />
+      <rect x="65" y="45" width="830" height="535" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="2" />
+      <rect x="65" y="45" width="830" height="52" rx="14" fill="#0f172a" />
+      <text x="480" y="77" text-anchor="middle" font-family="Inter, sans-serif" font-size="18" font-weight="700" fill="#ffffff">TORRES QAVALTA · TORRE A (6 NIVELES)</text>
+      <rect x="467" y="108" width="26" height="448" rx="6" fill="#e2e8f0" stroke="#cbd5e1" />
+      <text x="480" y="335" text-anchor="middle" font-family="Inter, sans-serif" font-size="10" font-weight="700" fill="#475569" transform="rotate(-90 480 335)">ELEVADORES Y ESCALERAS</text>
+      <text x="202" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 1 (68 m²)</text>
+      <text x="377" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 2 (84 m²)</text>
+      <text x="582" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 2 (84 m²)</text>
+      <text x="757" y="106" text-anchor="middle" font-family="Inter, sans-serif" font-size="11" font-weight="700" fill="#64748b">FLAT 1 (68 m²)</text>
+    `;
+  } else if (mapData.bg) {
+    bgMarkup = `<image href="${mapData.bg}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
+  }
+
+  const sw = mapData.isTower ? 2 : 9;
+  const swSel = mapData.isTower ? 4 : 24;
+
+  const lotsMarkup = mapData.lots.map(l => {
+    const stKey = l.s === 'apartado' ? 'reservado' : l.s;
+    const st = colors[stKey] || colors['no-disponible'];
+    const isSel = selectedLotId === l.id;
+    const dimmed = statusFilter !== 'all' && stKey !== statusFilter;
+    const op = dimmed ? '0.16' : '1';
+    const attrs = `class="qmap-lot ${isSel ? 'selected' : ''}" data-lot="${l.id}" fill="${st.fill}" stroke="${isSel ? '#0f172a' : st.stroke}" stroke-width="${isSel ? swSel : sw}" opacity="${op}"`;
+    const shape = l.t === 'g'
+      ? `<polygon points="${l.d}" ${attrs} />`
+      : `<path d="${l.d}" ${attrs} />`;
+    if (mapData.isTower) {
+      const m = l.d.match(/^M(\d+),(\d+)/);
+      const tx = m ? Number(m[1]) + 82 : 0;
+      const ty = m ? Number(m[2]) + 34 : 0;
+      return `${shape}<text x="${tx}" y="${ty}" text-anchor="middle" font-family="Inter, sans-serif" font-size="12" font-weight="700" fill="#0f172a" pointer-events="none">${l.id}</text>`;
+    }
+    return shape;
+  }).join('');
+
+  return `${bgMarkup}<g class="qmap-lots-layer">${lotsMarkup}</g>`;
+}
+
+async function loadInlineDevMap(slug) {
+  const section = document.querySelector(`.dev-inline-map-section[data-inline-map="${slug}"]`);
+  if (!section) return;
+  const svg = section.querySelector('.dev-inline-svg');
+  if (!svg || svg.dataset.loaded === slug) return;
+  try {
+    const mapData = await fetchDevMapData(slug);
+    const counts = getMapCounts(mapData.lots);
+    ['disponible', 'reservado', 'vendido'].forEach(k => {
+      const el = section.querySelector(`[data-c="${k}"]`);
+      if (el) el.textContent = counts[k];
+    });
+    svg.setAttribute('viewBox', `0 0 ${mapData.w} ${mapData.h}`);
+    svg.innerHTML = buildDevMapSvgMarkup(mapData);
+    svg.dataset.loaded = slug;
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function openInteractiveMap(devSlug = null) {
+  if (devSlug) state.mapDevSlug = devSlug;
+  else if (!state.mapDevSlug) state.mapDevSlug = 'sorento';
   state.selectedLotId = null;
-  state.mapProtoFilter = 'all';
+  state.mapStatusFilter = 'all';
   resetZoom();
-  renderInteractiveMap();
   showOnlyView('map');
+  await renderInteractiveMap();
 }
 
 async function openAdminCms() {
@@ -441,210 +595,88 @@ async function openAdminCms() {
   showOnlyView('admin');
 }
 
-// --- INTERACTIVE SVG MAP (TRACED REFERENCE + FULLSCREEN) ---
-function renderInteractiveMap() {
-  const { lots, prototypes, counts } = state;
-  $('mapAvailCount').textContent = `• ${counts.disponible} lotes disponibles`;
+// --- INTERACTIVE SVG MAP (REDRAWN PER DEVELOPMENT + FULLSCREEN) ---
+async function renderInteractiveMap() {
+  const slug = state.mapDevSlug || 'sorento';
+  const dev = state.developments.find(d => d.id === slug) || { id: slug, name: slug, startingPrice: 1382000 };
+  const mapData = await fetchDevMapData(slug);
+  const counts = getMapCounts(mapData.lots);
+
+  if ($('mapLocBadge')) $('mapLocBadge').textContent = `📍 Qavalta · ${dev.name}`;
+  if ($('mapPanelTitle')) $('mapPanelTitle').textContent = dev.name;
+  $('mapAvailCount').textContent = `• ${counts.disponible} disponibles`;
   $('countDisp').textContent = counts.disponible;
+  if ($('countRes')) $('countRes').textContent = counts.reservado;
   $('countNoDisp').textContent = counts.no_disponible;
   $('countVend').textContent = counts.vendido;
+  $('mapStartingPrice').textContent = mxn.format(dev.startingPrice || 1382000);
 
-  const minPrice = Math.min(...prototypes.map(p => p.price));
-  $('mapStartingPrice').textContent = mxn.format(minPrice);
-
-  // Side panel prototype filter pills
-  $('mapProtoFilters').innerHTML = [
-    `<button class="${state.mapProtoFilter === 'all' ? 'active' : ''}" data-mproto="all">Todos</button>`,
-    ...prototypes.map(p => `<button class="${state.mapProtoFilter === p.id ? 'active' : ''}" data-mproto="${p.id}">${p.name}</button>`)
-  ].join('');
-
-  const svg = $('mapSvg');
-  const statusStyle = {
-    disponible: { fill: '#bbf7d0', stroke: '#16a34a', roof: '#86efac' },
-    no_disponible: { fill: '#fde68a', stroke: '#d97706', roof: '#fcd34d' },
-    vendido: { fill: '#bfdbfe', stroke: '#2563eb', roof: '#93c5fd' }
-  };
-
-  // Trazado arquitectónico fiel a la fotografía (calles amplias sin encimar textos)
-  svg.setAttribute('viewBox', '30 8 880 930');
-  const tree = (x, y, r = 6) => `
-    <circle cx="${x}" cy="${y}" r="${r}" fill="#15803d" opacity="0.9" />
-    <circle cx="${x - 1.2}" cy="${y - 1.2}" r="${r * 0.62}" fill="#22c55e" opacity="0.85" />
-  `;
-
-  let markup = `
-    <!-- Perímetro trapezoidal del fraccionamiento -->
-    <polygon points="136,16 882,16 842,924 46,924" fill="#cfd8e3" stroke="#64748b" stroke-width="2" />
-    <!-- Calles pavimentadas -->
-    <polygon points="184,22 830,22 800,914 96,914" fill="#e2e8f0" />
-
-    <!-- Líneas discontinuas de calles horizontales (centradas en cada calle) -->
-    <g stroke="#94a3b8" stroke-width="1" stroke-dasharray="6 6" opacity="0.65">
-      <line x1="186" y1="78" x2="826" y2="78" />
-      <line x1="174" y1="196" x2="822" y2="196" />
-      <line x1="160" y1="334" x2="818" y2="334" />
-      <line x1="148" y1="468" x2="814" y2="468" />
-      <line x1="136" y1="602" x2="810" y2="602" />
-      <line x1="122" y1="740" x2="806" y2="740" />
-    </g>
-
-    <!-- Bulevar curvo C. Paseo Vittoria (corredor amplio, centrado entre bloques) -->
-    <path d="M 484 74 Q 490 196 476 320 Q 458 400 458 468 Q 458 536 474 616 Q 486 720 472 890"
-          fill="none" stroke="#f8fafc" stroke-width="44" stroke-linecap="round" />
-    <path d="M 484 74 Q 490 196 476 320 Q 458 400 458 468 Q 458 536 474 616 Q 486 720 472 890"
-          fill="none" stroke="#cbd5e1" stroke-width="1.2" stroke-dasharray="7 7" />
-
-    <!-- Parque Central Curvo (Manzana 5) -->
-    <path d="M 504 210 Q 484 340 490 468 Q 498 595 512 724 L 562 724 L 562 210 Z"
-          fill="#22c55e" stroke="#ffffff" stroke-width="2.5" />
-    <path d="M 488 388 Q 492 452 498 518 L 562 518 L 562 388 Z" fill="#14532d" />
-    <path d="M 526 226 Q 512 340 520 468 Q 528 595 538 708" fill="none" stroke="#dcfce7" stroke-width="2.5" opacity="0.65" />
-
-    <!-- Glorieta central entre Manzanas 17 y 16 -->
-    <circle cx="458" cy="468" r="32" fill="#f8fafc" stroke="#94a3b8" stroke-width="2" />
-    <circle cx="458" cy="468" r="19" fill="#16a34a" />
-    <circle cx="458" cy="468" r="9.5" fill="#991b1b" />
-
-    <!-- Caseta de acceso principal (alineada al bulevar inferior x=472) -->
-    <rect x="450" y="868" width="44" height="30" rx="4" fill="#991b1b" stroke="#fff" stroke-width="1.5" />
-    <rect x="436" y="876" width="72" height="14" rx="2" fill="#b91c1c" opacity="0.9" />
-
-    <!-- Contornos redondeados y áreas verdes centrales de las manzanas (ajustados a los lotes) -->
-    <rect x="198" y="88" width="256" height="94" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="184" y="210" width="264" height="110" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="186" y="253" width="260" height="22" rx="4" fill="#16a34a" />
-
-    <!-- Manzana 17 y 16 con borde derecho curvo abrazando la glorieta -->
-    <path d="M 172 348 L 434 348 Q 444 392 406 442 L 166 442 Q 164 395 172 348 Z" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <path d="M 160 492 L 402 492 Q 440 540 422 586 L 154 586 Q 154 538 160 492 Z" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-
-    <rect x="136" y="616" width="302" height="110" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="138" y="659" width="298" height="22" rx="4" fill="#15803d" />
-
-    <!-- Manzanas derecha -->
-    <rect x="520" y="88" width="280" height="94" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="576" y="210" width="218" height="110" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="578" y="253" width="214" height="22" rx="4" fill="#16a34a" />
-    <rect x="576" y="348" width="212" height="94" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="574" y="492" width="206" height="94" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="570" y="616" width="202" height="110" rx="10" fill="#f8fafc" stroke="#475569" stroke-width="1.2" />
-    <rect x="572" y="659" width="198" height="22" rx="4" fill="#15803d" />
-
-    <!-- Vegetación / Árboles en parque y camellones (sin tapar textos) -->
-    <g>
-      ${tree(520, 250, 7)} ${tree(524, 330, 8)} ${tree(528, 430, 9)} ${tree(532, 560, 8)} ${tree(540, 670, 7)}
-      ${tree(225, 264, 5.5)} ${tree(285, 264, 5.5)} ${tree(395, 264, 5.5)}
-      ${tree(190, 670, 5.5)} ${tree(270, 670, 5.5)} ${tree(385, 670, 5.5)}
-      ${tree(615, 264, 5.5)} ${tree(715, 264, 5.5)}
-      ${tree(610, 670, 5.5)} ${tree(710, 670, 5.5)}
-    </g>
-
-    <!-- Etiquetas de calles (limpias, centradas en sus carriles) -->
-    <g font-family="Inter, sans-serif" font-size="8" font-weight="700" fill="#334155" text-anchor="middle">
-      <text x="330" y="79">C. SENIA</text>
-      <text x="655" y="79">C. SENIA</text>
-      <text x="320" y="199">C. COLOMBO</text>
-      <text x="680" y="199">C. COLOMBO</text>
-      <text x="305" y="337">C. LEOPARDI</text>
-      <text x="680" y="337">C. MILANO</text>
-      <text x="290" y="471">C. MAGENTA</text>
-      <text x="675" y="471">C. PANTI</text>
-      <text x="290" y="605">C. MARTINO</text>
-      <text x="670" y="605">C. MARMORA</text>
-      <text x="280" y="743">C. TORINO</text>
-      <text x="665" y="743">C. TORINO</text>
-      <text x="480" y="290" transform="rotate(-84 480 290)">C. PASEO VITTORIA</text>
-      <text x="476" y="660" transform="rotate(-82 476 660)">C. PASEO VITTORIA</text>
-      <text x="116" y="470" transform="rotate(-84 116 470)">C. CAIROLI</text>
-      <text x="810" y="470" transform="rotate(88 810 470)">C. METANA</text>
-    </g>
-
-    <!-- Círculos numerados de Manzana -->
-    <g font-family="Inter, sans-serif" font-size="7.5" font-weight="700" fill="#fff" text-anchor="middle">
-      <circle cx="515" cy="46" r="7.5" fill="#7f1d1d" /><text x="515" y="49">1</text>
-      <circle cx="326" cy="135" r="7.5" fill="#7f1d1d" /><text x="326" y="138">19</text>
-      <circle cx="658" cy="135" r="7.5" fill="#7f1d1d" /><text x="658" y="138">2</text>
-      <circle cx="340" cy="264" r="7.5" fill="#7f1d1d" /><text x="340" y="267">18</text>
-      <circle cx="660" cy="264" r="7.5" fill="#7f1d1d" /><text x="660" y="267">3</text>
-      <circle cx="300" cy="395" r="7.5" fill="#7f1d1d" /><text x="300" y="398">17</text>
-      <circle cx="680" cy="395" r="7.5" fill="#7f1d1d" /><text x="680" y="398">4</text>
-      <circle cx="526" cy="450" r="7.5" fill="#7f1d1d" /><text x="526" y="453">5</text>
-      <circle cx="295" cy="539" r="7.5" fill="#7f1d1d" /><text x="295" y="542">16</text>
-      <circle cx="676" cy="539" r="7.5" fill="#7f1d1d" /><text x="676" y="542">6</text>
-      <circle cx="330" cy="670" r="7.5" fill="#7f1d1d" /><text x="330" y="673">14</text>
-      <circle cx="656" cy="670" r="7.5" fill="#7f1d1d" /><text x="656" y="673">8</text>
-    </g>
-  `;
-
-  // Lotes individuales interactivos con huella arquitectónica de casa
-  for (const lot of lots) {
-    const dimmed = state.mapProtoFilter !== 'all' && lot.prototypeId !== state.mapProtoFilter;
-    const isSelected = state.selectedLotId === lot.id;
-    const st = statusStyle[lot.status] || { fill: '#e2e8f0', stroke: '#94a3b8', roof: '#cbd5e1' };
-    const cx = lot.x + lot.w / 2;
-    const cy = lot.y + lot.h / 2;
-    const rot = lot.angle ? `transform="rotate(${lot.angle} ${cx} ${cy})"` : '';
-    markup += `
-      <g class="lot-group" data-lot="${lot.id}" ${rot}>
-        <rect
-          x="${lot.x}" y="${lot.y}" width="${lot.w}" height="${lot.h}" rx="2"
-          fill="${st.fill}" fill-opacity="0.92"
-          stroke="${isSelected ? '#0f172a' : st.stroke}" stroke-width="${isSelected ? '2.2' : '0.9'}"
-          class="lot-rect ${isSelected ? 'selected' : ''} ${dimmed ? 'dimmed' : ''}"
-        />
-        <rect
-          x="${lot.x + 2.5}" y="${lot.y + 2.5}" width="${Math.max(4, lot.w - 5)}" height="${Math.max(4, lot.h - 5)}" rx="1"
-          fill="${st.roof}" opacity="0.45" pointer-events="none"
-        />
-        <text
-          x="${cx}" y="${cy + 2.5}"
-          font-family="Inter, sans-serif" font-size="6.5" font-weight="700"
-          fill="#0f172a" text-anchor="middle" pointer-events="none"
-          opacity="${dimmed ? '0.2' : '0.95'}"
-        >${lot.number}</text>
-      </g>
-    `;
+  if ($('mapDevPills')) {
+    $('mapDevPills').innerHTML = state.developments.map(d => `
+      <button type="button" class="map-dev-pill ${d.id === slug ? 'active' : ''}" data-mdev="${d.id}">${d.name}</button>
+    `).join('');
   }
 
-  svg.innerHTML = markup;
+  $('mapProtoFilters').innerHTML = [
+    { id: 'all', label: `Todos (${mapData.lots.length})` },
+    { id: 'disponible', label: `Disponibles (${counts.disponible})` },
+    { id: 'reservado', label: `Apartados (${counts.reservado})` },
+    { id: 'vendido', label: `Vendidos (${counts.vendido})` }
+  ].map(f => `<button class="${state.mapStatusFilter === f.id ? 'active' : ''}" data-mstatus="${f.id}">${f.label}</button>`).join('');
+
+  const svg = $('mapSvg');
+  svg.setAttribute('viewBox', `0 0 ${mapData.w} ${mapData.h}`);
+  svg.innerHTML = buildDevMapSvgMarkup(mapData, {
+    selectedLotId: state.selectedLotId,
+    statusFilter: state.mapStatusFilter
+  });
   renderSelectedLotDetail();
 }
 
 function renderSelectedLotDetail() {
   const container = $('panelLotDetail');
-  if (!state.selectedLotId) {
+  const mapData = state.devMapsCache[state.mapDevSlug];
+  if (!state.selectedLotId || !mapData) {
     container.innerHTML = `
       <div class="empty-lot-state">
         <div class="empty-icon">🏠</div>
-        <h3>Toca un lote</h3>
-        <p>Selecciona cualquier casa o lote en el plano para ver su superficie, recámaras, baños y precio.</p>
+        <h3>Toca un lote o unidad</h3>
+        <p>Selecciona cualquier lote en el plano para ver su manzana, superficie m², estatus y cotizar por WhatsApp.</p>
       </div>
     `;
     return;
   }
 
-  const lot = state.lots.find(l => l.id === state.selectedLotId);
-  const proto = state.prototypes.find(p => p.id === lot.prototypeId) || state.prototypes[0];
+  const lot = mapData.lots.find(l => l.id === state.selectedLotId);
+  if (!lot) return;
+  const dev = state.developments.find(d => d.id === state.mapDevSlug);
+  const protoMatch = state.prototypes.find(p => lot.pr && p.name.toLowerCase() === String(lot.pr).toLowerCase())
+    || state.prototypes.find(p => Array.isArray(p.developments) && p.developments.includes(state.mapDevSlug))
+    || state.prototypes[0];
+  const stKey = lot.s === 'apartado' ? 'reservado' : lot.s;
   const statusLabel = {
     disponible: 'Disponible',
-    no_disponible: 'No disponible',
+    reservado: 'Apartado',
+    'no-disponible': 'No disponible',
     vendido: 'Vendido'
-  }[lot.status];
+  }[stKey] || lot.s;
+  const priceDisplay = lot.p > 0 ? mxn.format(lot.p) : (protoMatch ? `Desde ${mxn.format(protoMatch.price)}` : `Desde ${mxn.format(dev?.startingPrice || 1500000)}`);
+  const waMsg = encodeURIComponent(`Hola, me interesa información sobre ${lot.n} en ${dev?.name || state.mapDevSlug} (${lot.a} m²).`);
 
   container.innerHTML = `
     <div class="lot-detail-card">
-      <img src="${proto.image}" alt="${proto.name}" />
-      <span class="lot-status-pill ${lot.status}">${statusLabel}</span>
-      <h3>Casa / Lote #${lot.number}</h3>
-      <p style="font-size:12px;color:var(--muted);">Manzana ${lot.manzana} · ${lot.street}</p>
-      <div class="lot-detail-price">${mxn.format(proto.price)}</div>
+      ${protoMatch ? `<img src="${protoMatch.image}" alt="${lot.n}" />` : ''}
+      <span class="lot-status-pill ${stKey}">${statusLabel}</span>
+      <h3>${lot.n}</h3>
+      <p style="font-size:12px;color:var(--muted);">${dev?.name || ''} · Manzana / Nivel: ${lot.m || 'N/A'}</p>
+      <div class="lot-detail-price">${priceDisplay}</div>
       <div class="lot-specs-grid">
-        <div class="lot-spec-box"><small>Prototipo</small><strong>${proto.name}</strong></div>
-        <div class="lot-spec-box"><small>Área terreno</small><strong>${proto.area} m²</strong></div>
-        <div class="lot-spec-box"><small>Recámaras</small><strong>${proto.bedrooms}</strong></div>
-        <div class="lot-spec-box"><small>Baños</small><strong>${proto.bathrooms}</strong></div>
+        <div class="lot-spec-box"><small>📐 Superficie</small><strong>${lot.a ? `${lot.a} m²` : 'N/A'}</strong></div>
+        <div class="lot-spec-box"><small>🏷️ Estatus</small><strong>${statusLabel}</strong></div>
+        <div class="lot-spec-box"><small>🏘️ Privada</small><strong>${dev?.name || state.mapDevSlug}</strong></div>
+        <div class="lot-spec-box"><small>🏡 Prototipo</small><strong>${lot.pr || (protoMatch?.name || 'A elegir')}</strong></div>
       </div>
-      <p style="font-size:12px;color:var(--muted);line-height:1.5;">${proto.description}</p>
+      <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa" style="margin-top:8px;">Cotizar lote por WhatsApp →</a>
     </div>
   `;
 }
@@ -887,6 +919,58 @@ function bindEvents() {
         return;
       }
     }
+    const fsMapBtn = e.target.closest('[data-open-fs-map]');
+    if (fsMapBtn) {
+      e.stopPropagation();
+      openInteractiveMap(fsMapBtn.dataset.openFsMap);
+      return;
+    }
+
+    const zoomBtn = e.target.closest('.dev-iz-btn');
+    if (zoomBtn) {
+      e.stopPropagation();
+      const mapSec = zoomBtn.closest('.dev-inline-map-section');
+      const wrap = mapSec?.querySelector('.dev-inline-svg-wrap');
+      if (!wrap) return;
+      let sc = Number(wrap.dataset.scale || 1);
+      const act = zoomBtn.dataset.iz;
+      if (act === 'in') sc = Math.min(2.6, +(sc + 0.35).toFixed(2));
+      else if (act === 'out') sc = Math.max(1, +(sc - 0.35).toFixed(2));
+      else sc = 1;
+      wrap.dataset.scale = String(sc);
+      wrap.style.transform = `scale(${sc})`;
+      return;
+    }
+
+    const inlineLot = e.target.closest('.dev-inline-svg .qmap-lot');
+    if (inlineLot) {
+      e.stopPropagation();
+      const mapSec = inlineLot.closest('.dev-inline-map-section');
+      const slug = mapSec?.dataset.inlineMap;
+      const mapData = state.devMapsCache[slug];
+      const lot = mapData?.lots.find(l => l.id === inlineLot.dataset.lot);
+      if (mapSec && lot) {
+        mapSec.querySelectorAll('.qmap-lot').forEach(el => el.classList.remove('selected'));
+        inlineLot.classList.add('selected');
+        const bar = mapSec.querySelector('.dev-inline-lot-bar');
+        const stKey = lot.s === 'apartado' ? 'reservado' : lot.s;
+        const stLabel = { disponible: 'Disponible', reservado: 'Apartado', 'no-disponible': 'No disponible', vendido: 'Vendido' }[stKey] || lot.s;
+        const devName = state.developments.find(d => d.id === slug)?.name || slug;
+        const waMsg = encodeURIComponent(`Hola, me interesa información sobre ${lot.n} en ${devName} (${lot.a} m²).`);
+        bar.innerHTML = `
+          <div class="dev-inline-lot-info">
+            <span class="lot-status-pill ${stKey}">${stLabel}</span>
+            <strong>${lot.n}</strong>
+            <span>📐 ${lot.a ? `${lot.a} m²` : 'N/A'}</span>
+            ${lot.pr ? `<span>🏡 ${lot.pr}</span>` : ''}
+          </div>
+          <a href="https://wa.me/${state.site?.whatsapp || '525537560931'}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa-mini">Cotizar por WhatsApp →</a>
+        `;
+        bar.classList.remove('hidden');
+      }
+      return;
+    }
+
     const trigger = e.target.closest('.dev-pill-trigger');
     if (!trigger) return;
     const item = trigger.closest('.dev-pill-item');
@@ -900,6 +984,7 @@ function bindEvents() {
       item.classList.add('open');
       item.querySelector('.dev-pill-body').classList.remove('hidden');
       trigger.setAttribute('aria-expanded', 'true');
+      loadInlineDevMap(item.dataset.devPill);
     }
   });
 
@@ -910,16 +995,13 @@ function bindEvents() {
     });
   }
 
-  $('developmentsGrid').addEventListener('click', (e) => {
-    const card = e.target.closest('.dev-card');
-    if (!card) return;
-    if (state.isAdmin) {
-      openInteractiveMap();
-    } else {
-      document.getElementById('prototipos').scrollIntoView({ behavior: 'smooth' });
-      showToast('Inicia sesión como Administrador en el icono superior derecho para abrir el Plano Interactivo');
-    }
-  });
+  if ($('developmentsGrid')) {
+    $('developmentsGrid').addEventListener('click', (e) => {
+      const card = e.target.closest('.dev-card');
+      if (!card) return;
+      openInteractiveMap(card.dataset.dev);
+    });
+  }
 
   $('closeProtoModal').addEventListener('click', () => $('protoModal').classList.add('hidden'));
 
@@ -1007,18 +1089,30 @@ function bindEvents() {
     });
   }
 
-  // Map interactions (Lot click, filter pills, tabs, zoom, pan)
+  // Map interactions (Lot click, dev pills, status filter pills, tabs, zoom, pan)
   $('mapSvg').addEventListener('click', (e) => {
-    const g = e.target.closest('.lot-group');
-    if (!g) return;
-    state.selectedLotId = g.dataset.lot;
+    const lotEl = e.target.closest('.qmap-lot');
+    if (!lotEl) return;
+    state.selectedLotId = lotEl.dataset.lot;
     renderInteractiveMap();
   });
 
+  if ($('mapDevPills')) {
+    $('mapDevPills').addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-mdev]');
+      if (!btn) return;
+      state.mapDevSlug = btn.dataset.mdev;
+      state.selectedLotId = null;
+      state.mapStatusFilter = 'all';
+      resetZoom();
+      renderInteractiveMap();
+    });
+  }
+
   $('mapProtoFilters').addEventListener('click', (e) => {
-    const btn = e.target.closest('button[data-mproto]');
+    const btn = e.target.closest('button[data-mstatus]');
     if (!btn) return;
-    state.mapProtoFilter = btn.dataset.mproto;
+    state.mapStatusFilter = btn.dataset.mstatus;
     renderInteractiveMap();
   });
 

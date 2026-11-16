@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.2.1" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.2.2" />
 </head>
 <body>
   <!-- HEADER -->
@@ -54,21 +54,22 @@
 
   <!-- PUBLIC VIEW -->
   <main id="publicView">
-    <!-- HERO + DESARROLLOS ACTIVOS (inspirado en planos.qavalta.com) -->
+    <!-- HERO CON ANIMACIÓN DE IMÁGENES DE DESARROLLOS -->
     <section class="hero-section" id="top">
-      <div class="hero-bg" id="heroBg"></div>
+      <div class="hero-slideshow" id="heroSlideshow" aria-hidden="true"></div>
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <p class="hero-eyebrow" id="heroEyebrow">DESARROLLOS RESIDENCIALES · PACHUCA</p>
         <h1 class="hero-title" id="heroTitle">Encuentra el hogar que lo tiene todo.</h1>
         <p class="hero-subtitle" id="heroSubtitle">Descubre el desarrollo perfecto para ti y tu familia.</p>
-        <a href="#prototipos" class="btn-primary-pill">Ver prototipos →</a>
+        <div class="hero-cta-row">
+          <a href="#prototipos" class="btn-primary-pill">Ver desarrollos y prototipos →</a>
+        </div>
       </div>
 
-      <!-- DESARROLLOS ACTIVOS STRIP -->
-      <div class="developments-strip" id="desarrollos">
-        <div class="strip-label">• DESARROLLOS ACTIVOS</div>
-        <div class="developments-grid" id="developmentsGrid"></div>
+      <div class="hero-slide-bar" id="desarrollos">
+        <span class="hero-slide-badge" id="heroSlideLabel">Sorento · Qavalta Residencial</span>
+        <div class="hero-slide-dots" id="heroSlideDots"></div>
       </div>
     </section>
 
@@ -350,9 +351,10 @@
   <section class="fullscreen-map-view hidden" id="mapView">
     <div class="map-topbar">
       <div class="map-topbar-left">
-        <span class="map-loc-badge">📍 Qavalta · Vittoria</span>
+        <span class="map-loc-badge" id="mapLocBadge">📍 Qavalta · Sorento</span>
         <span class="map-avail-badge" id="mapAvailCount">• 0 lotes disponibles</span>
       </div>
+      <div class="map-dev-pills" id="mapDevPills"></div>
       <div class="map-mode-tabs">
         <button class="mode-tab active" data-maptab="plano">Plano interactivo</button>
         <button class="mode-tab" data-maptab="amenidades">Amenidades</button>
@@ -400,6 +402,7 @@
       <!-- Bottom Legend -->
       <div class="map-legend-pill">
         <span><i class="dot disponible"></i> Disponible <strong id="countDisp">0</strong></span>
+        <span><i class="dot reservado"></i> Apartado <strong id="countRes">0</strong></span>
         <span><i class="dot no_disponible"></i> No disponible <strong id="countNoDisp">0</strong></span>
         <span><i class="dot vendido"></i> Vendido <strong id="countVend">0</strong></span>
       </div>
@@ -407,8 +410,8 @@
       <!-- Right Floating Info Panel -->
       <aside class="map-side-panel">
         <div class="panel-header">
-          <h2>Vittoria</h2>
-          <p class="panel-sub">PROTOTIPOS</p>
+          <h2 id="mapPanelTitle">Sorento</h2>
+          <p class="panel-sub">FILTRAR POR ESTATUS</p>
           <div class="panel-proto-filters" id="mapProtoFilters"></div>
         </div>
         <div class="panel-lot-detail" id="panelLotDetail">
@@ -617,6 +620,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.2.1"></script>
+  <script src="/js/app.js?v=1.2.2"></script>
 </body>
 </html>
