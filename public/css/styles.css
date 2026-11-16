@@ -1087,7 +1087,12 @@ html[data-theme="dark"] .fin-logo img {
 .empty-lot-state {
   margin: auto; text-align: center; color: var(--muted); padding: 24px 12px;
 }
-.empty-icon { font-size: 32px; margin-bottom: 10px; }
+.empty-icon {
+  width: 60px; height: 60px; margin: 0 auto 12px; border-radius: 50%;
+  background: var(--card-bg); border: 1px solid var(--border); color: var(--accent);
+  display: grid; place-items: center;
+}
+.empty-icon .ui-icon { width: 28px; height: 28px; stroke-width: 1.8; }
 .empty-lot-state h3 { color: var(--text); font-size: 16px; margin-bottom: 6px; }
 .empty-lot-state p { font-size: 13px; line-height: 1.5; }
 
