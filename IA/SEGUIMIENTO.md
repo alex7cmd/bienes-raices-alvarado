@@ -2,7 +2,9 @@
 
 **Ubicación del proyecto:** `/Users/alejandrofernandez/Documents/bienes-raices-alvarado`  
 **Fecha de inicio:** 2026-11-15  
-**Estado:** Análisis inicial y definición del modelo de ejecución
+**Última actualización:** 2026-11-16 (`v1.9.3`)  
+**URL Demo en vivo:** `https://alvarado.commandigital.biz`  
+**Estado:** Demo funcional completa y sincronizada con `planos.qavalta.com` (lista para revisión final del cliente)
 
 ---
 
@@ -60,12 +62,17 @@ Rediseñar y reconstruir la plataforma web de **Bienes Raíces Alvarado (Qvalta 
 - [x] **Fase 2:** Diseño UI/UX minimalista (Home inspirado en `planos.qavalta.com` + Prototipos sin duplicados).
 - [x] **Fase 3:** Plano Interactivo a pantalla completa (`100vw × 100vh`) exclusivo para Administrador en modo presentación (sin botones de edición visibles).
 - [x] **Fase 4:** Backend Node.js + CMS cerrado del Administrador (icono en esquina superior derecha, edición de disponibilidad por número de casa, precios, textos, imágenes y videos).
-- [x] **Fase 5 (Demo):** Desplegado en **SiteGround (Node.js Projects)** con auto-deploy desde GitHub (`alex7cmd/bienes-raices-alvarado`). URL temporal `https://yurenic2.sg-host.com/` → subdominio temporal elegido: `alvarado.commandigital.biz`.
-- [ ] **Fase 6 (Producción):** Carga de datos reales (cuando el cliente confirme modelos y plano final) y conexión al dominio definitivo.
+- [x] **Fase 5 (Demo):** Desplegado en **SiteGround (Node.js Projects)** con auto-deploy desde GitHub (`alex7cmd/bienes-raices-alvarado`). Subdominio activo: `https://alvarado.commandigital.biz`.
+- [x] **Fase 6 (Sincronización real con `planos.qavalta.com` + Pulido UI/UX):**
+  - [x] Integración de los **6 desarrollos reales** (`Sorento`, `Oporto`, `Ardenza`, `Montalese`, `Torres Qavalta` con 6 niveles de departamentos `Flat 1` y `Flat 2`, y `Vittoria`) con sus prototipos, precios y disponibilidad reales (`catalogVersion = 3`).
+  - [x] Identidad azul ejecutivo (`#1e5b8f`), favicon hexagonal oficial, logos transparentes de financiamiento en marquesina continua sin salto, y modo claro/oscuro automático + manual (sitio público y CMS).
+  - [x] Hero con segundo menú sticky de desarrollos, ficha técnica lineal (`Icono | Etiqueta Valor`), amenidades adaptativas, galería horizontal y mapa de recorrido en Google Maps.
+  - [x] Planos `.webp` calados sin fondo blanco exterior (con respaldo en `public/assets/maps/backup/`), logo de **Oporto** en cabecera de columna derecha, animaciones ligeras en mapa (autos en 2 carriles, peatones, pasto y arbolitos con brisa), ondas expansivas en estatus, paneo táctil móvil (embebido y pantalla completa) y `<select>` homologados.
+- [ ] **Fase 7 (Producción / Dominio Final):** Conexión al dominio definitivo y validación final de contenidos con el cliente.
 
 ---
 
 ## 5. Pendientes del Cliente / Siguientes Pasos
-- [ ] Compartir el archivo del **plano** (PDF, imagen, CAD/SVG) para montar la demo interactiva.
-- [ ] Confirmar si la lista inicial de desarrollos en el Home serán los mismos de la web actual (`Ardenza`, `Oporto`, `Sorento`) o se incluirán `Montalese`, `Torres Qavalta`, `Vittoria`.
-- [ ] Confirmar el modelo de plan en SiteGround (GrowBig / GoGeek / Cloud) para habilitar Node.js.
+- [ ] Revisar en `https://alvarado.commandigital.biz` los 6 desarrollos, el modo claro/oscuro, la vista móvil y el panel **Alvarado Studio** (icono superior derecho).
+- [ ] Confirmar si se agregan logotipos individuales en la columna derecha del mapa para el resto de las privadas (como se hizo con **Oporto**).
+- [ ] Confirmar datos de contacto finales (WhatsApp, teléfono, correo y redes sociales) y dominio definitivo para apuntar SiteGround en producción.
