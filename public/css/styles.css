@@ -1889,7 +1889,7 @@ body { font-size:1rem; line-height:1.5; }
   .unified-dev-tab-count { position:static; transform:none; width:24px; height:24px; font-size:.9375rem; }
   .unified-dev-tab small { font-size:.8125rem; line-height:1.3; white-space:nowrap; }
   .dev-inline-legend { gap:8px 12px; }
-  .lot-spec-box strong { white-space:normal; overflow-wrap:anywhere; }
+  .lot-spec-box strong { white-space:normal; overflow-wrap:normal; }
   .cms-topbar { gap:12px; align-items:flex-start; }
   .cms-topbar > div { min-width:0; flex-wrap:wrap; }
   .cms-topbar-actions { justify-content:flex-start; }
@@ -1922,3 +1922,8 @@ body { font-size:1rem; line-height:1.5; }
 .cms-topbar .icon-user-btn,.cms-topbar .install-app-btn { min-width:44px; height:44px; min-height:44px; }
 .cms-topbar .icon-user-btn > svg { width:22px; height:22px; }
 @media(max-width:768px) { .hero-dev-dock .unified-dev-tabs { grid-auto-rows:1fr; } }
+
+@media(max-width:480px) {
+  .dev-overview-details { grid-template-columns:1fr; }
+  .dev-overview-details .spec-text-wrap { flex-direction:row; flex-wrap:wrap; justify-content:flex-start; align-items:baseline; gap:4px 8px; }
+}

@@ -201,3 +201,5 @@ Transporte: indicador circular44x44sincontracción, chevronSVGcentrado ydistribu
 - Encabezado admin compacto: información de sesión y procedencia de lotes en panel ⓘ, cierre exterior/Escape, conserva aviso de caducidad; ya no muestra Catálogo remoto como insignia.
 
 Verificación:52pruebas existentes aprobadas, JS válido ydiffcheckcorrecto. Chrome local320/390sin desbordes, mapa contacto100%, controles52/círculo44, tarjetas60px(63en320paraTorres), tipografíaformularios16px. Admininfoabre/cierraalrepetir,fuera/Escape;desktop1440conservafichahorizontal.
+
+Revisión visual final: detalles del desarrollo en una columna hasta480px para mantener precios/capacidad legibles con la nueva escala, sin partir números. CSSv24.
