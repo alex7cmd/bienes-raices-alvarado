@@ -9,9 +9,8 @@ function setup() {
     if (!elements.has(id)) elements.set(id, { value: '', innerHTML: '', textContent: '', dataset: {}, style: {}, classList: { add() {}, remove() {}, toggle() {} }, querySelectorAll: () => [], querySelector: () => null, getAttribute(name) { return this[name] ?? null; }, setAttribute(name, value) { this[name] = value; }, removeAttribute(name) { delete this[name]; } });
     return elements.get(id);
   };
-  const context = vm.createContext({ Intl, console, location: { pathname: "/" }, setTimeout, clearTimeout, setInterval, clearInterval, AbortSignal, FormData, document: { getElementById: element, querySelectorAll: () => [] } });
-  let source = fs.readFileSync(path.join(__dirname, '../public/js/app.js'), 'utf8');
-  source = source.replace(/\ninit\(\)\.catch[^\n]+;\s*$/, '');
+  const context = vm.createContext({ Intl, console, location: { pathname: "/" }, setTimeout, clearTimeout, setInterval, clearInterval, AbortSignal, FormData, document: { documentElement: {dataset:{}}, getElementById: element, querySelectorAll: () => [] } });
+  let source = ['shared','public','admin'].map(name => fs.readFileSync(path.join(__dirname, `../public/js/${name}.js`), 'utf8').replace(/\ninit(?:Public|Admin)App\(\)\.catch[^\n]+;\s*$/, '')).join('\n');
   vm.runInContext(source, context);
   const data = require('../data/seed').buildInitialData();
   context.data = data;
@@ -194,4 +193,16 @@ test('el zoom permite800%, limita excesos y conserva el restablecimiento del pla
   run('resetZoom()');
   assert.equal(element('zoomPercentLabel').textContent, '100%');
   assert.equal(element('mapSvg').style.transform, 'translate(0px, 0px) scale(1)');
+});
+
+test('el plano conserva la vista ligera y usa el original HD únicamente al ampliar', () => {
+  const {run,context} = setup();
+  const attrs = {href:'/preview.webp'};
+  const image = {dataset:{mapBackground:'sorento'},getAttribute:k=>attrs[k],setAttribute:(k,v)=>{attrs[k]=v;}};
+  context.svg = {querySelector:()=>image};
+  run('updateMapResolution(svg,1)'); assert.equal(attrs.href,'/preview.webp');
+  run('updateMapResolution(svg,2)'); assert.equal(attrs.href,'/assets/maps/hd/sorento.webp');
+  run('updateMapResolution(svg,8)'); assert.equal(attrs.href,'/assets/maps/hd/sorento.webp');
+  image.onerror(); assert.equal(attrs.href,'/preview.webp');
+  run('updateMapResolution(svg,3)'); run('updateMapResolution(svg,1)'); assert.equal(attrs.href,'/preview.webp');
 });

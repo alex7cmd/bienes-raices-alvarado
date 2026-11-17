@@ -21,6 +21,7 @@ const loginAttempts = new Map();
 const activeSessions = createSessionStore(path.join(DATA_DIR, 'sessions'), { email: ADMIN_EMAIL, password: ADMIN_PASSWORD });
 
 app.disable('x-powered-by');
+app.enable('strict routing');
 app.use((req, res, next) => {
   res.setHeader('X-Content-Type-Options', 'nosniff');
   if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method) && req.get('Origin')) {
@@ -40,7 +41,7 @@ cleanup.unref();
 
 // Cache-Control: evitar caché en HTML y API para actualizaciones inmediatas
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api/') || ['/', '/admin', '/admin/'].includes(req.path) || req.path.endsWith('.html')) {
+  if (req.path.startsWith('/api/') || ['/', '/sitio', '/sitio/', '/admin', '/admin/'].includes(req.path) || req.path.endsWith('.html')) {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -48,6 +49,10 @@ app.use((req, res, next) => {
   next();
 });
 
+// Distinct, non-overlapping PWA scopes. Keep the original entry address working.
+app.get(['/', '/index.html'], (req,res) => res.redirect(302, '/sitio/' + (req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '')));
+app.get(['/sitio','/admin'], (req,res) => res.redirect(302, req.path + '/' + (req.originalUrl.includes('?') ? req.originalUrl.slice(req.originalUrl.indexOf('?')) : '')));
+app.get('/sitio/', (req,res) => res.sendFile('index.html', {root:path.join(__dirname,'public'),dotfiles:'deny'}));
 app.use('/uploads', express.static(UPLOADS_DIR, { etag: true, maxAge: '1d', dotfiles: 'deny' }));
 
 app.use(express.static(path.join(__dirname, 'public'), {
@@ -55,7 +60,7 @@ app.use(express.static(path.join(__dirname, 'public'), {
   lastModified: true,
   maxAge: '1d',
   setHeaders(res, file) {
-    if (file.endsWith('.html')) res.setHeader('Cache-Control', 'no-store');
+    if (file.endsWith('.html') || file.endsWith('/sw.js') || file.endsWith('.webmanifest')) res.setHeader('Cache-Control', 'no-store');
   }
 }));
 
@@ -479,8 +484,8 @@ app.use((err, req, res, next) => {
 });
 
 // Explicit entry route also works on hosts that do not resolve named SPA wildcards.
-app.get(['/admin', '/admin/'], (req, res) => {
-  res.sendFile('index.html', { root: path.join(__dirname, 'public'), dotfiles: 'deny' });
+app.get('/admin/', (req, res) => {
+  res.sendFile('admin/index.html', { root: path.join(__dirname, 'public'), dotfiles: 'deny' });
 });
 
 // Fallback to index.html for SPA routes

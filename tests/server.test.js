@@ -17,7 +17,7 @@ before(async () => {
   fs.copyFileSync(path.join(project, 'server.js'), path.join(fixture, 'server.js'));
   fs.cpSync(path.join(project, 'data'), path.join(fixture, 'data'), { recursive: true });
   fs.mkdirSync(path.join(fixture, 'public'));
-  for (const item of ['assets', 'js', 'css', 'index.html']) fs.symlinkSync(path.join(project, 'public', item), path.join(fixture, 'public', item));
+  for (const item of ['assets', 'js', 'css', 'index.html', 'admin', 'sitio']) fs.symlinkSync(path.join(project, 'public', item), path.join(fixture, 'public', item));
   fs.symlinkSync(path.join(project, 'node_modules'), path.join(fixture, 'node_modules'));
   process.env.ADMIN_PASSWORD = password;
   global.fetch = async (url, options) => {
@@ -75,7 +75,7 @@ test('HTML no se cachea y los recursos estáticos tienen caché y MIME seguros',
   const adminPage = await request('/admin?seccion=site');
   assert.equal(adminPage.status, 200);
   assert.match(adminPage.headers.get('cache-control'), /no-store/);
-  const res = await request('/js/app.js');
+  const res = await request('/js/shared.js');
   assert.match(res.headers.get('cache-control'), /max-age=86400/);
   assert.equal(res.headers.get('x-content-type-options'), 'nosniff');
 });
@@ -211,4 +211,35 @@ test('la sincronización obtiene la asignación oficial protoName para el filtro
   const lot = data.lots.find(l => l.id === 'Mza1Lote2');
   assert.equal(lot.pr, 'Malvasia');
   assert.equal(lot.pp, 4450000);
+});
+
+test('sitio y administrador tienen documentos, código y ámbitos instalables independientes', async () => {
+  const redirect = await originalFetch(base + '/admin?seccion=site', {redirect:'manual'});
+  assert.equal(redirect.headers.get('location'), '/admin/?seccion=site');
+  const root = await originalFetch(base + '/?origen=prueba', {redirect:'manual'});
+  assert.equal(root.headers.get('location'), '/sitio/?origen=prueba');
+  const publicHtml = await (await request('/sitio/')).text();
+  const adminHtml = await (await request('/admin/')).text();
+  assert.ok(publicHtml.includes('id="publicView"') && !publicHtml.includes('id="loginForm"') && !publicHtml.includes('id="adminView"'));
+  assert.ok(adminHtml.includes('id="loginForm"') && adminHtml.includes('id="adminView"') && !adminHtml.includes('id="publicView"'));
+  assert.ok(publicHtml.includes('/js/public.js') && !publicHtml.includes('/js/admin.js'));
+  assert.ok(adminHtml.includes('/js/admin.js') && !adminHtml.includes('/js/public.js'));
+  const manifests = [];
+  for (const scope of ['/sitio/','/admin/']) {
+    const response = await request(scope+'manifest.webmanifest');
+    assert.match(response.headers.get('content-type'), /manifest\+json/);
+    assert.match(response.headers.get('cache-control'), /no-store/);
+    const manifest = await response.json(); manifests.push(manifest);
+    assert.equal(manifest.scope,scope); assert.equal(manifest.start_url,scope); assert.equal(manifest.display,'standalone');
+    assert.deepEqual(manifest.icons.map(icon=>icon.sizes),['192x192','512x512']);
+    for (const icon of manifest.icons) {
+      const asset = await request(icon.src); assert.equal(asset.status,200); assert.match(asset.headers.get('content-type'),/image\/png/);
+      const png = Buffer.from(await asset.arrayBuffer());
+      const dimension = Number(icon.sizes.split('x')[0]);
+      assert.equal(png.readUInt32BE(16),dimension); assert.equal(png.readUInt32BE(20),dimension);
+    }
+    const worker = await request(scope+'sw.js'); assert.match(worker.headers.get('content-type'),/javascript/); assert.match(worker.headers.get('cache-control'),/no-store/);
+  }
+  assert.notEqual(manifests[0].id,manifests[1].id);
+  assert.notEqual(manifests[0].icons[0].src,manifests[1].icons[0].src);
 });

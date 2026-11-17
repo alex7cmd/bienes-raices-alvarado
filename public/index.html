@@ -1,18 +1,21 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-app="public">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bienes Raíces Alvarado · Qvalta Residencial</title>
   <link rel="icon" type="image/svg+xml" href="/assets/logo-alvarado-mark.svg?v=1.7.9" />
-  <link rel="apple-touch-icon" href="/assets/logo-alvarado-mark.svg?v=1.7.9" />
+  <link rel="apple-touch-icon" href="/assets/app-icons/public-192.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-9" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-14" />
+  <meta name="theme-color" content="#10243b" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Alvarado" />
+  <link rel="manifest" href="/sitio/manifest.webmanifest" />
 </head>
 <body>
-  <!-- DOCK SUPERIOR FLOTANTE iOS 27 LIQUID GLASS -->
   <header class="site-header" id="siteHeader">
     <div class="header-inner">
       <a href="#top" class="brand" aria-label="Bienes Raíces Alvarado">
@@ -39,41 +42,24 @@
         </a>
       </nav>
       <div class="header-actions">
+        <button type="button" class="install-app-btn hidden" data-install-app>Instalar app</button>
         <button class="icon-user-btn" id="themeToggleBtn" title="Modo automático (8:00 AM claro / 6:00 PM oscuro)" aria-label="Cambiar tema claro u oscuro">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
           </svg>
         </button>
         <div class="admin-menu-wrap">
-          <button class="icon-user-btn" id="userIconBtn" title="Acceso Administrador" aria-label="Acceso Administrador">
+          <a href="/admin/" class="icon-user-btn" id="userIconBtn" title="Acceso Administrador" aria-label="Acceso Administrador">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            <span class="admin-dot hidden" id="adminActiveDot"></span>
-          </button>
-          <div class="admin-dropdown hidden" id="adminDropdown">
-            <div class="admin-dropdown-header">
-              <span class="badge-admin">Administrador</span>
-              <small id="adminEmailLabel"></small>
-            </div>
-            <button class="dropdown-item" id="openMapBtn">
-              <span>🗺️</span> Edición de Plano Interactivo
-            </button>
-            <button class="dropdown-item" id="openCmsBtn">
-              <span>⚙️</span> Alvarado Studio · Centro de Gestión
-            </button>
-            <hr />
-            <button class="dropdown-item danger" id="logoutBtn">
-              <span>🚪</span> Cerrar sesión
-            </button>
-          </div>
+          </a>
         </div>
       </div>
     </div>
   </header>
 
-  <!-- PUBLIC VIEW -->
   <main id="publicView">
     <div class="hero-catalog-wrap">
       <!-- HERO CON ANIMACIÓN DE IMÁGENES DE DESARROLLOS -->
@@ -394,200 +380,6 @@
   </section>
 
   <!-- ALVARADO STUDIO (GESTIÓN RESIDENCIAL) -->
-  <section class="admin-cms-view hidden" id="adminView">
-    <div class="cms-layout">
-      <aside class="cms-sidebar">
-        <div class="cms-brand">
-          <div class="cms-brand-mark">A</div>
-          <div>
-            <strong>Alvarado Studio</strong>
-            <small>Gestión Residencial</small>
-          </div>
-        </div>
-
-        <nav class="cms-sidebar-nav" aria-label="Navegación Alvarado Studio">
-          <span class="cms-nav-label">GESTIÓN</span>
-          <button class="cms-tab active" data-cmstab="lots">
-            <svg class="ui-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-            Control de Lotes
-          </button>
-          <button class="cms-tab" data-cmstab="prototypes">
-            <svg class="ui-icon" viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1v-9.5z"/></svg>
-            Prototipos y Precios
-          </button>
-          <button class="cms-tab" data-cmstab="site">
-            <svg class="ui-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
-            Portada y Desarrollos
-          </button>
-
-          <span class="cms-nav-label" style="margin-top:16px;">VISTAS</span>
-          <button class="cms-side-action" id="cmsToMapBtn">
-            <svg class="ui-icon" viewBox="0 0 24 24"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
-            Edición de Plano Interactivo
-          </button>
-          <button class="cms-side-action" id="cmsToPublicBtn">
-            <svg class="ui-icon" viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-            Ver Sitio Público
-          </button>
-        </nav>
-
-      </aside>
-
-      <div class="cms-main">
-        <div class="cms-topbar">
-          <div class="cms-title-group">
-            <h1 class="cms-page-title">Alvarado Studio · Centro de Gestión</h1>
-            <span class="cms-note">Administración integral de inventario, precios y desarrollos · Qavalta · Versión 1.0</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span class="cms-session-notice" id="cmsSessionNotice" role="status"></span>
-            <span class="cms-live-pill" id="cmsSyncBadge">Consultando fuente de datos…</span>
-            <button class="icon-user-btn" id="cmsThemeToggleBtn" title="Cambiar tema claro u oscuro" aria-label="Cambiar tema claro u oscuro"></button>
-            <div class="cms-account">
-              <button type="button" class="icon-user-btn" id="cmsUserMenuBtn" aria-label="Menú de usuario" aria-haspopup="menu" aria-expanded="false" aria-controls="cmsUserMenu">
-                <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-3a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v3"/></svg>
-              </button>
-              <div class="cms-account-menu hidden" id="cmsUserMenu" role="menu" aria-label="Cuenta del administrador">
-                <small id="cmsAdminEmail"></small>
-                <button type="button" class="dropdown-item danger" id="cmsLogoutBtn" role="menuitem">Cerrar sesión</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="cms-body">
-
-      <!-- TAB 1: LOTS -->
-      <div class="cms-panel" id="cmsTabLots">
-        <div class="cms-sync-bar">
-          <div class="cms-sync-info">
-            <strong>Sincronización en vivo con planos.qavalta.com</strong>
-            <small id="cmsSyncStatus">Fuente activa: planos.qavalta.com</small>
-          </div>
-          <div class="cms-sync-controls">
-            <select id="cmsDevSelect">
-              <option value="sorento">Sorento</option>
-              <option value="oporto">Oporto</option>
-              <option value="ardenza">Ardenza</option>
-              <option value="montalese">Montalese</option>
-              <option value="torres-qavalta">Torres Qavalta</option>
-              <option value="vittoria">Vittoria</option>
-            </select>
-            <button type="button" class="btn-secondary" id="cmsSyncQavaltaBtn">Sincronizar ahora</button>
-          </div>
-        </div>
-        <div class="cms-stats-row" id="cmsLotStats"></div>
-        <div class="cms-toolbar">
-          <input type="text" id="lotSearchInput" placeholder="Buscar por lote, manzana o prototipo..." />
-          <select id="lotStatusFilter">
-            <option value="all">Todos los estados</option>
-            <option value="disponible">Disponible</option>
-            <option value="reservado">Apartado</option>
-            <option value="no-disponible">No disponible</option>
-            <option value="vendido">Vendido</option>
-          </select>
-        </div>
-        <div class="cms-table-wrap">
-          <table class="cms-table">
-            <thead>
-              <tr>
-                <th>Lote / Unidad</th>
-                <th>Manzana / Nivel</th>
-                <th>Superficie</th>
-                <th>Prototipo</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
-            <tbody id="cmsLotsBody"></tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- TAB 2: PROTOTYPES -->
-      <div class="cms-panel hidden" id="cmsTabPrototypes">
-        <div class="cms-toolbar" style="align-items:center;">
-          <input type="search" id="cmsProtoSearchInput" placeholder="Buscar prototipo por nombre, privada, precio o recámaras..." />
-          <select id="cmsProtoDevFilter">
-            <option value="all">Todos los desarrollos</option>
-            <option value="sorento">Sorento</option>
-            <option value="oporto">Oporto</option>
-            <option value="ardenza">Ardenza</option>
-            <option value="montalese">Montalese</option>
-            <option value="torres-qavalta">Torres Qavalta</option>
-            <option value="vittoria">Vittoria</option>
-          </select>
-          <span class="cms-note" id="cmsProtoCountBadge" style="white-space:nowrap;font-weight:600;"></span>
-        </div>
-        <div class="cms-cards-grid" id="cmsPrototypesGrid"></div>
-      </div>
-
-      <!-- TAB 3: SITE & DEVELOPMENTS -->
-      <div class="cms-panel hidden" id="cmsTabSite">
-        <div class="cms-form-card">
-          <section class="cms-carousel-overview" aria-labelledby="cmsCarouselHeading">
-            <h3 id="cmsCarouselHeading">Carrusel de inicio · 6 imágenes</h3>
-            <p class="cms-field-help cms-card-location">Selecciona una foto para editarla aquí. Estas seis imágenes aparecen consecutivamente en el banner grande de la página de inicio.</p>
-            <div class="cms-carousel-grid" id="cmsCarouselOverview"></div>
-          </section>
-          <div class="cms-edit-context">
-            <span class="cms-location-pill">Estás editando: Inicio → Banner principal</span>
-            <button type="button" class="btn-secondary" id="previewHomeSectionBtn">Ver esta sección en la página ↗</button>
-          </div>
-          <h3 id="cmsHeroEditorTitle">Imagen 1 de 6 · Sorento</h3>
-          <p class="cms-field-help cms-card-location" id="heroLocationHelp">Esta foto aparece detrás del título de la portada. Guardar foto actualiza únicamente la imagen seleccionada.</p>
-          <figure class="cms-home-preview" aria-label="Vista previa de la portada principal">
-            <img id="cmsHeroPreviewImage" alt="Primera imagen del carrusel de inicio" decoding="async" />
-            <div class="cms-home-preview-content">
-              <span class="cms-preview-label">Vista previa · Inicio</span>
-              <span class="cms-home-preview-eyebrow" id="cmsHeroPreviewEyebrow"></span>
-              <strong id="cmsHeroPreviewTitle"></strong>
-              <p id="cmsHeroPreviewSubtitle"></p>
-              <small class="cms-preview-image-state hidden" id="cmsHeroPreviewImageState">Añade una imagen válida para previsualizarla.</small>
-            </div>
-          </figure>
-          <p class="cms-field-help cms-card-location">Vista previa de la foto seleccionada. Tus cambios se publican al pulsar Guardar foto.</p>
-          <div class="form-grid">
-            <label><span id="cmsHeroImageLabel">Imagen de Sorento (URL)</span><input type="text" id="editHeroImage" aria-describedby="heroLocationHelp" /></label>
-            <label>Subir foto seleccionada<input type="file" id="uploadHeroFile" accept="image/*" /></label>
-          </div>
-          <button class="btn-primary" id="saveHeroSlideBtn">Guardar foto de Sorento</button>
-        </div>
-        <div class="cms-form-card cms-copy-editor">
-          <h3>Textos de portada y contacto</h3>
-          <p class="cms-field-help cms-card-location">El título y los textos aparecen sobre todas las fotos del carrusel. El teléfono se muestra al final de la página, en Contáctanos.</p>
-          <div class="form-grid">
-            <label>Texto pequeño sobre el título<input type="text" id="editHeroEyebrow" aria-describedby="heroTextHelp" /><small class="cms-field-help" id="heroTextHelp">Aparece en la parte superior del banner.</small></label>
-            <label>Título principal del banner<input type="text" id="editHeroTitle" /></label>
-            <label>Texto debajo del título<input type="text" id="editHeroSubtitle" /></label>
-            <label>Teléfono del pie de página<input type="text" id="editPhoneDisplay" aria-describedby="footerPhoneHelp" /><small class="cms-field-help" id="footerPhoneHelp">Se muestra en Contáctanos, al final de la página.</small></label>
-          </div>
-          <button class="btn-primary" id="saveSiteBtn">Guardar textos y contacto</button>
-        </div>
-        <h3 class="cms-subhead">Datos de los desarrollos</h3>
-        <div class="cms-cards-grid" id="cmsDevsGrid"></div>
-      </div>
-    </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DEDICATED ADMIN SIGN-IN PAGE -->
-  <section class="admin-login-page hidden" id="loginView" aria-labelledby="adminLoginTitle">
-    <div class="admin-login-content">
-      <a href="/" class="admin-login-back" id="loginBackBtn">← Volver al sitio</a>
-      <div class="admin-login-brand"><span>A</span> Alvarado Studio</div>
-      <h1 id="adminLoginTitle">Acceso Administrador</h1>
-      <p id="loginDescription">Ingresa para administrar el inventario, los precios y la portada.</p>
-      <form id="loginForm">
-        <label>Correo<input type="email" id="loginEmail" autocomplete="username" required value="admin@bienesraicesalvarado.com.mx" /></label>
-        <label>Contraseña<input type="password" id="loginPassword" autocomplete="current-password" required /></label>
-        <p class="form-error hidden" id="loginError" role="alert"></p>
-        <button type="submit" class="btn-primary full-width">Entrar</button>
-      </form>
-    </div>
-  </section>
-
-  <!-- PROTOTYPE QUICK-VIEW MODAL (PUBLIC) -->
   <div class="modal-backdrop hidden" id="protoModal">
     <div class="modal-card proto-modal-card">
       <button class="modal-close" id="closeProtoModal">✕</button>
@@ -688,6 +480,8 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.0.0-9" defer></script>
+  <script src="/js/shared.js?v=1.0.0-14" defer></script>
+  <script src="/js/public.js?v=1.0.0-14" defer></script>
+  <script src="/js/install.js?v=1.0.0-14" defer></script>
 </body>
 </html>

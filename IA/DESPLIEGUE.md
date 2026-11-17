@@ -46,3 +46,13 @@ Si la compilación falla, revisar los registros y conservar los archivos anterio
 No se modifica DNS ni el dominio como parte de esta publicación.
 
 Referencia de SiteGround: https://es.siteground.com/kb/gestionar-proyecto-node-js.
+
+
+## Dos apps instalables · 16nov2026
+- Público: /sitio/ (la raíz redirige). Admin: /admin/ (normaliza la barra conservando query).
+- Manifests e iconos propios, id/start_url/scope independientes y hermanos. display:standalone. Botón Instalar app solo al recibir beforeinstallprompt del navegador; usuario confirma la instalación nativa.
+- HTML y JS de entrada separados: shared.js + public.js o admin.js. No reunir de nuevo CMS y portada en un HTML. Mantener APIs y sesiones de8h existentes.
+- SW /sitio/sw.js y /admin/sw.js sin caché de inventario, API, credenciales ni HTML privado; navegación sin red ofrece un mensaje de conexión. No añadir offline writes ni almacenar sesiones en localStorage.
+- Fondos originales HD9000×6600 exactos bajo assets/maps/hd, se solicitan al ampliar>=200% y vuelven a vista ligera al alejar. Fondo sigue raster; lotes y autos SVG. No inventar números ni afirmar plano100%vectorial.
+- Cuatro autos en cuatro calles/regiones distintas por privada, sin tránsito en pisos de Torres. Pausa SMIL fuera del viewport/pestaña oculta/movimiento reducido. Mantener recortes y63máscaras de autos impresos existentes.
+- No subir __perf_local.js ni herramientas locales de medición, DB, sesiones o uploads.

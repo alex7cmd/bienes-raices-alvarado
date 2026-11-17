@@ -1,0 +1,27 @@
+{
+  "id": "/admin/",
+  "name": "Alvarado Studio · Administrador",
+  "short_name": "Studio",
+  "description": "Administración de inventario, prototipos y portada",
+  "lang": "es-MX",
+  "start_url": "/admin/",
+  "scope": "/admin/",
+  "display": "standalone",
+  "background_color": "#10243b",
+  "theme_color": "#10243b",
+  "icons": [
+    {
+      "src": "/assets/app-icons/admin-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/assets/app-icons/admin-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "prefer_related_applications": false
+}
