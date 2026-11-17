@@ -124,7 +124,7 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
           <div class="proto-modal-thumbs proto-panel-thumbs">
             ${gallery.map((src, idx) => `
               <button type="button" class="proto-modal-thumb proto-panel-thumb ${idx === activeIdx ? 'active' : ''}" data-thumb-idx="${idx}" aria-label="Ver foto ${idx + 1}">
-                <img src="${escapeHtml(src)}" alt="${escapeHtml(p.name)} vista ${idx + 1}" loading="lazy" />
+                <img src="${escapeHtml(getProtoThumbnail(p, src))}" alt="${escapeHtml(p.name)} vista ${idx + 1}" loading="lazy" />
               </button>
             `).join('')}
           </div>
@@ -392,7 +392,7 @@ function openPrototypeModal(protoId, initialIdx = 0) {
         <div class="proto-modal-thumbs" id="protoModalThumbs">
           ${gallery.map((src, idx) => `
             <button type="button" class="proto-modal-thumb ${idx === activeIdx ? 'active' : ''}" data-thumb-idx="${idx}" aria-label="Miniatura ${idx + 1}">
-              <img src="${escapeHtml(src)}" alt="${escapeHtml(p.name)} ${idx + 1}" />
+              <img src="${escapeHtml(getProtoThumbnail(p, src))}" alt="${escapeHtml(p.name)} ${idx + 1}" loading="lazy" />
             </button>
           `).join('')}
         </div>
@@ -481,7 +481,7 @@ function openFullscreenGallery(protoId, initialIdx = 0) {
   $('fsGalleryPrice').textContent = mxn.format(p.price);
   $('fsGalleryThumbs').innerHTML = gallery.map((src, i) => `
     <button type="button" class="fs-gallery-thumb ${i === initialIdx ? 'active' : ''}" data-fs-idx="${i}" aria-label="Foto ${i + 1}">
-      <img src="${escapeHtml(src)}" alt="${escapeHtml(p.name)} ${i + 1}" />
+      <img src="${escapeHtml(getProtoThumbnail(p, src))}" alt="${escapeHtml(p.name)} ${i + 1}" loading="lazy" />
     </button>
   `).join('');
   renderFullscreenSlide(initialIdx);

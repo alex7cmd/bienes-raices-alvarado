@@ -1,0 +1,1514 @@
+{
+  "reviewed": "2026-11-17",
+  "prototypes": [
+    {
+      "id": "moscato",
+      "title": "MOSCATO",
+      "images": [
+        {
+          "src": "/assets/images/galleries/moscato/01.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-2.png",
+          "sha256": "ebe8960a0b0a91f0fa86ebacbe35fb554d4438cc348bc51691434418b617864f",
+          "bytes": 1556561,
+          "thumbnail": "/assets/images/galleries/moscato/thumb-01.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-2-835x467.png",
+          "thumbnailSha256": "01b6e53a9c0da55d22f78073204f25795b2fe1b11aab8548a592bddc46189cbd"
+        },
+        {
+          "src": "/assets/images/galleries/moscato/02.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/Moscato.webp",
+          "sha256": "84d497792341cbcedfb5cebe06bd4e563729fe503253e6b5b3b23eeb69dd03d1",
+          "bytes": 174044
+        },
+        {
+          "src": "/assets/images/galleries/moscato/03.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/IMG_9904-scaled.webp",
+          "sha256": "b0151797f8c1f7c1f8bc9d8c1a0a71c38fa18f70fae68bf1c4487d75cba2a029",
+          "bytes": 144492
+        },
+        {
+          "src": "/assets/images/galleries/moscato/04.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/IMG_9906-scaled.webp",
+          "sha256": "dfb7924749bcb32551aa0915324251795203db063406ad55008d71f638ed7e74",
+          "bytes": 123548
+        },
+        {
+          "src": "/assets/images/galleries/moscato/05.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/IMG_9911-scaled.webp",
+          "sha256": "5279d91efcbf64fa02200f2a95b2403e4d38f1845249514e98e84ab00cbfc850",
+          "bytes": 122042
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/moscato/",
+        "https://qavalta.com/property/moscato-montalese/"
+      ]
+    },
+    {
+      "id": "belat",
+      "title": "BELAT",
+      "images": [
+        {
+          "src": "/assets/images/galleries/belat/01.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3.png",
+          "sha256": "f10613f6dde437fed9b67982e94748961e4f0cd04ef7c31b11c21546a6fc1837",
+          "bytes": 1784302,
+          "thumbnail": "/assets/images/galleries/belat/thumb-01.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-3-835x467.png",
+          "thumbnailSha256": "ae347a77713238b08ef40f07b9f0808e587486067f1d97c0303cbaccfd9f6243"
+        },
+        {
+          "src": "/assets/images/galleries/belat/02.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/MONTALESE-WEB_Belat-1.webp",
+          "sha256": "6412ed147335c69278a58ba06affdb031bc9467bcbfe4952cf3fb96ceb065ff4",
+          "bytes": 764936
+        },
+        {
+          "src": "/assets/images/galleries/belat/03.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/Belat2.webp",
+          "sha256": "afdacafe6a2fcd096a7d15eb4edbfadc97dee31b8da0eb8ce128840a1902cf74",
+          "bytes": 345264
+        },
+        {
+          "src": "/assets/images/galleries/belat/04.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/Belat3.webp",
+          "sha256": "004d4ce9db2acc3a9a114fadd632a0771b29f2da972a492d581a2b0fddab552a",
+          "bytes": 355096
+        },
+        {
+          "src": "/assets/images/galleries/belat/05.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/Belat4.webp",
+          "sha256": "1c4502268f05a4f3432e8e9bb3b157d69e2f8ff24b7037bc7cbb2029f578e7d6",
+          "bytes": 345482
+        },
+        {
+          "src": "/assets/images/galleries/belat/06.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/MONTALESE-WEB_Belat-4.webp",
+          "sha256": "1a8e829ed20beba6aeaa3410e27221fd1b1f3b99b5dbf5b2434d7e65c56da4fc",
+          "bytes": 978962
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/belta/",
+        "https://qavalta.com/property/belat-montalese/"
+      ]
+    },
+    {
+      "id": "arveto",
+      "title": "ARVETO",
+      "images": [
+        {
+          "src": "/assets/images/galleries/arveto/01.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-1.png",
+          "sha256": "fd8cb9839293e173b62c595f5d43dd8adfc89a22dcab1db04c0a9e670405d88f",
+          "bytes": 1174027,
+          "thumbnail": "/assets/images/galleries/arveto/thumb-01.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2026/06/FACHADAS-WEB-1-835x467.png",
+          "thumbnailSha256": "3183baf3c6199a453f12136f8e2de02f7c00092640042d2d26c60e136d8f66f4"
+        },
+        {
+          "src": "/assets/images/galleries/arveto/02.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/MONTALESE-WEB_Arveto-1.webp",
+          "sha256": "96eb62614e84939db726c258b413eebf612fe5e5995b90e2ad14382e9b7844b7",
+          "bytes": 829336
+        },
+        {
+          "src": "/assets/images/galleries/arveto/03.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/MONTALESE-WEB_Arveto-4.webp",
+          "sha256": "f7c94eda0c578abfdbd69c1b67c62f83b8e54b23d60bfb04aa20bb1f6fc96c87",
+          "bytes": 687058
+        },
+        {
+          "src": "/assets/images/galleries/arveto/04.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/MONTALESE-WEB_Arveto-5.webp",
+          "sha256": "ed36bf6e03c14bedadade620316eddb0c9c0ce3b89ce15ffc49f6c1dc5136259",
+          "bytes": 695060
+        },
+        {
+          "src": "/assets/images/galleries/arveto/05.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/arbeto3.webp",
+          "sha256": "b56b6b2c2cfa39250ddd0a2dacb6259b431787c301a12a9cfabab26ef79567f5",
+          "bytes": 201530
+        },
+        {
+          "src": "/assets/images/galleries/arveto/06.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/arbeto5.webp",
+          "sha256": "7132b1cd8795ee5ba98fbe5bdfd36430ce4dc9d3b6a0d20c63727d557d7f7a41",
+          "bytes": 320998
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/arveto/",
+        "https://qavalta.com/property/arveto-montalese/"
+      ]
+    },
+    {
+      "id": "malvasia",
+      "title": "MALVASIA",
+      "images": [
+        {
+          "src": "/assets/images/galleries/malvasia/01.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343.jpg",
+          "sha256": "803d6190d72fe2aaf8341c766494932ab9e263665b3d2c918b51243d1427f34e",
+          "bytes": 1076307,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-01.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_1040343-835x467.jpg",
+          "thumbnailSha256": "ea68134ec5f307a919524102d0cd8a827232c1573042caabea3f2f26d90fde17"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/02.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104431-scaled.jpg",
+          "sha256": "3528f16d9fa2a0d4450b8f105576e80bfd1b5d5bdffe09a2dbcfa8bbebdb075f",
+          "bytes": 646422,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-02.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104431-835x467.jpg",
+          "thumbnailSha256": "5a41b6822cde21caed3e44f49b64e253f2096919af0a0bf8754465c577c1f408"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/03.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104342-scaled.jpg",
+          "sha256": "8b2c24fcd310267ce064cc551512fc04acb32ce1125c776252aac128aa05c0c7",
+          "bytes": 607663,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-03.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104342-835x467.jpg",
+          "thumbnailSha256": "ffa1826958fe80eebdfc5cfce246e9bad8c7e962c0df67d0ef5ef7bd8ef006cc"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/04.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104307-scaled.jpg",
+          "sha256": "61704a3fb9b81724e5eb1d1f3b63f4114e9bc5c80d45aeb4e56d15f7fbe49167",
+          "bytes": 617805,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-04.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104307-835x467.jpg",
+          "thumbnailSha256": "340c965ba339d5becc6c904c750f657b13a73f7ec2a854a682b7c3122a0009eb"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/05.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104737-scaled.jpg",
+          "sha256": "9663dfe9960d4c65f8f462483c44b86ee0ca8a3887005621f065fd991a805d1e",
+          "bytes": 450918,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-05.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104737-835x467.jpg",
+          "thumbnailSha256": "83a3304d4a38e5082e524791cf4662b4cc4c9bd47403c937ce892e51b8aa4431"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/06.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104805-scaled.jpg",
+          "sha256": "246e4a1e844f2e8e8b59db07593afdc44bcf98c790889a83a5fb50599badf88b",
+          "bytes": 599665,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-06.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104805-835x467.jpg",
+          "thumbnailSha256": "76f2074952bf813f16fd3013d5c54345a8b87c947f66d78e152fae35d4870a41"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/07.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104810-scaled.jpg",
+          "sha256": "a4b84a863331e049c523fa9da5930b7eb53067a6565946c6e236cb7e292b99b2",
+          "bytes": 568948,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-07.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104810-835x467.jpg",
+          "thumbnailSha256": "f2302a58eda5ef681144e067de46dbdf4380638fb4d321a59ea6a0a2dfb5c704"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/08.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104701-scaled.jpg",
+          "sha256": "9fb10bf68be08db399e5c77fb5ab8095071e77950611bb2788d4fe723e96ab65",
+          "bytes": 502864,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-08.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104701-835x467.jpg",
+          "thumbnailSha256": "967e83b761e2fc7df95e1b6903158c4ec2043bb40f629953065a8d743e0d84ab"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/09.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104555-scaled.jpg",
+          "sha256": "6437625f0922a213a7ea679bc86799fe0011c13b5864fa5710c3e8d946d44c52",
+          "bytes": 594756,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-09.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104555-835x467.jpg",
+          "thumbnailSha256": "e03b67ef9887f1a18392e5c764f93d4725a3d88c30d992242a8691f466d00ba6"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/10.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104621-scaled.jpg",
+          "sha256": "cbb5edbe06f061dc7333abdcacf385865c8fc9c9c2a361656726ad0a5cc5e126",
+          "bytes": 410242,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-10.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104621-835x467.jpg",
+          "thumbnailSha256": "46bfc3293f500170dd4252e143487b1dd9fadbfd801bb8ce7b018cdf3631906c"
+        },
+        {
+          "src": "/assets/images/galleries/malvasia/11.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104400-scaled.jpg",
+          "sha256": "6baa41292f5a9d3dfeb282dbf47f8dcc8e2aedc2b2dbd3e5364796c1a5806ade",
+          "bytes": 437764,
+          "thumbnail": "/assets/images/galleries/malvasia/thumb-11.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2025/05/20241030_104400-835x467.jpg",
+          "thumbnailSha256": "97c59c8b318fe7867125048d020408884d11cfe581ee7061b5f229e7349db5a2"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/malvasia/"
+      ]
+    },
+    {
+      "id": "belora",
+      "title": "BELORA",
+      "images": [
+        {
+          "src": "/assets/images/galleries/belora/01.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114215-scaled.jpg",
+          "sha256": "2e6abb2328b968f80292c0c183135300f390a51090e66d90a140ee46fe5cd905",
+          "bytes": 806903,
+          "thumbnail": "/assets/images/galleries/belora/thumb-01.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114215-835x467.jpg",
+          "thumbnailSha256": "17f15525888a230befe050f48615f3a69e43a7ee403d584041d680fefb934b3c"
+        },
+        {
+          "src": "/assets/images/galleries/belora/02.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113046-scaled.jpg",
+          "sha256": "3a024eb74c8fc1d8a87e1d853869350544b97772b206f8aa75324619b5073fd2",
+          "bytes": 682440,
+          "thumbnail": "/assets/images/galleries/belora/thumb-02.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113046-835x467.jpg",
+          "thumbnailSha256": "f21b8af4a0b28ac468b5631d5b6e74cd42dbcc10236255543dba8e9b79286a3e"
+        },
+        {
+          "src": "/assets/images/galleries/belora/03.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113105-scaled.jpg",
+          "sha256": "8702a0a29ba6b14875baa3205876b354e0e268c162a8ed205f21ebdd1aa9fccb",
+          "bytes": 717164,
+          "thumbnail": "/assets/images/galleries/belora/thumb-03.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113105-835x467.jpg",
+          "thumbnailSha256": "f198ecec8fdb5cacfe990ef71ffdf7f28559f5848109d38cf929dece32223017"
+        },
+        {
+          "src": "/assets/images/galleries/belora/04.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113321-scaled.jpg",
+          "sha256": "12eef5b628f1db2898c01e559f435d2324825794bf893e17b5c7f5b5625efa67",
+          "bytes": 440024,
+          "thumbnail": "/assets/images/galleries/belora/thumb-04.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113321-835x467.jpg",
+          "thumbnailSha256": "d180995fad163441d6cf016d29e556183bd0e78156b17ca6f57f45ea55834650"
+        },
+        {
+          "src": "/assets/images/galleries/belora/05.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113402-scaled.jpg",
+          "sha256": "2079dc173b9a4eed23ddd57feca06ea20257e1ac2eb6aed92ee42098fe6206ea",
+          "bytes": 809241,
+          "thumbnail": "/assets/images/galleries/belora/thumb-05.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113402-835x467.jpg",
+          "thumbnailSha256": "a035492a4b016c6d11d577a190705943e30ead12bb126076b0c07d76d6137307"
+        },
+        {
+          "src": "/assets/images/galleries/belora/06.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113406-scaled.jpg",
+          "sha256": "3813315b95802ea74895486d2e2aa6f2c49ba7c5006c081166d4ba1f5fca672d",
+          "bytes": 839098,
+          "thumbnail": "/assets/images/galleries/belora/thumb-06.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113406-835x467.jpg",
+          "thumbnailSha256": "c4fc0555637ef35dfeec7e8c5d14c6715e7f7c81db115d8b0e2081de874a4b15"
+        },
+        {
+          "src": "/assets/images/galleries/belora/07.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113417-scaled.jpg",
+          "sha256": "f22ab033bb9f2a60f58fd75a22b5a22d768f598e9d8ceddb0e5b9a83604b6ae4",
+          "bytes": 878658,
+          "thumbnail": "/assets/images/galleries/belora/thumb-07.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113417-835x467.jpg",
+          "thumbnailSha256": "db06858d9a49fd249fbd84a0fcb1ef69ff30c30773ed3b15462e8fcf34f4c3f9"
+        },
+        {
+          "src": "/assets/images/galleries/belora/08.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113508-scaled.jpg",
+          "sha256": "017f8efac47a471ff497b28fbee077d22d7512ed1afebc4154713ad94ea02c6f",
+          "bytes": 795089,
+          "thumbnail": "/assets/images/galleries/belora/thumb-08.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113508-835x467.jpg",
+          "thumbnailSha256": "04c6ab085b9b0d28a2fb3f2dde732a823b7ff5aa4fd1f381eb3cdb7cf898fce5"
+        },
+        {
+          "src": "/assets/images/galleries/belora/09.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113513-scaled.jpg",
+          "sha256": "c22a86ebd05f8878cecff9a4ca38b9491831d5de81ef0bdc5097ca1d20bd453d",
+          "bytes": 617146,
+          "thumbnail": "/assets/images/galleries/belora/thumb-09.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113513-835x467.jpg",
+          "thumbnailSha256": "800ae2236123ef0743779b0f7532933f2637b72dcfb3782a8d7ffd31db5539d6"
+        },
+        {
+          "src": "/assets/images/galleries/belora/10.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113653-scaled.jpg",
+          "sha256": "99ef05b556c0d815705f3f59b3ca153632a07d140822ca6196399b30519419c5",
+          "bytes": 628788,
+          "thumbnail": "/assets/images/galleries/belora/thumb-10.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113653-835x467.jpg",
+          "thumbnailSha256": "86f82f29eefbd4421bb98402bb04734716843322bc11c9289e2209ecfa58f47e"
+        },
+        {
+          "src": "/assets/images/galleries/belora/11.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113722-scaled.jpg",
+          "sha256": "9224f307f0bb64bb27ab071602520c9e10d732cd7d450580d03a440eefd6cbde",
+          "bytes": 799913,
+          "thumbnail": "/assets/images/galleries/belora/thumb-11.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113722-835x467.jpg",
+          "thumbnailSha256": "614ffc63414a7bd62a71f750e834d2c8da9ac3f071f2a0802add3a7efe573c65"
+        },
+        {
+          "src": "/assets/images/galleries/belora/12.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113726-scaled.jpg",
+          "sha256": "246ae10b611e63adaa23cfbab9931525e5d67118ddbc4597797f11a0f8eafe2e",
+          "bytes": 770003,
+          "thumbnail": "/assets/images/galleries/belora/thumb-12.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113726-835x467.jpg",
+          "thumbnailSha256": "4a5cfdfe8b8e030ae802999f6a7cec05800660d57bbd621643a21dc0c1e5e6bc"
+        },
+        {
+          "src": "/assets/images/galleries/belora/13.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113751-scaled.jpg",
+          "sha256": "409144e47bcc063053b5966531a74408ca933f360a96deb1f145920d6c8349c6",
+          "bytes": 488186,
+          "thumbnail": "/assets/images/galleries/belora/thumb-13.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113751-835x467.jpg",
+          "thumbnailSha256": "a1d5428b230668f573fc8763f493a8508d52b1fb4b7e3bd9558547c733e085ae"
+        },
+        {
+          "src": "/assets/images/galleries/belora/14.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113809-scaled.jpg",
+          "sha256": "e68c63c877712ec6461647649aec16338ecb4274bbe63532f3c567ba38cfd451",
+          "bytes": 625193,
+          "thumbnail": "/assets/images/galleries/belora/thumb-14.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113809-835x467.jpg",
+          "thumbnailSha256": "d4b605aa4b41a534251de71139d09547abbb0f73ae87e2100ba1af456f0a25c9"
+        },
+        {
+          "src": "/assets/images/galleries/belora/15.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113848-scaled.jpg",
+          "sha256": "23ed08f282e63e4e684243e29fd2e9b1f35e9224ced6207cbaf05220b9bdb6ec",
+          "bytes": 584190,
+          "thumbnail": "/assets/images/galleries/belora/thumb-15.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_113848-835x467.jpg",
+          "thumbnailSha256": "0f1b6a7d8c366ca00a3e820a8c17a8faef01b9dd2b25acf0ecb91cac6d2cfe09"
+        },
+        {
+          "src": "/assets/images/galleries/belora/16.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114001-scaled.jpg",
+          "sha256": "52111b9268489f3af3c9e71d155ee606603f2fdba92a9ea0701ccdea6fd1de03",
+          "bytes": 556978,
+          "thumbnail": "/assets/images/galleries/belora/thumb-16.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114001-835x467.jpg",
+          "thumbnailSha256": "bf7997c48cc0a8561b8beae4fcc836c7d10dc58996d1312406299dc7356158c8"
+        },
+        {
+          "src": "/assets/images/galleries/belora/17.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114015-scaled.jpg",
+          "sha256": "b5303f50dd3ad08e19fc78c834f700cf6ce53550bb3b90fba0a7e63fddb6992b",
+          "bytes": 832177,
+          "thumbnail": "/assets/images/galleries/belora/thumb-17.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114015-835x467.jpg",
+          "thumbnailSha256": "aad0279bd0fe344aedc850d29f77c00701f609b1bcb11664b8d9fa4e07e93b1b"
+        },
+        {
+          "src": "/assets/images/galleries/belora/18.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114029-scaled.jpg",
+          "sha256": "b31a5d733f0902779946b516a30da903bc66cf81768361ea942f4f1360ee9310",
+          "bytes": 719949,
+          "thumbnail": "/assets/images/galleries/belora/thumb-18.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114029-835x467.jpg",
+          "thumbnailSha256": "7b10fa9cbaec9215ddd0c3815862c6aa4fe6f4a7cd050a552280d7e60609091c"
+        },
+        {
+          "src": "/assets/images/galleries/belora/19.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114039-scaled.jpg",
+          "sha256": "3fcfcae92656521d2f378a7f27b37c5b62b61c0585e1a715309615b8b19f7c08",
+          "bytes": 551211,
+          "thumbnail": "/assets/images/galleries/belora/thumb-19.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114039-835x467.jpg",
+          "thumbnailSha256": "13dc8903cf18a594bb30daccf18038471b0659cce3bb5c9e9828067ba078007d"
+        },
+        {
+          "src": "/assets/images/galleries/belora/20.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114056-scaled.jpg",
+          "sha256": "078c89eda6699748dd76c46131c2c0f08426b524ae2d1b1b3f27b22492bdbee6",
+          "bytes": 409663,
+          "thumbnail": "/assets/images/galleries/belora/thumb-20.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114056-835x467.jpg",
+          "thumbnailSha256": "bcc49d38e3383959182b9218e14c960d33105ac625a474c46d5fe10e0a083455"
+        },
+        {
+          "src": "/assets/images/galleries/belora/21.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114131-scaled.jpg",
+          "sha256": "a9c48865c5c2a52b3c887db67f95d32ed8af205dc21a531be6444a8a03947529",
+          "bytes": 593177,
+          "thumbnail": "/assets/images/galleries/belora/thumb-21.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220221_114131-835x467.jpg",
+          "thumbnailSha256": "58db942fce9923b221a3d5e8b11412283fcddebaaa5a426022e4a277ba3ee237"
+        },
+        {
+          "src": "/assets/images/galleries/belora/22.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220717_130744_0000.png",
+          "sha256": "1871499839d65f8f1c91aea4c90aea5d8e34a04678affeef7439662f343b7755",
+          "bytes": 1791552,
+          "thumbnail": "/assets/images/galleries/belora/thumb-22.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/20220717_130744_0000-835x467.png",
+          "thumbnailSha256": "b9c7f2a3d5123edc875827666144f3e51ca9a8af89c06abe8585f50940acd39d"
+        },
+        {
+          "src": "/assets/images/galleries/belora/23.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/FB_IMG_1660852536024.jpg",
+          "sha256": "a198d28702f5285f0fe1c0393f53f9c008c7079d6ce5607d5dc88a86f089d050",
+          "bytes": 134611,
+          "thumbnail": "/assets/images/galleries/belora/thumb-23.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/FB_IMG_1660852536024-835x467.jpg",
+          "thumbnailSha256": "3b787b3650d6fa7788f283e27d2033d43260c90b753889ad9981556c427d4072"
+        },
+        {
+          "src": "/assets/images/galleries/belora/24.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/FB_IMG_1660852537716.jpg",
+          "sha256": "8117b4b8ec6355dfb5d4cbf4e47b050f065537471f0c54c7d6ffc218c76697ad",
+          "bytes": 106310,
+          "thumbnail": "/assets/images/galleries/belora/thumb-24.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/FB_IMG_1660852537716-835x467.jpg",
+          "thumbnailSha256": "58e25df82746f9b4783744440e6b5b0b1bca95d69bacf38a985e25dbef411000"
+        },
+        {
+          "src": "/assets/images/galleries/belora/25.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/FB_IMG_1660852539848.jpg",
+          "sha256": "02d3d0361e1505134fe9ffccfda48404b6f116a77213013b71addd9f1f0f00b3",
+          "bytes": 170635,
+          "thumbnail": "/assets/images/galleries/belora/thumb-25.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/07/FB_IMG_1660852539848-835x467.jpg",
+          "thumbnailSha256": "dc7ae2572d7f3eac536010591559512e895783e0617d8bd37638021b3ae37656"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/areni-ampliacion/"
+      ]
+    },
+    {
+      "id": "ruche",
+      "title": "RUCHE",
+      "images": [
+        {
+          "src": "/assets/images/galleries/ruche/01.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-scaled.jpg",
+          "sha256": "fede3eb98278e8235b5e67bb40cc2ae5d04cc016a0cdd49d973078a5f3d423a3",
+          "bytes": 837183,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-01.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Ruche-835x467.jpg",
+          "thumbnailSha256": "2b3a8b09200d8c9365bd03d89db8ea12f64dd71f14784ec5e90c51e390e85c09"
+        },
+        {
+          "src": "/assets/images/galleries/ruche/02.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE.png",
+          "sha256": "26aa18072f9b7a3ae195551add12c21535e877e7175267c6a880fba274c2c2bf",
+          "bytes": 1603818,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-02.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-835x467.png",
+          "thumbnailSha256": "1c0a877847fe176b090b57582f1e1d7cc3f39ffc3d3578526541760b28462a2e"
+        },
+        {
+          "src": "/assets/images/galleries/ruche/03.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-7.png",
+          "sha256": "a07d3d219808c2d1b20f1cfd65cd0b5b508dccf626e34a61f3b394de67e72647",
+          "bytes": 1873141,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-03.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-7-835x467.png",
+          "thumbnailSha256": "893f5cde846d16eea9fa3d7756531f6d9cb53f592c11c532efe600b3b961e598"
+        },
+        {
+          "src": "/assets/images/galleries/ruche/04.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-3.png",
+          "sha256": "86f3ab44e3d27233f9ffefc6d0af3da46b00493461ca9b38eaa70e7ea22f2824",
+          "bytes": 1842022,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-04.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-3-835x467.png",
+          "thumbnailSha256": "d0fb3142ba252e778d6f9ad3063754db35e607ea5e03ebce0ce8238bd23d894a"
+        },
+        {
+          "src": "/assets/images/galleries/ruche/05.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-5.png",
+          "sha256": "1336c08f9e1916a37f488fc0abb4b035cee2f3340e47f1e00231fc22006e1542",
+          "bytes": 2339580,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-05.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-5-835x467.png",
+          "thumbnailSha256": "f939d1a450a9c700f26b03c5c022e05960f0ead833d0b73efea7f287dd8aa20d"
+        },
+        {
+          "src": "/assets/images/galleries/ruche/06.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-6.png",
+          "sha256": "5779980d64f8d20ca1365fd8e1dffdc6401cc22db064879f7ce745c69aabb8b2",
+          "bytes": 1756195,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-06.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-6-835x467.png",
+          "thumbnailSha256": "89db0e99ec53f9f34d047865ed33725b2a975cb49125877461d5a93c2998b19c"
+        },
+        {
+          "src": "/assets/images/galleries/ruche/07.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-4.png",
+          "sha256": "dbdb8124cc47b80b398ebec276b50b94ac25e87c7524332cdf707694d4a08020",
+          "bytes": 1544146,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-07.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-4-835x467.png",
+          "thumbnailSha256": "de273d07fa5bc041169b0da76070461e3e779a73a3bb3db9d0d76241cc1143d8"
+        },
+        {
+          "src": "/assets/images/galleries/ruche/08.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-1.png",
+          "sha256": "82db58ce558208a2fbb2d52434135626dc7a519772e9d587779d23838f2e8b81",
+          "bytes": 2044301,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-08.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-1-835x467.png",
+          "thumbnailSha256": "2f459c9e852ec050619c234029636151caebc771ff6b6491e28783cd55e94eb8"
+        },
+        {
+          "src": "/assets/images/galleries/ruche/09.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-2.png",
+          "sha256": "68c235ed1652e0b2894997b3a5cdd799a0bd1692fe4b76a2d2c55e4b62a620c9",
+          "bytes": 1700116,
+          "thumbnail": "/assets/images/galleries/ruche/thumb-09.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/RUCHE-2-835x467.png",
+          "thumbnailSha256": "cd09f283786ea0018042d9ab1bbb9cc7b7d25eb1eecded325d8a983ab95b7d2b"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/ruche/"
+      ]
+    },
+    {
+      "id": "brachetto",
+      "title": "BRACHETTO",
+      "images": [
+        {
+          "src": "/assets/images/galleries/brachetto/01.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/FACHADAS-WEB-4.png",
+          "sha256": "8cc1241198abf8c4557f37ec437d0797cd7318119464fd9e10197e0596d3b8ac",
+          "bytes": 1244322,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-01.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/FACHADAS-WEB-4-835x467.png",
+          "thumbnailSha256": "a7061193a9e4efe154c64adacee143f2234cb2a7fc765570828973fbcca3a027"
+        },
+        {
+          "src": "/assets/images/galleries/brachetto/02.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/9bbd95fc-d1e9-486f-b26b-16891af0b82c.jpeg",
+          "sha256": "62fca8c508c334399465d7832261720d873e43ef3ca186af5448a92dbf28d1af",
+          "bytes": 171132,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-02.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/9bbd95fc-d1e9-486f-b26b-16891af0b82c-835x467.jpeg",
+          "thumbnailSha256": "b3c2c5e5f50f01c526dc8a777840aa11e2e88c196d1094cb3c209084a77bd720"
+        },
+        {
+          "src": "/assets/images/galleries/brachetto/03.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/57487f6e-0833-426c-95cc-e3f5c9933cf9.jpeg",
+          "sha256": "3a3975ea49bccc5422546ee4890c85ececf4b08c32f524f52e0d078875fbefd4",
+          "bytes": 304459,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-03.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/57487f6e-0833-426c-95cc-e3f5c9933cf9-835x467.jpeg",
+          "thumbnailSha256": "24e109820315811eb234140b70f24fe61b95268ee9732ceaa0e19db4d4f2358f"
+        },
+        {
+          "src": "/assets/images/galleries/brachetto/04.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/b1a10516-ccff-4cb1-b1f1-eb38d2c3f1bb.jpeg",
+          "sha256": "90e749ff5419911258c30d77056fb64f9cfb058eb2e2d4457fa7f954f002a5e3",
+          "bytes": 205314,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-04.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/b1a10516-ccff-4cb1-b1f1-eb38d2c3f1bb-835x467.jpeg",
+          "thumbnailSha256": "1e2385b24e5146ed2ed5c223f8be476fdeac7a468f6d542045d5dba1a134875d"
+        },
+        {
+          "src": "/assets/images/galleries/brachetto/05.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/b78b695d-a9e9-40c4-8f5b-661b37e6e78b.jpeg",
+          "sha256": "f1ed04ff0d6ca372d0e1e7e105afc2f3f97d846b27ff0696ee1d2da3553db516",
+          "bytes": 227997,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-05.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/b78b695d-a9e9-40c4-8f5b-661b37e6e78b-835x467.jpeg",
+          "thumbnailSha256": "8de06068175831c1c7eb859ef1ffe8265f11dce3c28a5eabbe7fe2e3215fafd2"
+        },
+        {
+          "src": "/assets/images/galleries/brachetto/06.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/bce6f3a2-4a2a-4528-9205-f0a6ef07730c.jpeg",
+          "sha256": "7561089a399d92ad81396df3c1529a184d0cf314a50a13849b0014850effd4e9",
+          "bytes": 202589,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-06.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/bce6f3a2-4a2a-4528-9205-f0a6ef07730c-835x467.jpeg",
+          "thumbnailSha256": "9610976af00a4bafaee240a45155167a5067e4dbcaccd7169062317a7ff84ea4"
+        },
+        {
+          "src": "/assets/images/galleries/brachetto/07.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/c7320af9-71c6-469e-a6d0-71a6f27f0202.jpeg",
+          "sha256": "6e5ce9295ff4eb4be5e00d18a14fe0fc5b637cfaf36478125cfb844d1c397aa3",
+          "bytes": 201182,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-07.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/c7320af9-71c6-469e-a6d0-71a6f27f0202-835x467.jpeg",
+          "thumbnailSha256": "fb01ca09b48207d21a26a65c4ed34816d71930298dba69354cf25224bb804052"
+        },
+        {
+          "src": "/assets/images/galleries/brachetto/08.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/f738d58c-05ee-4357-a7fd-0e188ae706d4.jpeg",
+          "sha256": "f1e37f9c9339fe5a5570a52b66fa38313125bb698ad6184c7feefd8f1c2bdf1c",
+          "bytes": 261465,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-08.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/f738d58c-05ee-4357-a7fd-0e188ae706d4-835x467.jpeg",
+          "thumbnailSha256": "7e6374a60813071e350f4c4025ceb7c5edc53636dbe53be52763612cb520f855"
+        },
+        {
+          "src": "/assets/images/galleries/brachetto/09.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/1c7c9298-c1f6-48b1-855d-d1978a853ad1.jpeg",
+          "sha256": "45b45c6472a8e7d2ac8f410ecc4c4ca0fd33b9642bdd6d2f11090282afcb9295",
+          "bytes": 146500,
+          "thumbnail": "/assets/images/galleries/brachetto/thumb-09.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/1c7c9298-c1f6-48b1-855d-d1978a853ad1-835x467.jpeg",
+          "thumbnailSha256": "7d46a5b24c03aa87e839dd97396131a7c1c3be1ec5a69a090727583c896169dc"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/brachetto/"
+      ]
+    },
+    {
+      "id": "moscatel",
+      "title": "MOSCATEL",
+      "images": [
+        {
+          "src": "/assets/images/galleries/moscatel/01.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Moscatell-scaled.jpg",
+          "sha256": "ae08b65240acb925552f76dc5fa93d4906dafcc661dd11048d41c2a5ecba1e47",
+          "bytes": 775665,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-01.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Moscatell-835x467.jpg",
+          "thumbnailSha256": "5f26be9e6f5c00dfc9b2b0544cb2b0607a1d54e7b7a369bef106e8fb04c38c2c"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/02.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/4e5f5152-b4ea-42c5-a53f-ba50642789e1.jpeg",
+          "sha256": "16ee219967f5bdba3c9a5d104fc21dfcfdc62e8287e93b19d5ec204f744b0631",
+          "bytes": 144190,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-02.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/4e5f5152-b4ea-42c5-a53f-ba50642789e1-835x467.jpeg",
+          "thumbnailSha256": "a71623b44540461171633640f20aea2a13c59f2f9943354a2ecf79c69ea1d48f"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/03.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/9cd37ee5-a527-4e08-b340-113c389797d5.jpeg",
+          "sha256": "885581bc64d7e6cf1432703dc369486ce51ff8ab0fc0f483eef4e8138b720969",
+          "bytes": 167111,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-03.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/9cd37ee5-a527-4e08-b340-113c389797d5-835x467.jpeg",
+          "thumbnailSha256": "0bceb974760e0c38a7feb58729a6923526613496af1436a84468eecf819a05f7"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/04.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/20b4ce47-51b5-4d84-b4ae-eecc942d5c38.jpeg",
+          "sha256": "510836de46008b8fb07160457e9caf9a462c254018bce77a3954672284f7cb20",
+          "bytes": 246699,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-04.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/20b4ce47-51b5-4d84-b4ae-eecc942d5c38-835x467.jpeg",
+          "thumbnailSha256": "a70f994f2fe0658646379e1a5de2ff60f0a1eb7a222e0de835a32c4f2d4c6e4d"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/05.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/62d14d25-dc4c-48e9-930c-67561473f4bc.jpeg",
+          "sha256": "9346e296b7809ee083ae324f91858d23eadcf417def6e17a3660779fb98c86cd",
+          "bytes": 196803,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-05.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/62d14d25-dc4c-48e9-930c-67561473f4bc-835x467.jpeg",
+          "thumbnailSha256": "fa6079861601cf4980b0d775bbda52011437290d29a5dd8ef0c16a72604dd02b"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/06.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/81cefdf2-de98-42bf-ba74-9f22c7926eb0.jpeg",
+          "sha256": "717eb7ee4aa727364f152a7ab8f9ac2bfd6108cd7fa4e94e299e8f50663dbdc4",
+          "bytes": 141415,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-06.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/81cefdf2-de98-42bf-ba74-9f22c7926eb0-835x467.jpeg",
+          "thumbnailSha256": "5336b7f10d27638fafd2e2a73c0374fa2b186572541556fa022331c8c64d5f9c"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/07.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/346bd51b-4792-477f-a115-7b2d965b2bbd.jpeg",
+          "sha256": "26b4ecdd9d47f5648bbbd41f5e9ad062823591babcb7142d95cdfd228e8cbfa3",
+          "bytes": 215993,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-07.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/346bd51b-4792-477f-a115-7b2d965b2bbd-835x467.jpeg",
+          "thumbnailSha256": "90f7e42cf072da31ebfd60b842d2f4359f7a8846fa888109c5ed63050b9729ff"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/08.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/774d4a6d-de10-439c-9aea-4de1857dbfa4.jpeg",
+          "sha256": "adeafe0a033fcffbb8f85e8239acc2d8f2816c27542dbd497556ca4856139d62",
+          "bytes": 250885,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-08.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/774d4a6d-de10-439c-9aea-4de1857dbfa4-835x467.jpeg",
+          "thumbnailSha256": "a1642074049f44aae8fd7245dda40db2f552636018ccd9dc1b8d5ad5b26c7cba"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/09.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/8396c877-761b-4731-82c6-4e04ac4ac87f.jpeg",
+          "sha256": "9e6bbf6a448cca70cdd9484387240c44be0c2574b20a69c85c0c6d9477fb1e2e",
+          "bytes": 123012,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-09.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/8396c877-761b-4731-82c6-4e04ac4ac87f-835x467.jpeg",
+          "thumbnailSha256": "4bd6e2ba8a058e2b12e7cece60004f160ff3a731651603d21fd5e23f0163ea2c"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/10.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/54734e3d-eedb-45c0-89c3-3cd4bb9abcb3.jpeg",
+          "sha256": "60969833a6c0b197623708a221a7e0d43a30995620fa836e9e293915a8b2af5a",
+          "bytes": 212883,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-10.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/54734e3d-eedb-45c0-89c3-3cd4bb9abcb3-835x467.jpeg",
+          "thumbnailSha256": "9488cb23cb5e469818c58d491447093607f6768d6946b868c1782a3116f0c9d3"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/11.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/a485c165-edfa-48bb-8e32-f0ff80fb9a31.jpeg",
+          "sha256": "64ab56d3ba74930bda4f7971f11c0e4a3ac3052f6ddec8ec20fe095bd0aa7878",
+          "bytes": 256025,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-11.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/a485c165-edfa-48bb-8e32-f0ff80fb9a31-835x467.jpeg",
+          "thumbnailSha256": "284a4f45d43013da533a6500293e5c075e47088cdc0d637403dddd5dc1f657f7"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/12.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/a842b3aa-84af-4673-a558-a53ba304ee8e.jpeg",
+          "sha256": "4d95f837c4921198ea0ffb447500ccaaaab85e06ad5488933a2bba340c64db62",
+          "bytes": 103547,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-12.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/a842b3aa-84af-4673-a558-a53ba304ee8e-835x467.jpeg",
+          "thumbnailSha256": "b8a45b2d0dad621dbe8b55800d3b1ffcf55067251f2e426c4a1c15b7c3ea428b"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/13.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/b512ff61-00bd-4b47-83aa-20df97c700d9.jpeg",
+          "sha256": "bc2d2d96203c03deb8591f8df641da9fd7ae0b2efec895b5beba0bcdfdf9865c",
+          "bytes": 258519,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-13.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/b512ff61-00bd-4b47-83aa-20df97c700d9-835x467.jpeg",
+          "thumbnailSha256": "ed6e274b0c235b3c5545823ae0a0413ae60a316728a4117b4c44ef300444ed27"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/14.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/dcf000ab-5785-4a3c-b177-36e2e7b71620.jpeg",
+          "sha256": "bd2a13a7def3cc942e10475f9f954f40f917fd97d7e7e5199a66e5c6fb03a136",
+          "bytes": 215760,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-14.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/dcf000ab-5785-4a3c-b177-36e2e7b71620-835x467.jpeg",
+          "thumbnailSha256": "e445587ed117f3719cf2e55660bce6851e83e29c49e1a183edb587b200ce8bf9"
+        },
+        {
+          "src": "/assets/images/galleries/moscatel/15.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/eff65a42-5b68-455e-9f40-38b1c4234091.jpeg",
+          "sha256": "e09101e1f8bf09d15e276d787d78093dcbc50dd05816009081c83fc7d472db7a",
+          "bytes": 270912,
+          "thumbnail": "/assets/images/galleries/moscatel/thumb-15.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/eff65a42-5b68-455e-9f40-38b1c4234091-835x467.jpeg",
+          "thumbnailSha256": "71c35771c738e4ba48b2ae1445202f41ef1bf1b320c897af9687629591fe7b86"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/moscatel/"
+      ]
+    },
+    {
+      "id": "carlina",
+      "title": "CARLINA",
+      "images": [
+        {
+          "src": "/assets/images/galleries/carlina/01.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Carlina-scaled.jpg",
+          "sha256": "06326e307881ce4da0eac7fc4c1c1d1305203e434061ae5162b446a732c358b1",
+          "bytes": 794781,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-01.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Carlina-835x467.jpg",
+          "thumbnailSha256": "93cb07ce086696729d23979cedc432910b7dc816f6174563376cb8aa247a04f8"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/02.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-1-1.png",
+          "sha256": "e67df892cfe676f69472b8c1bdab09dd8cfbacdb6bec5baa78b2009d03d27e1f",
+          "bytes": 1401583,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-02.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-1-1-835x467.png",
+          "thumbnailSha256": "8e2af4d3c50ea2ef15f18bdce60ef1e0000e7b4714930d451372381ab1a552a3"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/03.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-2-1.png",
+          "sha256": "a10446b36124f75fc545e12c8f3a23baf3926dc163066b81b824edac89dfc0e1",
+          "bytes": 1049903,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-03.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-2-1-835x467.png",
+          "thumbnailSha256": "ee874e9af4e3f3986bb9ac2701668e6c432a7245ebbce8f8fe69646b8526e9d6"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/04.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-3-1.png",
+          "sha256": "72b81324229a8f7ae604434b19eda9a0646a9bd74934493d5e482bca9ea40283",
+          "bytes": 1126349,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-04.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-3-1-835x467.png",
+          "thumbnailSha256": "82be8975252fbe00c856c3e154147a93198c205778c56f38dd069080342b6675"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/05.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-4-1.png",
+          "sha256": "199831be9735ba84bc57fed86ba5d5c112edea9ab1449831e2938165ae648509",
+          "bytes": 1387857,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-05.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-4-1-835x467.png",
+          "thumbnailSha256": "4fb0c8e82a1ef383c67568ad8c66264c4543c5e0e0f65c8ac817f121374b4bf0"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/06.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-5-1.png",
+          "sha256": "ea35a2115e6b750dd9b7b9056ff901524ed6dcedcc01167e5fff2f5189f6914a",
+          "bytes": 1497826,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-06.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-5-1-835x467.png",
+          "thumbnailSha256": "83320614ae3bbec29e9073df881f2a1604a4f2dbd961df78ea3629187807d6e0"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/07.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-6-1.png",
+          "sha256": "b54fc9ae2328e8e783d6d06469afb929e221d4b9d0b28ec21421e3b00548ce1d",
+          "bytes": 1088871,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-07.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-6-1-835x467.png",
+          "thumbnailSha256": "5ccb6321e774a74357d296c04b4f2a79c1e1a4c2cf54f34d2f8d89f57c1619e6"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/08.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-7-1.png",
+          "sha256": "35b04391360a2ad47d92716a086384ee15542b526d71bc7ad5eb719bf8729ea5",
+          "bytes": 1589480,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-08.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-7-1-835x467.png",
+          "thumbnailSha256": "51f85c81463f577ab2adc9bfb8cbe79631d918f0fd5383b686625d350ab4e9e2"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/09.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-8-1.png",
+          "sha256": "7545fb69fe65312e5de6a41a82306867939062779d1f83e65539dc8c9114cd2e",
+          "bytes": 1530740,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-09.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-8-1-835x467.png",
+          "thumbnailSha256": "7623260512ae2e1c530d22ff006566cd9ea394f63c8429bb9282467a8ab04340"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/10.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-9-1.png",
+          "sha256": "6e183b56b3546f32d94956e001144e9b18234a42bc30ff77853a321e0941fbdb",
+          "bytes": 1563636,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-10.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-9-1-835x467.png",
+          "thumbnailSha256": "54798ea75f5de1c75cc731f1127b18ac0573224140d70924b13204806ec79623"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/11.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-10-1.png",
+          "sha256": "c76937ff5466905d7f98c1e289b29a8fbf37166b714f6bc0fcce479bf5b9f506",
+          "bytes": 1309435,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-11.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-10-1-835x467.png",
+          "thumbnailSha256": "9cae4aad807952d020c8c8c19d46f8009b3fa1f098b0181756f2e00c3121d64a"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/12.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-11-1.png",
+          "sha256": "b9cefb24450c9fa9708b366938708ddf7be3684777c85cff1c9f8b0037882e4f",
+          "bytes": 1518294,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-12.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-11-1-835x467.png",
+          "thumbnailSha256": "2b6eeccc22169776f59f7569e8c6ce4f3a21cf95d8d024c5ec08eea44f27a2ac"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/13.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-12-1.png",
+          "sha256": "c92c542dbb2d06aa5be97569e22924feed35ea03b5220199b23716db9dd75f25",
+          "bytes": 1612677,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-13.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-12-1-835x467.png",
+          "thumbnailSha256": "6d16ff11d583b564a39bdce812d87fd563066ab4ae86ed6b7f4a0211e7a5f805"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/14.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-17.png",
+          "sha256": "13ccfb5a3cdc9ddfb8f56ea70ce3411b5abe7300d12bbd4e6f223e2babd3dccc",
+          "bytes": 1557360,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-14.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-17-835x467.png",
+          "thumbnailSha256": "3f205123f0b04f901795a6bde6b037c215aee0f4e839d4a53ac816adbafb1bbd"
+        },
+        {
+          "src": "/assets/images/galleries/carlina/15.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-18.png",
+          "sha256": "b9e9855ea1489a8bab47b62cfe079618744b7053c519e8ee5b1a07e53eba6f1c",
+          "bytes": 856990,
+          "thumbnail": "/assets/images/galleries/carlina/thumb-15.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-18-835x467.png",
+          "thumbnailSha256": "8e9f8d30bb73b670123b10e71dcffa878b0bdd34b3c5ec6c17b9f6f4272f0188"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/carlina/"
+      ]
+    },
+    {
+      "id": "loureira",
+      "title": "LOUREIRA",
+      "images": [
+        {
+          "src": "/assets/images/galleries/loureira/01.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Loureira-scaled.jpg",
+          "sha256": "1da98b48484af11d68c6eb398574c8b110a3fc9ec706af4abcf2d4607a3b6fc7",
+          "bytes": 619946,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-01.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Loureira-835x467.jpg",
+          "thumbnailSha256": "bde5b4110e478f8a1529b94ab52dd4ae74a546b943daacf8e0d11cd113ec9bc1"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/02.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-1.png",
+          "sha256": "c957aea1d051375d73febfaff5161a18a2483a17c262ac611ac2dcaeaad62c47",
+          "bytes": 1287188,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-02.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-1-835x467.png",
+          "thumbnailSha256": "ff42821a15a9073a73c35d4f9949736f540fed377479435f12c5b3d1edb971fa"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/03.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-2.png",
+          "sha256": "1c9882f969e1a2bcfd532d4e260bddaf72df8aa5b9ebdb1dc9ca642fed067bc3",
+          "bytes": 1671431,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-03.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-2-835x467.png",
+          "thumbnailSha256": "b46c06c827b3bc93d685066411c120f993a3a11271335060d90f5c2c31ec6c90"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/04.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-3.png",
+          "sha256": "e30d7dd9d1712dc8a306798f30677a9710ba3c2084cf54023cccddc3a8815340",
+          "bytes": 1134853,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-04.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-3-835x467.png",
+          "thumbnailSha256": "09b2f41bd4ea01e3fc08ad033a390cf00f0ce9e07e34d99a662382a754507692"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/05.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-4.png",
+          "sha256": "dab1f24f66be0798354e90a2a3c72c7059c4fe95e6f8e21e6eafe86a45f6d7db",
+          "bytes": 1351695,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-05.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-4-835x467.png",
+          "thumbnailSha256": "3f8e0e331569f67a5333d3e9ecdfc39ce6de42d7f2965ded705295d51af607ed"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/06.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-5.png",
+          "sha256": "46d80c93766d42752a9af275e9df6a229017efb8246fc5022c1bc16770bc76cc",
+          "bytes": 1363697,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-06.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-5-835x467.png",
+          "thumbnailSha256": "ce06d94c7ee79ecfb66328847c36ccd79ee34c398b6363c7d100cb27da2a8d33"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/07.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-6.png",
+          "sha256": "7f3741abce84798fa969da790a9e45f4fb66f2b9baf6f7860b7752632884610e",
+          "bytes": 1755090,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-07.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-6-835x467.png",
+          "thumbnailSha256": "cb1f61e520534d544b454ba28596e24d01462ed5b91792c00f6e8cf6d8fdb1c9"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/08.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-7.png",
+          "sha256": "7c36eabac129f72b84f76bfe4a45505237ef2c9f233b65aae6a5085c897ded5a",
+          "bytes": 1280014,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-08.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-7-835x467.png",
+          "thumbnailSha256": "818c9247985cacc292201beb777f3e1d6a1cefb570cb2ad13a30114ed62c862c"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/09.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-8.png",
+          "sha256": "77f45dbe842d18dbc9103ec189d406c830da77a27f0e999b50f0ebb59b1614ef",
+          "bytes": 1366902,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-09.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-8-835x467.png",
+          "thumbnailSha256": "a7b7c69c3ed7aba204614f1bfb8eea2e82541cf2d4e4047970c7f36f90b88710"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/10.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-9.png",
+          "sha256": "925ac564ffdbf272b0f2562d7745db8e587038c91917bdf164842eaaad47feb0",
+          "bytes": 1280498,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-10.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-9-835x467.png",
+          "thumbnailSha256": "49ef56401eb20d795308ae9431e7a78f057152f7ea0cfe0464935ed029a9cce5"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/11.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-10.png",
+          "sha256": "9f1c47d9d7ee71b8ebef37a7845e7b4b85dee2f83fd783386857e9492c589ff2",
+          "bytes": 1537775,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-11.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-10-835x467.png",
+          "thumbnailSha256": "b444951d1dae9320e098595394fa9f478b4ecdb9be3ddbe2118d12addb95b773"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/12.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-11.png",
+          "sha256": "af2baa946727782b45e7c22a5cc3907ed1e4b72969883cf81171ff4422376473",
+          "bytes": 1816705,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-12.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-11-835x467.png",
+          "thumbnailSha256": "c754bd967616a6b034f195e2b1b7040bb29cb27858582b58d615ae580ebfdd75"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/13.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-12.png",
+          "sha256": "135b44d7a8c891a25bb0a5cfc50939fb6a9b7ea854de6413de81ca5b67a4cd5c",
+          "bytes": 1439120,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-13.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-12-835x467.png",
+          "thumbnailSha256": "1f7be9f623b6c706859ac01d1d1d7f563013f591f5ee65163e8771774dafb4ba"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/14.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-13.png",
+          "sha256": "fbd3aba2bdfc07c0193957123128304ad68d3a1b62a4d727f774ab4835f7f982",
+          "bytes": 1884375,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-14.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-13-835x467.png",
+          "thumbnailSha256": "9929a680a8fd6b016e0ec4e94afedb863a4f908811ce8cddf6a879c720db0026"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/15.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-14.png",
+          "sha256": "d58f193928e273b6df49cdbdab7ae854b248d240998948262a218f3e04c42ef4",
+          "bytes": 1037656,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-15.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-14-835x467.png",
+          "thumbnailSha256": "68dea1a121a937187ebfd589c62ed2860770295e671a7fd4e764b37ccaed00fb"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/16.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-15.png",
+          "sha256": "3c39541d60e6f1fe3abc918dca52558f44107377ca44571b0e860e94b090c0fb",
+          "bytes": 1297079,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-16.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-15-835x467.png",
+          "thumbnailSha256": "f6c25b357d6b82bc0fe995ec26782e09ab8473806e524178b1fae96c226494b0"
+        },
+        {
+          "src": "/assets/images/galleries/loureira/17.png",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-16.png",
+          "sha256": "6873aa915388b1cbc354911c3ad43146c6e3f89848f51edfc4b53cb3d414738a",
+          "bytes": 1019172,
+          "thumbnail": "/assets/images/galleries/loureira/thumb-17.png",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/descarga-16-835x467.png",
+          "thumbnailSha256": "311b6f9f2f7a4986259eaea735f3ea4d97a0ab8768b882890e7a44a1cee97d1e"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/loureira/"
+      ]
+    },
+    {
+      "id": "gracciano",
+      "title": "GRACCIANO",
+      "images": [
+        {
+          "src": "/assets/images/galleries/gracciano/01.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Fachada.jpg",
+          "sha256": "99de30243b20ed1069932454faf790dfd4caffa2f3246b2e18f695c9152aac3f",
+          "bytes": 127130,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-01.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Fachada-768x467.jpg",
+          "thumbnailSha256": "a674426a1ada5f26daf7c37d1f4334a42b147eb202eb008109e077c24333e326"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/02.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/2f928407-3785-4d63-a069-db9fc1a01416.jpeg",
+          "sha256": "72a2c91fa24ebd830ef345a6d91e96a7b6b601e8f7a8d2b0c59370a68e3b9e44",
+          "bytes": 200807,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-02.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/2f928407-3785-4d63-a069-db9fc1a01416-835x467.jpeg",
+          "thumbnailSha256": "aa4a225eaef0b8fb21d39d5cac7b827d495d515cd5242ca0f78c8f573b4174c6"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/03.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/6deeabc8-12ca-4c14-b5d9-9ff66c58e991.jpeg",
+          "sha256": "3451142ca1055453e3ad98ce38dc071f51b6ade2e35c9106a2ba5719594be8ba",
+          "bytes": 127564,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-03.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/6deeabc8-12ca-4c14-b5d9-9ff66c58e991-835x467.jpeg",
+          "thumbnailSha256": "4d5010e56c66a3a51ecefcdc421596127df048df83c6ecf12bd002a9c93ed829"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/04.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/8a6f04df-bd48-4fbd-b30e-6bd0a9cd1a61.jpeg",
+          "sha256": "bdfaab166027b42b97c268ba86b90bcd6ed4b0a82795df2d5201f39752de7d4e",
+          "bytes": 131123,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-04.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/8a6f04df-bd48-4fbd-b30e-6bd0a9cd1a61-835x467.jpeg",
+          "thumbnailSha256": "f768a82b39a832db14a354513f2880da33d95c1e52d72ac15a9d31c1f15946ff"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/05.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/9e58ddf6-c636-43e8-9f25-edd4e442a317.jpeg",
+          "sha256": "f37539f6e125bfedc4f1d65bf2901cf7ec7cf88a89a08336c955f08ec5038df2",
+          "bytes": 206464,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-05.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/9e58ddf6-c636-43e8-9f25-edd4e442a317-835x467.jpeg",
+          "thumbnailSha256": "eac9cff341ea8e98da8765d10f955f0ee52ab0fd92ce0db5247490c71fa5e554"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/06.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/17a2c3dc-df15-4abc-b8bf-c8d3904df2d5.jpeg",
+          "sha256": "93e60f7eadc005fd9c80c86e01c6fd8e9b5a76a46c67ada18bfc9670ac7ac864",
+          "bytes": 136408,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-06.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/17a2c3dc-df15-4abc-b8bf-c8d3904df2d5-835x467.jpeg",
+          "thumbnailSha256": "0060200777fa5a61ab39d00bbd0d88f523cde01ea1a46a8d37f4e1adc00eba3c"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/07.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/046a97a6-189d-4f69-9399-206e37273073.jpeg",
+          "sha256": "aaa71c0ff61cf30ab68a7ef32acc9b83b0a12ba5f0182b52b1cb8a65217eb6b1",
+          "bytes": 170466,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-07.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/046a97a6-189d-4f69-9399-206e37273073-835x467.jpeg",
+          "thumbnailSha256": "1241340fcc563dd185e4e6eaad1fafc54d46e7e5d49ea6de496ed1a13e46ecda"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/08.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/88ff9681-790d-4333-8258-f37f3ad7744b.jpeg",
+          "sha256": "84fac5e6b0a50faad5c82fafe7d1788c5a25340d625f535c9f204128e54b59f4",
+          "bytes": 110354,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-08.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/88ff9681-790d-4333-8258-f37f3ad7744b-835x467.jpeg",
+          "thumbnailSha256": "6e434e10ac1a90b856aae593ef081fa31f2276dbdd65e691e95f419966b2fde6"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/09.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/738bf753-44b5-4b2f-a6ed-3810e5e03eaf.jpeg",
+          "sha256": "77995a7d83bdc925189fb7eb25a6be5c065da28ffdd68282bb391f8d4e84fd19",
+          "bytes": 109189,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-09.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/738bf753-44b5-4b2f-a6ed-3810e5e03eaf-835x467.jpeg",
+          "thumbnailSha256": "47c3ffa8ba802bfa97efd966b613ef8070c4036c9b8571dca04022194a7cce29"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/10.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/5649b553-eeb8-4478-a3c6-60364d4f93f7.jpeg",
+          "sha256": "d4685d28d4b4817bd146217dc0f789b3429a741604d0b7abfde17072361c1d18",
+          "bytes": 123680,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-10.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/5649b553-eeb8-4478-a3c6-60364d4f93f7-835x467.jpeg",
+          "thumbnailSha256": "1d870d5a75dc1562a1b2fceeb0ac2cc01ac15ab6ff75eb5e8d8bce80076d3bee"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/11.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/6574ce06-4fbc-4090-9838-ea29fe54e54b.jpeg",
+          "sha256": "9bbcfd0dc8901806c8cc8f055ac5cc0a5270fa43724725b4f494ed0081587a36",
+          "bytes": 169140,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-11.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/6574ce06-4fbc-4090-9838-ea29fe54e54b-835x467.jpeg",
+          "thumbnailSha256": "501778b011fae1b9bfad72d27535dffb9e4c5c1cbbeda184cc5a19bd6b13f8bc"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/12.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/69649b2c-326d-48b5-bd1d-2ced93b0f682.jpeg",
+          "sha256": "ed48b5a3957fd572f76c176afeef362c482c34f025fd2791275b239ca52c2d19",
+          "bytes": 125726,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-12.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/69649b2c-326d-48b5-bd1d-2ced93b0f682-835x467.jpeg",
+          "thumbnailSha256": "93421a62c39b792c380bb0534ef592f903cabe538f9b9cc0ccf0198dc298e04c"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/13.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/06628496-df06-45bc-9d45-3e1ce69169e9.jpeg",
+          "sha256": "b2ac6d7798a6c3864ae158e46da062f18c5cff0e5e36f97d3d34a9c6a68b7c57",
+          "bytes": 150353,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-13.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/06628496-df06-45bc-9d45-3e1ce69169e9-835x467.jpeg",
+          "thumbnailSha256": "16e526fdd430fa6d17454886196c3371e6711c5991397ef9a8fbe40d824f8e64"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/14.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/84642904-835f-45c0-a237-0c48ee648592.jpeg",
+          "sha256": "d9ae37cf4b982ab2a9acce516ae75eac6d5ca93810a2f2717f4bad8af6ccebc1",
+          "bytes": 281991,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-14.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/84642904-835f-45c0-a237-0c48ee648592-835x467.jpeg",
+          "thumbnailSha256": "9102148dc6e636622b7ee6ba730f2996e3172ddcd9731fcd0c6326770720ebbb"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/15.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/a9f3f035-a1d9-44ae-b8e6-36f2df087c79.jpeg",
+          "sha256": "3e5704dde918ea7a46ee08b8ebe39758d22e2ccc167b28ccd611561bf072f986",
+          "bytes": 144336,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-15.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/a9f3f035-a1d9-44ae-b8e6-36f2df087c79-835x467.jpeg",
+          "thumbnailSha256": "65e75912bf4585856aa1eb7e53df7a14ab01a48ae8a258c1519942e9588340d5"
+        },
+        {
+          "src": "/assets/images/galleries/gracciano/16.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/d9bae19b-ca0b-47b3-8433-38a85115d9b8.jpeg",
+          "sha256": "11229c0c0e301b36863d6fafaf485c906bdbfef7592f546e4e1f70a61b3b1d99",
+          "bytes": 169494,
+          "thumbnail": "/assets/images/galleries/gracciano/thumb-16.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/d9bae19b-ca0b-47b3-8433-38a85115d9b8-835x467.jpeg",
+          "thumbnailSha256": "d331ee78683fef50ee16f479e5b8280581b3ba8f26769c0415b4b2e51bc991ec"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/gracciano/"
+      ]
+    },
+    {
+      "id": "areni",
+      "title": "Areni",
+      "images": [
+        {
+          "src": "/assets/images/galleries/areni/01.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Areni_1-scaled.jpg",
+          "sha256": "9a0a4898d8ed62334f009f1e9bc137ff26b6159feba6e695ff5e26e4f91f5780",
+          "bytes": 838276,
+          "thumbnail": "/assets/images/galleries/areni/thumb-01.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2024/04/Areni_1-835x467.jpg",
+          "thumbnailSha256": "c032ba280cbd19576bface6c4faf3125898127f6289f2d8a6d1cbc98f00a9c73"
+        },
+        {
+          "src": "/assets/images/galleries/areni/02.jpg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/ARENI.jpg",
+          "sha256": "8aaab06d50dc5b51ea0dcce31af6339d0474ce1edd1a40054f2638860e71a0fc",
+          "bytes": 117280,
+          "thumbnail": "/assets/images/galleries/areni/thumb-02.jpg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/ARENI-835x467.jpg",
+          "thumbnailSha256": "270e75ce1b6f79c8a09b03f13d829b5c1b9f720b15c07814b8697a7fe65f10af"
+        },
+        {
+          "src": "/assets/images/galleries/areni/03.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/2cb6dd21-3ecf-4962-9dc3-e7bc5606c326.jpeg",
+          "sha256": "07ccd9e935835d902a802e93522db3154c015d417b7006cc9acc280bf85494b4",
+          "bytes": 365881,
+          "thumbnail": "/assets/images/galleries/areni/thumb-03.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/2cb6dd21-3ecf-4962-9dc3-e7bc5606c326-835x467.jpeg",
+          "thumbnailSha256": "a9309eb9f20c5463997d86c0ec85f92e71d617d8997ba45978a51a70833ad56a"
+        },
+        {
+          "src": "/assets/images/galleries/areni/04.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/9e96bd76-3d9a-4520-a1fb-844c41c91196.jpeg",
+          "sha256": "f1ac93bf25985d0d6784cc541ba928171b4bffb5850a1fa3f4495f7eb04d59ad",
+          "bytes": 146675,
+          "thumbnail": "/assets/images/galleries/areni/thumb-04.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/9e96bd76-3d9a-4520-a1fb-844c41c91196-835x467.jpeg",
+          "thumbnailSha256": "166598bcca4f98464559a81f2bbb12d0cb90ac5c54aa11a45ad30b45d6aa3ceb"
+        },
+        {
+          "src": "/assets/images/galleries/areni/05.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/35acdf8d-0118-4f56-8a8c-a46a3be7d0e0.jpeg",
+          "sha256": "74950264aa9e249ee2365b38d814587f6f1f850e0123ee3b4bb88518a8cef345",
+          "bytes": 238448,
+          "thumbnail": "/assets/images/galleries/areni/thumb-05.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/35acdf8d-0118-4f56-8a8c-a46a3be7d0e0-835x467.jpeg",
+          "thumbnailSha256": "6f775efdb8467271429213b0f4d526342a6defb83f6d4c4c5f880f6187616fdd"
+        },
+        {
+          "src": "/assets/images/galleries/areni/06.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/56c62271-1d7c-445f-9e4b-1764a72ed1ba.jpeg",
+          "sha256": "1a44538a4613b7f84b7e0909b5ccc293049bc0988c78dd109d944c7287a76faf",
+          "bytes": 84786,
+          "thumbnail": "/assets/images/galleries/areni/thumb-06.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/56c62271-1d7c-445f-9e4b-1764a72ed1ba-835x467.jpeg",
+          "thumbnailSha256": "ee14aec79081ab497617f7e4a532132504533f91284ca2288105d916c0337681"
+        },
+        {
+          "src": "/assets/images/galleries/areni/07.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/72404512-0dfc-4c10-90ed-7f1294ddac4e.jpeg",
+          "sha256": "4568d1a01d13661329433089eac252b476e2082c689ed987af1bc2403fd76f37",
+          "bytes": 196071,
+          "thumbnail": "/assets/images/galleries/areni/thumb-07.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/72404512-0dfc-4c10-90ed-7f1294ddac4e-835x467.jpeg",
+          "thumbnailSha256": "63311287129afd2b97662a5072f23b7d64a2b99d50db0aabf419285e62019eae"
+        },
+        {
+          "src": "/assets/images/galleries/areni/08.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/b693b90b-d960-4362-a01e-fc016e235745.jpeg",
+          "sha256": "e860857dd78a3b8f2c7f6c9640bdb879c1d5104af64cfdf557f90d488cd042f5",
+          "bytes": 146944,
+          "thumbnail": "/assets/images/galleries/areni/thumb-08.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/b693b90b-d960-4362-a01e-fc016e235745-835x467.jpeg",
+          "thumbnailSha256": "298526cc53ad3dafdfc77cffcb5fb48e18fe585f763dabfea20bd1f5a3961e99"
+        },
+        {
+          "src": "/assets/images/galleries/areni/09.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/c869f493-710e-43b1-bea6-06785e9679af.jpeg",
+          "sha256": "46656099b28d2103f71b3631e47b756314d57619e300a371b90d0d997cb60572",
+          "bytes": 132914,
+          "thumbnail": "/assets/images/galleries/areni/thumb-09.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/c869f493-710e-43b1-bea6-06785e9679af-835x467.jpeg",
+          "thumbnailSha256": "0a532c14536cc24e2f280e7c2ef58ee080d6f4009ccf406fd35296a9e4097838"
+        },
+        {
+          "src": "/assets/images/galleries/areni/10.jpeg",
+          "source": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/d0bde130-f455-4920-9bd3-3772b90ad182.jpeg",
+          "sha256": "ee3e227a5702ffc26c452567955204916400ff352ea39a5f8889ae47190dc0de",
+          "bytes": 155432,
+          "thumbnail": "/assets/images/galleries/areni/thumb-10.jpeg",
+          "thumbnailSource": "https://bienesraicesalvarado.com.mx/wp-content/uploads/2014/05/d0bde130-f455-4920-9bd3-3772b90ad182-835x467.jpeg",
+          "thumbnailSha256": "8f8dc3016e606f045152d7b88ca19d21864bbf60329e75becfaf275d21e54336"
+        }
+      ],
+      "sources": [
+        "https://bienesraicesalvarado.com.mx/propiedad/areni/"
+      ]
+    },
+    {
+      "id": "areni-3r",
+      "title": "areni-3r",
+      "sources": [
+        "https://qavalta.com/property/areni-3r-oporto/"
+      ],
+      "images": [
+        {
+          "src": "/assets/images/galleries/areni-3r/01.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/09/portadas2da_Areni3r.webp",
+          "sha256": "46e4058b165c092e7495ac144b75e0bb583bd32d8891aa6dffc0de74c26e0010",
+          "bytes": 533404
+        },
+        {
+          "src": "/assets/images/galleries/areni-3r/02.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/09/Areni3rwebp-01-1.webp",
+          "sha256": "969e1e773dab0193f147fd62c5d2580b994c5141a1de7bfd0e855009ac5f3ec6",
+          "bytes": 128006
+        },
+        {
+          "src": "/assets/images/galleries/areni-3r/03.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/09/Areni3rwebp-02-1.webp",
+          "sha256": "715a214477b1481214458e380e1191385f3f2e52db22f6760802a80470c794f9",
+          "bytes": 146950
+        },
+        {
+          "src": "/assets/images/galleries/areni-3r/04.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/09/Areni3rwebp-03-1.webp",
+          "sha256": "d11f635de4332cba437f16bbd94659f785a0346d7077ab7957dcbf5707ec596d",
+          "bytes": 81724
+        }
+      ]
+    },
+    {
+      "id": "castella",
+      "title": "castella",
+      "sources": [
+        "https://qavalta.com/property/castella-ardenza/"
+      ],
+      "images": [
+        {
+          "src": "/assets/images/galleries/castella/01.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/F-CASTELLA.webp",
+          "sha256": "921658bddda15a8f5d808e2d9889ec4d9e8a12cbe3423c847c3e798aed743a79",
+          "bytes": 251238
+        },
+        {
+          "src": "/assets/images/galleries/castella/02.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/castella-3.webp",
+          "sha256": "6ee42d58e6f92cd6d95df6bb31de9db423d262e8d1258a06d7c611943990b3ac",
+          "bytes": 139580
+        },
+        {
+          "src": "/assets/images/galleries/castella/03.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/CASTELLA-2.webp",
+          "sha256": "3324200458164c54631374a9a1c2c62c99aa595fee4d3e9a981bcd84da3222a4",
+          "bytes": 281628
+        },
+        {
+          "src": "/assets/images/galleries/castella/04.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/CASTELLA-1.webp",
+          "sha256": "213adf22dbf2ee8239be19d9a1b548e30d43aea5b5fa67987c86e2068b2ce5fb",
+          "bytes": 42490
+        }
+      ]
+    },
+    {
+      "id": "montello",
+      "title": "montello",
+      "sources": [
+        "https://qavalta.com/property/montello-oporto/"
+      ],
+      "images": [
+        {
+          "src": "/assets/images/galleries/montello/01.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/F-MONTELLO.webp",
+          "sha256": "c2fe9be0d1184c50aa44a649aec72fa7ed3ac83bf0d0b12c73824b18482fe348",
+          "bytes": 195130
+        },
+        {
+          "src": "/assets/images/galleries/montello/02.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/MONTELLO-2.webp",
+          "sha256": "2c6433d7bbc8d3670c620c017bb261dd9a036c12ba3af1f20f011b5e77b915d5",
+          "bytes": 53742
+        },
+        {
+          "src": "/assets/images/galleries/montello/03.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/MONTELLO-1.webp",
+          "sha256": "bba78e7260831f846ad9854fd0d008d4ec6867da29ca644d3db1317003a1f119",
+          "bytes": 145248
+        },
+        {
+          "src": "/assets/images/galleries/montello/04.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/MONTELLO-3.webp",
+          "sha256": "baee7ae17d5161f08beb734dda7456a091c46362c6f53b3154e2541885e47fed",
+          "bytes": 37754
+        },
+        {
+          "src": "/assets/images/galleries/montello/05.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/04/PB-MOTELLO.webp",
+          "sha256": "43e274060699d4c624041b6e2e2220a05b6341b19eb992c8eafd2837c9497db2",
+          "bytes": 429856
+        }
+      ]
+    },
+    {
+      "id": "nebbiolo",
+      "title": "nebbiolo",
+      "sources": [
+        "https://qavalta.com/vittoria/"
+      ],
+      "images": [
+        {
+          "src": "/assets/images/galleries/nebbiolo/01.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/10/vittoria_nebbiolo_fachada.webp",
+          "sha256": "82f0ff4062069e10f71c3eca3702d110e4cfd7c408568cbb4a32579fa1eff771",
+          "bytes": 4316718
+        },
+        {
+          "src": "/assets/images/galleries/nebbiolo/02.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/10/vittoria_nebbiolo_interior_sala.webp",
+          "sha256": "fb239d2c3e6696a4559e4551546032f458650ef6f0210168137f8c25ec03304a",
+          "bytes": 3324058
+        },
+        {
+          "src": "/assets/images/galleries/nebbiolo/03.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/10/vittoria_nebbiolo_interior_recamara_secundaria.webp",
+          "sha256": "020dc594ea3e357ed97c06e4deab9b68c2848659ca85ae58aefb026d8fb7a4a7",
+          "bytes": 2902714
+        },
+        {
+          "src": "/assets/images/galleries/nebbiolo/04.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/10/vittoria_nebbiolo_interior_recamara_principal.webp",
+          "sha256": "8d6d39962c237c93e200418cbef6b17152c99629239a2ef34bc2ff8d76a4cb55",
+          "bytes": 3518518
+        },
+        {
+          "src": "/assets/images/galleries/nebbiolo/05.webp",
+          "source": "https://qavalta.com/wp-content/uploads/2026/10/vittoria_nebbiolo_interior_cocina.webp",
+          "sha256": "ddd9b7bdc453d559e5c42c2460b9adf323c9c76a65443d19964a7b4970e8d33d",
+          "bytes": 3682750
+        }
+      ]
+    }
+  ]
+}

@@ -161,6 +161,10 @@ function getProtoGallery(p) {
   return [...new Set(list)];
 }
 
+function getProtoThumbnail(p, src) {
+  return p.galleryThumbs?.[src] || src;
+}
+
 function showToast(msg, { syncSuccess = false } = {}) {
   const t = $('toast');
   t.textContent = msg;

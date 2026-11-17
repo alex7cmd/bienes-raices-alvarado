@@ -6,6 +6,7 @@ const multer = require('multer');
 const { ensureDatabase, DB_PATH } = require('./data/seed');
 const { DATA_DIR, UPLOADS_DIR } = require('./data/storage');
 const { createSessionStore } = require('./data/sessions');
+const { withPrototypeGallery } = require('./data/galleries');
 
 ensureDatabase();
 
@@ -326,7 +327,7 @@ app.get('/api/public/site', (req, res) => {
   res.json({
     site: db.site,
     developments: db.developments,
-    prototypes: db.prototypes
+    prototypes: db.prototypes.map(withPrototypeGallery)
   });
 });
 
@@ -369,7 +370,7 @@ app.get('/api/admin/lots', requireAdmin, (req, res) => {
   }
   res.json({
     lots: db.lots,
-    prototypes: db.prototypes,
+    prototypes: db.prototypes.map(withPrototypeGallery),
     developments: db.developments,
     counts
   });
@@ -414,7 +415,7 @@ app.patch('/api/admin/prototypes/:id', requireAdmin, (req, res) => {
   }
 
   writeDB(db);
-  res.json({ ok: true, prototype: proto });
+  res.json({ ok: true, prototype: withPrototypeGallery(proto) });
 });
 
 app.patch('/api/admin/developments/:id', requireAdmin, (req, res) => {

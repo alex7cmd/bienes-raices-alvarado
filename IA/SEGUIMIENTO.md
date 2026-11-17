@@ -174,3 +174,6 @@ El fondo del login es azul fijo; el texto del botón heredaba el azul del tema c
 
 ## 17 noviembre: fichas horizontales y controles
 Se publica un prototipo por fila, vista previa izquierda y campos derecha, apilado en celular. Instalar app precede al control de tema en el administrador, como en el público. Datos del catálogo preservados.
+
+## Galerías por prototipo · 17 noviembre
+Se integran 162 imágenes originales con procedencia y SHA256 en data/prototype-galleries.json: 12 propiedades del sitio anterior, complementos oficiales para Arveto/Belat/Moscato y galerías oficiales Areni3R/Castella/Montello/Nebbiolo. Los dos Flat conservan sus galerías existentes (3 cada uno). 130 vistas pequeñas se descargan de URLs de miniaturas realmente publicadas. data/galleries.js enriquece las respuestas sin migrar ni sobrescribir la base persistente: respeta precios, asociaciones, imágenes personalizadas y galerías previas; reemplaza únicamente las portadas genéricas iniciales por la portada verificada. GET público/administrador y respuesta de guardado comparten el enriquecimiento. Galería integrada/modal/pantalla completa carga miniaturas lazy y originales al seleccionarlos. 45 pruebas pasan, incluyen integridad de archivos y preservación de cambios del CMS.
