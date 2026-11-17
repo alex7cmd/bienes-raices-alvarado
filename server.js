@@ -478,12 +478,12 @@ app.use((err, req, res, next) => {
 
 // Explicit entry route also works on hosts that do not resolve named SPA wildcards.
 app.get(['/admin', '/admin/'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile('index.html', { root: path.join(__dirname, 'public'), dotfiles: 'deny' });
 });
 
 // Fallback to index.html for SPA routes
 app.get('/{*splat}', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile('index.html', { root: path.join(__dirname, 'public'), dotfiles: 'deny' });
 });
 
 if (require.main === module) {

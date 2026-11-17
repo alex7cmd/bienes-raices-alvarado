@@ -13,7 +13,7 @@ async function request(route, { method = 'GET', body, authenticated = false, hea
   return originalFetch(base + route, { method, headers: { ...(body !== undefined ? { 'Content-Type': 'application/json' } : {}), ...(authenticated ? { Cookie: cookie } : {}), ...headers }, body: body !== undefined ? JSON.stringify(body) : undefined });
 }
 before(async () => {
-  fixture = fs.mkdtempSync(path.join(os.tmpdir(), 'alvarado-test-'));
+  fixture = fs.mkdtempSync(path.join(os.tmpdir(), '.alvarado-test-'));
   fs.copyFileSync(path.join(project, 'server.js'), path.join(fixture, 'server.js'));
   fs.cpSync(path.join(project, 'data'), path.join(fixture, 'data'), { recursive: true });
   fs.mkdirSync(path.join(fixture, 'public'));

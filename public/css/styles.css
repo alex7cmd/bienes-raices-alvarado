@@ -1650,3 +1650,18 @@ html[data-theme="dark"] .panel-dev-logo { filter: brightness(0) invert(1); }
 .cms-topbar { position: sticky; z-index: 50; }
 
 .cms-topbar > div:last-child { margin-left: auto; max-width: 100%; justify-content: flex-end; }
+
+/* Larger badges align to the center of the whole development card. */
+.unified-dev-tab { position: relative; padding: 14px 76px 14px 14px; min-height: 88px; justify-content: center; }
+.unified-dev-tab-top { display: block; }
+.unified-dev-tab-count { position: absolute; top: 50%; right: 14px; transform: translateY(-50%); width: 48px; height: 48px; font-size: 22px; }
+.proto-panel-stage { flex-shrink: 0; }
+.proto-panel-map { display: flex; flex-direction: column; flex: 1 0 210px; }
+.proto-panel-map-head { flex-shrink: 0; flex-wrap: wrap; gap: 8px; }
+.proto-panel-map iframe { flex: 1; min-height: 170px; height: 100%; }
+
+@media (max-width: 1200px) and (min-width: 993px) { .unified-dev-tabs { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 600px) {
+  .unified-dev-tab { padding: 12px 62px 12px 10px; min-height: 100px; }
+  .unified-dev-tab-count { width: 44px; height: 44px; right: 10px; font-size: 20px; }
+}

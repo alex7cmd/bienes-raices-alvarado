@@ -98,3 +98,8 @@ También se eliminó la pausa de logos de financiamiento al pasar el mouse y se 
 - Validación: pruebas de ruta/cache, caducidad, fotografías separadas, sincronización, persistencia y revisión visual de escritorio/móvil. La publicación se comprueba por HTTPS tras el push.
 
 El cierre de sesión se movió a un menú del icono de usuario en la esquina superior derecha. Admite cierre con Escape, clic fuera y navegación por teclado.
+
+
+## Compatibilidad de hosting y proporciones — 1.10.5
+Se reprodujo el404 de /admin usando una carpeta de prueba oculta como .nodeapp del servidor. sendFile con ruta absoluta rechazaba ese directorio; ahora sirve index.html relativo a la raíz pública, manteniendo denegado el acceso a archivos ocultos. La prueba pasa en esa misma estructura.
+Indicadores de prototipos48×48px y número22px, centrados verticalmente en la tarjeta. El mapa de ubicación ocupa la altura restante de la columna para alinear su borde con las características del prototipo.
