@@ -511,8 +511,13 @@ function renderDevelopmentVideos(development) {
       const id = video.url.split('/').pop();
       return `<article class="qavalta-video-card">
         <div class="qavalta-video-player"><iframe title="${escapeHtml(video.title)} · Itzel Alva"
-          src="https://www.tiktok.com/player/v1/${id}?embed_from=oembed&amp;autoplay=0&amp;loop=1&amp;description=0&amp;music_info=0&amp;rel=0"
-          loading="lazy" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+          src="https://www.tiktok.com/player/v1/${id}?embed_from=webapp_share&amp;music_info=1&amp;description=1&amp;autoplay=1&amp;muted=1"
+          loading="lazy" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+          <div class="qavalta-video-fallback hidden" role="status">
+            <p>Este recorrido está disponible en TikTok.</p>
+            <a href="${escapeHtml(video.url)}" target="_blank" rel="noopener noreferrer">Abrir video ↗</a>
+          </div>
+        </div>
         <div class="qavalta-video-info"><h5>${escapeHtml(video.title)}</h5>
           ${video.sharedModel ? '<p>Modelo disponible en esta privada y en otros desarrollos Qavalta.</p>' : ''}
           <a href="${escapeHtml(video.url)}" target="_blank" rel="noopener noreferrer">Ver en TikTok ↗</a>
@@ -520,6 +525,33 @@ function renderDevelopmentVideos(development) {
       </article>`;
     }).join('')}</div>
   </section>`;
+}
+
+function showVideoFallback(frame) {
+  if (!frame.isConnected) return;
+  frame.classList.add('hidden');
+  frame.closest('.qavalta-video-player')?.querySelector('.qavalta-video-fallback')?.classList.remove('hidden');
+}
+
+function initDevelopmentVideoPlayers() {
+  document.querySelectorAll('.qavalta-videos iframe').forEach(frame => {
+    frame.addEventListener('load', () => {
+      setTimeout(() => { if (frame.dataset.playerReady !== '1') showVideoFallback(frame); }, 12000);
+    });
+  });
+}
+
+function handleDevelopmentVideoMessage(event) {
+  if (event.origin !== 'https://www.tiktok.com') return;
+  const frame = Array.from(document.querySelectorAll('.qavalta-videos iframe')).find(frame => frame.contentWindow === event.source);
+  if (!frame) return;
+  let message = event.data;
+  if (typeof message === 'string') { try { message = JSON.parse(message); } catch { return; } }
+  if (!message || message['x-tiktok-player'] !== true) return;
+  if (message.type === 'onPlayerReady') frame.dataset.playerReady = '1';
+  if (message.type === 'onPlayerError' && message.value?.errorCode !== 3002) showVideoFallback(frame);
+  // End on the selected Qavalta post instead of showing unrelated recommendations.
+  if (message.type === 'onStateChange' && message.value === 0) showVideoFallback(frame);
 }
 
 function renderDevelopmentAccordion(openDevId = 'sorento') {
@@ -639,6 +671,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
       </div>
     </div>
   `;
+  initDevelopmentVideoPlayers();
 }
 
 function openPrototypeModal(protoId, initialIdx = 0) {
@@ -1716,6 +1749,7 @@ function closeCmsUserMenu() {
 }
 
 function bindEvents() {
+  window.addEventListener('message', handleDevelopmentVideoMessage);
   const accountButton = $('cmsUserMenuBtn');
   const accountMenu = $('cmsUserMenu');
   const openAccountMenu = () => {

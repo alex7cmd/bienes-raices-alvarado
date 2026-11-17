@@ -155,3 +155,27 @@ test('el reproductor rechaza URLs ajenas a los videos de Itzel y escapa títulos
   assert.ok(!html.includes('<img src=x'));
   assert.ok(!html.includes('evil.example'));
 });
+
+test('solo mensajes del reproductor propio pueden cambiar su estado o mostrar la alternativa', () => {
+  const { context, run } = setup();
+  let hidden = false, fallbackShown = false;
+  const source = {};
+  const frame = { contentWindow: source, dataset: {}, isConnected: true, classList: { add: () => { hidden = true; } }, closest: () => ({ querySelector: () => ({ classList: { remove: () => { fallbackShown = true; } } }) }) };
+  context.document.querySelectorAll = () => [frame];
+  context.event = { origin: 'https://evil.example', source, data: { 'x-tiktok-player': true, type: 'onPlayerError' } };
+  run('handleDevelopmentVideoMessage(event)');
+  assert.equal(hidden, false);
+  context.event.origin = 'https://www.tiktok.com'; context.event.source = {};
+  run('handleDevelopmentVideoMessage(event)');
+  assert.equal(hidden, false);
+  context.event.source = source;
+  context.event.data = { 'x-tiktok-player': true, type: 'onPlayerReady' };
+  run('handleDevelopmentVideoMessage(event)');
+  assert.equal(frame.dataset.playerReady, '1');
+  context.event.data = { 'x-tiktok-player': true, type: 'onPlayerError', value: { errorCode: 3002 } };
+  run('handleDevelopmentVideoMessage(event)');
+  assert.equal(hidden, false);
+  context.event.data.value.errorCode = 2001;
+  run('handleDevelopmentVideoMessage(event)');
+  assert.equal(hidden, true); assert.equal(fallbackShown, true);
+});
