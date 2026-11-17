@@ -180,3 +180,18 @@ test('solo mensajes del reproductor propio pueden cambiar su estado o mostrar la
   run('handleDevelopmentVideoMessage(event)');
   assert.equal(hidden, true); assert.equal(fallbackShown, true);
 });
+
+
+test('el zoom permite800%, limita excesos y conserva el restablecimiento del plano', () => {
+  const { run, element } = setup();
+  assert.equal(run('limitMapZoom(20)'), 8);
+  assert.equal(run('limitMapZoom(5)'), 5);
+  assert.equal(run('limitMapZoom(-1)'), 0.6);
+  assert.equal(run('limitMapZoom(0.5, 1)'), 1);
+  run('state.zoom = limitMapZoom(12); state.panX = 25; state.panY = -20; applyTransform()');
+  assert.equal(element('zoomPercentLabel').textContent, '800%');
+  assert.equal(element('mapSvg').style.transform, 'translate(25px, -20px) scale(8)');
+  run('resetZoom()');
+  assert.equal(element('zoomPercentLabel').textContent, '100%');
+  assert.equal(element('mapSvg').style.transform, 'translate(0px, 0px) scale(1)');
+});

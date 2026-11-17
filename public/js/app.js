@@ -1506,6 +1506,10 @@ function renderSelectedLotDetail() {
 }
 
 // --- ZOOM & PAN ---
+function limitMapZoom(value, minimum = 0.6) {
+  return Math.min(8, Math.max(minimum, value));
+}
+
 function applyTransform() {
   $('mapSvg').style.transform = `translate(${state.panX}px, ${state.panY}px) scale(${state.zoom})`;
   $('zoomPercentLabel').textContent = `${Math.round(state.zoom * 100)}%`;
@@ -2023,7 +2027,7 @@ function bindEvents() {
       let px = Number(wrap.dataset.panX || 0);
       let py = Number(wrap.dataset.panY || 0);
       const act = zoomBtn.dataset.iz;
-      if (act === 'in') sc = Math.min(2.6, +(sc + 0.35).toFixed(2));
+      if (act === 'in') sc = limitMapZoom(+(sc + 0.35).toFixed(2), 1);
       else if (act === 'out') sc = Math.max(1, +(sc - 0.35).toFixed(2));
       else { sc = 1; px = 0; py = 0; }
       if (sc === 1) { px = 0; py = 0; }
@@ -2230,7 +2234,7 @@ function bindEvents() {
     });
   });
 
-  $('zoomInBtn').addEventListener('click', () => { state.zoom = Math.min(3, +(state.zoom + 0.25).toFixed(2)); applyTransform(); });
+  $('zoomInBtn').addEventListener('click', () => { state.zoom = limitMapZoom(+(state.zoom + 0.25).toFixed(2)); applyTransform(); });
   $('zoomOutBtn').addEventListener('click', () => { state.zoom = Math.max(0.6, +(state.zoom - 0.25).toFixed(2)); applyTransform(); });
   $('zoomResetBtn').addEventListener('click', resetZoom);
 
@@ -2238,7 +2242,7 @@ function bindEvents() {
   vp.addEventListener('wheel', (e) => {
     e.preventDefault();
     const delta = e.deltaY < 0 ? 0.15 : -0.15;
-    state.zoom = Math.min(3, Math.max(0.6, +(state.zoom + delta).toFixed(2)));
+    state.zoom = limitMapZoom(+(state.zoom + delta).toFixed(2));
     applyTransform();
   }, { passive: false });
 

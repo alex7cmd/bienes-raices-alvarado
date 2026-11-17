@@ -151,3 +151,8 @@ Indicadores de prototipos48×48px y número22px, centrados verticalmente en la t
 - Se conservan las rutas ya comprobadas y el tamaño aumentado15%. Torres muestra planos interiores de departamentos, sin calles ni vehículos.
 
 - Petición adicional: sustituir el gris de No disponible por naranja, como en el plano original. Se aplica al relleno y trazo SVG en todos los planos, y a su leyenda e insignia de estado. No cambia estados ni asignaciones.
+
+
+## Ampliación de zoom
+- Máximo800% para plano integrado, botones de pantalla completa y rueda del ratón. Restablecer conserva100%.
+- El plano es híbrido: polígonos y trazos de lotes y vehículos enSVG; imagenraster para fondo, números, calles y vegetación. El zoom adicional no convierte esa imagen en vectores ni aumenta su resolución.
