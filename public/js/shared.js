@@ -14,6 +14,7 @@ const state = {
   selectedLotId: null,
   mapProtoFilter: 'all',
   mapDevSlug: 'sorento',
+  publicDevSlug: 'sorento',
   mapStatusFilter: 'all',
   devMapsCache: {},
   heroSlideTimer: null,
@@ -156,7 +157,33 @@ const DEV_DETAILS = {
   }
 };
 
+function getPrototypeForDevelopment(prototype, slug = state.publicDevSlug) {
+  if (!prototype) return null;
+  const media = prototype.mediaByDevelopment?.[slug];
+  return {
+    ...prototype,
+    salesStatus: prototype.availabilityByDevelopment?.[slug] || 'available',
+    ...(media?.pending ? { mediaPending: true, image: '', gallery: [], galleryThumbs: {}, video: '' } : {})
+  };
+}
+
+function getDevelopmentPrototypes(slug) {
+  const development = state.developments.find(d => d.id === slug);
+  const order = development?.prototypeOrder;
+  const prototypes = state.prototypes.filter(p => p.developments?.includes(slug)).map(p => getPrototypeForDevelopment(p, slug));
+  return Array.isArray(order) ? prototypes.sort((a,b) => order.indexOf(a.id) - order.indexOf(b.id)) : prototypes;
+}
+
+function renderSoldOutBadge(p) {
+  return p.salesStatus === 'sold-out' ? '<span class="prototype-sold-out">Agotado</span>' : '';
+}
+
+function renderPendingPrototypeMedia() {
+  return '<div class="prototype-media-pending"><strong>Fotografías próximamente</strong><span>Ruche · Montalese</span></div>';
+}
+
 function getProtoGallery(p) {
+  if (p.mediaPending) return [];
   const list = [p.image, ...(Array.isArray(p.gallery) ? p.gallery : [])].filter(Boolean);
   return [...new Set(list)];
 }
@@ -253,7 +280,7 @@ function resolveLotPrototype(lot, slug) {
   if (!lot.pr) return null;
   const pool = getDevMapPrototypes(slug);
   const exact = [...pool, ...state.prototypes].find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase());
-  return exact || { id: String(lot.pr).toLowerCase().replace(/\s+/g, '-'), name: lot.pr, price: Number(lot.pp ?? lot.p) || 0, image: '' };
+  return (exact ? getPrototypeForDevelopment(exact, slug) : null) || { id: String(lot.pr).toLowerCase().replace(/\s+/g, '-'), name: lot.pr, price: Number(lot.pp ?? lot.p) || 0, image: '' };
 }
 
 function getMappedDevPrototypes(mapData) {
@@ -272,6 +299,7 @@ async function fetchDevMapData(slug, forceRefresh = false) {
   if (devMapPending.has(slug)) return devMapPending.get(slug);
   const pending = api(`/api/public/qavalta-map/${encodeURIComponent(slug)}${forceRefresh ? '?refresh=1' : ''}`).then(data => {
     state.devMapsCache[slug] = data;
+    updateInventorySyncLabels(slug, data);
     devMapFetchedAt.set(slug, Date.now());
     return data;
   }).finally(() => devMapPending.delete(slug));
@@ -467,13 +495,34 @@ function buildMapLifeOverlay(mapData) {
 
 const HD_MAP_BACKGROUNDS = {"sorento": "/assets/maps/hd/sorento.webp", "oporto": "/assets/maps/hd/oporto.webp", "ardenza": "/assets/maps/hd/ardenza.webp", "montalese": "/assets/maps/hd/montalese.webp", "vittoria": "/assets/maps/hd/vittoria.webp"};
 let mapRenderSequence = 0;
-function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all', protoFilter = 'all', floorId = null } = {}) {
+function buildInventoryLotMarkup(mapData, activeLots, { selectedLotId = null, statusFilter = 'all', protoFilter = 'all' } = {}) {
   const colors = {
     disponible: { fill: 'rgba(16, 185, 129, 0.52)', stroke: '#047857' },
     reservado: { fill: 'rgba(245, 158, 11, 0.58)', stroke: '#b45309' },
     vendido: { fill: 'rgba(59, 130, 246, 0.52)', stroke: '#1d4ed8' },
     'no-disponible': { fill: 'rgba(255, 152, 0, 0.50)', stroke: '#ea580c' }
   };
+  const sw = mapData.isTowerFloors ? 12 : 9;
+  const swSel = mapData.isTowerFloors ? 30 : 24;
+
+  return activeLots.map(l => {
+    const stKey = normalizeStatus(l.s);
+    const st = colors[stKey] || colors['no-disponible'];
+    const isSel = selectedLotId === l.id;
+    const lotProto = resolveLotPrototype(l, mapData.slug);
+    const dimmedStatus = statusFilter !== 'all' && stKey !== normalizeStatus(statusFilter);
+    const dimmedProto = protoFilter !== 'all' && (!lotProto || lotProto.id !== protoFilter);
+    const dimmed = dimmedStatus || dimmedProto;
+    const op = dimmed ? '0.14' : '1';
+    const attrs = `class="qmap-lot ${isSel ? 'selected' : ''}" data-lot="${escapeHtml(l.id)}" fill="${st.fill}" stroke="${isSel ? '#ffffff' : st.stroke}" stroke-width="${isSel ? swSel : sw}" opacity="${op}"`;
+    return l.t === 'g'
+      ? `<polygon points="${escapeHtml(l.d)}" ${attrs} />`
+      : `<path d="${escapeHtml(l.d)}" ${attrs} />`;
+  }).join('');
+}
+
+function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all', protoFilter = 'all', floorId = null } = {}) {
+
 
   let activeBg = mapData.bg;
   let activeLots = mapData.lots;
@@ -505,23 +554,7 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
     bgMarkup = `<defs><mask id="${maskId}" maskUnits="userSpaceOnUse" x="0" y="0" width="${mapData.w}" height="${mapData.h}"><rect width="${mapData.w}" height="${mapData.h}" fill="white"/>${masks.map(mask => `<path d="${escapeHtml(mask.d)}" fill="black"/>`).join('')}</mask></defs><g mask="url(#${maskId})">${bgMarkup}</g><g class="qmap-vehicle-cleanup" pointer-events="none">${masks.filter(mask => mask.road).map(mask => `<path d="${escapeHtml(mask.d)}" fill="white"/>`).join('')}</g>`;
   }
 
-  const sw = mapData.isTowerFloors ? 12 : 9;
-  const swSel = mapData.isTowerFloors ? 30 : 24;
-
-  const lotsMarkup = activeLots.map(l => {
-    const stKey = normalizeStatus(l.s);
-    const st = colors[stKey] || colors['no-disponible'];
-    const isSel = selectedLotId === l.id;
-    const lotProto = resolveLotPrototype(l, mapData.slug);
-    const dimmedStatus = statusFilter !== 'all' && stKey !== normalizeStatus(statusFilter);
-    const dimmedProto = protoFilter !== 'all' && (!lotProto || lotProto.id !== protoFilter);
-    const dimmed = dimmedStatus || dimmedProto;
-    const op = dimmed ? '0.14' : '1';
-    const attrs = `class="qmap-lot ${isSel ? 'selected' : ''}" data-lot="${escapeHtml(l.id)}" fill="${st.fill}" stroke="${isSel ? '#ffffff' : st.stroke}" stroke-width="${isSel ? swSel : sw}" opacity="${op}"`;
-    return l.t === 'g'
-      ? `<polygon points="${escapeHtml(l.d)}" ${attrs} />`
-      : `<path d="${escapeHtml(l.d)}" ${attrs} />`;
-  }).join('');
+  const lotsMarkup = buildInventoryLotMarkup(mapData, activeLots, { selectedLotId, statusFilter, protoFilter });
 
   return `${bgMarkup}<g class="qmap-lots-layer">${lotsMarkup}</g>${buildMapLifeOverlay(mapData)}`;
 }
@@ -737,6 +770,7 @@ async function renderInteractiveMap() {
   observeMapMotion(svg);
   renderMapAmenities(slug, 0);
   renderSelectedLotDetail();
+  updateInventorySyncLabels(slug, mapData);
 }
 
 function renderSelectedLotDetail() {
@@ -808,7 +842,7 @@ function renderSelectedLotDetail() {
           <label>Prototipo
             <select id="mapEditProto">
               <option value="">Sin asignar</option>
-              ${getDevMapPrototypes(state.mapDevSlug).map(p => `<option value="${escapeHtml(p.name)}" ${String(lot.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('')}
+              ${getMappedDevPrototypes(mapData).map(p => `<option value="${escapeHtml(p.name)}" ${String(lot.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('')}
             </select>
           </label>
           <button type="button" class="btn-primary full-width" id="mapSaveLotBtn">Guardar cambios en lote</button>
@@ -1005,4 +1039,91 @@ function observeMapMotion(svg) {
   }
   if (!observedMotionMaps.has(svg)) { mapMotionObserver?.observe(svg); observedMotionMaps.add(svg); }
   applyMapMotionPolicy(svg);
+}
+
+
+const INVENTORY_SYNC_INTERVAL_MS = 60 * 1000;
+let inventorySyncRunning = false;
+let inventorySyncTimer;
+function inventoryElementVisible(element) {
+  if (!element || element.closest('.hidden')) return false;
+  const rect = element.getBoundingClientRect();
+  return rect.width > 0 && rect.height > 0 && rect.bottom > 0 && rect.top < window.innerHeight;
+}
+function inventoryEditInProgress() {
+  if (document.activeElement?.matches('input, textarea, select')) return true;
+  const lot = state.devMapsCache[state.mapDevSlug]?.lots.find(l => l.id === state.selectedLotId);
+  return Boolean(state.currentView === 'map' && state.isAdmin && lot && $('mapEditStatus') &&
+    ($('mapEditStatus').value !== normalizeStatus(lot.s) || $('mapEditProto')?.value !== (lot.pr || '')));
+}
+function patchInventoryMap(svg, mapData, options = {}) {
+  const layer = svg?.querySelector('.qmap-lots-layer');
+  if (!layer) return;
+  const floor = mapData.floors?.find(f => f.id === Number(options.floorId));
+  layer.innerHTML = buildInventoryLotMarkup(mapData, floor?.lots || mapData.lots, options);
+}
+function setInventorySyncLabel(element, mapData, failed = false) {
+  if (!element) return;
+  const time = mapData?.syncedAt ? new Date(mapData.syncedAt).toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit', second:'2-digit'}) : '';
+  const live = !failed && mapData?.source === 'planos.qavalta.com';
+  element.textContent = live
+    ? `Automática cada 60 s · Última sincronización ${time}`
+    : `Sin respuesta de Qavalta · ${time ? 'últimos datos de ' + time : 'copia local disponible'}`;
+  element.dataset.syncState = live ? 'live' : 'stale';
+}
+function updateInventorySyncLabels(slug, data, failed = false) {
+  document.querySelectorAll('[data-inventory-sync]').forEach(element => {
+    if (element.dataset.inventorySync === slug || (element.dataset.inventorySync === 'map' && state.mapDevSlug === slug)) setInventorySyncLabel(element, data, failed);
+  });
+}
+async function refreshVisibleInventory() {
+  if (inventorySyncRunning || document.hidden || inventoryEditInProgress()) return;
+  const targets = [];
+  if (state.currentView === 'map') targets.push({ kind:'map', slug:state.mapDevSlug });
+  if (state.currentView === 'public') {
+    document.querySelectorAll('.dev-inline-map-section').forEach(section => {
+      if (inventoryElementVisible(section.querySelector('.dev-inline-map-viewport'))) targets.push({kind:'inline', slug:section.dataset.inlineMap});
+    });
+  }
+  if (state.currentView === 'admin' && state.isAdmin && inventoryElementVisible($('cmsTabLots'))) targets.push({kind:'admin', slug:state.cmsDevSlug || 'sorento'});
+  if (!targets.length) return;
+  inventorySyncRunning = true;
+  try {
+    for (const target of targets) {
+      try {
+        const data = await fetchDevMapData(target.slug, true);
+        if (document.hidden || inventoryEditInProgress()) continue;
+        if (target.kind === 'map' && state.currentView === 'map' && state.mapDevSlug === target.slug) {
+          patchInventoryMap($('mapSvg'), data, {selectedLotId:state.selectedLotId, statusFilter:state.mapStatusFilter, protoFilter:state.mapProtoFilter, floorId:state.mapFloorId});
+          refreshInteractiveInventoryCounts(data);
+          renderSelectedLotDetail();
+        } else if (target.kind === 'inline' && state.currentView === 'public' && typeof refreshInlineInventory === 'function') refreshInlineInventory(target.slug, data);
+        else if (target.kind === 'admin' && state.currentView === 'admin' && state.cmsDevSlug === target.slug && typeof refreshAdminInventory === 'function') refreshAdminInventory(data, target.slug);
+        updateInventorySyncLabels(target.slug, data);
+      } catch {
+        updateInventorySyncLabels(target.slug, state.devMapsCache[target.slug], true);
+      }
+    }
+  } finally { inventorySyncRunning = false; }
+}
+function refreshInteractiveInventoryCounts(mapData) {
+  const counts = getMapCounts(mapData.lots);
+  $('mapAvailCount').textContent = `• ${counts.disponible} disponibles`;
+  for (const [id,key] of [['countDisp','disponible'], ['countRes','reservado'], ['countNoDisp','no_disponible'], ['countVend','vendido']]) if ($(id)) $(id).textContent = counts[key];
+  document.querySelectorAll('[data-mstatus]').forEach(button => {
+    const key = button.dataset.mstatus;
+    const count = key === 'all' ? mapData.lots.length : counts[key === 'no-disponible' ? 'no_disponible' : key];
+    const label = button.querySelector('small');
+    if (label) label.textContent = count;
+  });
+  document.querySelectorAll('[data-mfloor]').forEach(button => {
+    const floor = mapData.floors?.find(f => f.id === Number(button.dataset.mfloor));
+    if (floor && button.querySelector('small')) button.querySelector('small').textContent = floor.lots.filter(l => normalizeStatus(l.s) === 'disponible').length;
+  });
+}
+function initInventoryAutoSync() {
+  if (inventorySyncTimer) return;
+  inventorySyncTimer = setInterval(refreshVisibleInventory, INVENTORY_SYNC_INTERVAL_MS);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) refreshVisibleInventory(); });
+  window.addEventListener('online', refreshVisibleInventory);
 }

@@ -206,3 +206,89 @@ test('el plano conserva la vista ligera y usa el original HD únicamente al ampl
   image.onerror(); assert.equal(attrs.href,'/preview.webp');
   run('updateMapResolution(svg,3)'); run('updateMapResolution(svg,1)'); assert.equal(attrs.href,'/preview.webp');
 });
+
+test('Ruche muestra agotado solo en Sorento y espera sus fotos propias en Montalese', () => {
+  const { run, context, element } = setup();
+  const { withSalesCatalog, withSalesDevelopment } = require('../data/sales-catalog');
+  const { withPrototypeGallery } = require('../data/galleries');
+  const db = require('../data/seed').buildInitialData();
+  context.salesPrototypes = db.prototypes.map(withPrototypeGallery).map(withSalesCatalog);
+  context.salesDevelopments = db.developments.map(d => withSalesDevelopment(d, db.prototypes));
+  run('state.prototypes = salesPrototypes; state.developments = salesDevelopments; state.publicDevSlug = "sorento";');
+  const sorento = run('renderPrototypeDetailPanel(state.prototypes.find(p=>p.id === "ruche"))');
+  assert.match(sorento, /Agotado/);
+  assert.match(sorento, /images\/galleries\/ruche\//);
+  run('state.publicDevSlug = "montalese";');
+  const montalese = run('renderPrototypeDetailPanel(state.prototypes.find(p=>p.id === "ruche"))');
+  assert.match(montalese, /Fotografías próximamente/);
+  assert.doesNotMatch(montalese, /Agotado|images\/galleries\/ruche\/|data-proto-gallery/);
+  assert.equal(run('resolveLotPrototype({pr:"Ruche"},"montalese").image'), '');
+  run('openFullscreenGallery("ruche")');
+  assert.equal(element('fsGalleryThumbs').innerHTML, '');
+  element("protoModalFullscreenBtn").addEventListener = () => {};
+  run('openPrototypeModal("ruche")');
+  assert.match(element('protoModalContent').innerHTML, /Fotografías próximamente/);
+  assert.doesNotMatch(element('protoModalContent').innerHTML, /images\/galleries\/ruche\//);
+  assert.deepEqual(JSON.parse(run('JSON.stringify(getDevelopmentPrototypes("oporto").map(p=>p.id))')), ['areni-3r','belora']);
+  // Official map history still resolves models removed from the commercial list.
+  assert.equal(run('resolveLotPrototype({pr:"Montello"},"oporto").id'), 'montello');
+});
+
+test('la actualización automática conserva zoom, filtros y selección y evita consultas solapadas', async () => {
+  const { run, context, element } = setup();
+  const layer = { innerHTML: '' };
+  element('mapSvg').querySelector = () => layer;
+  context.reply = { slug:'sorento', source:'planos.qavalta.com', syncedAt:'2026-11-17T18:00:00Z', lots:[{id:'L1',n:'Lote 1',t:'g',d:'0,0 1,0 1,1',s:'vendido',pr:'Ruche'}] };
+  let resolveRequest;
+  context.waitForInventory = () => new Promise(resolve => { resolveRequest = resolve; });
+  run('state.currentView="map"; state.mapDevSlug="sorento"; state.selectedLotId="L1"; state.zoom=3; state.panX=42; state.mapStatusFilter="disponible"; state.mapProtoFilter="ruche"; var refreshCalls=0; var selectedUpdates=0; fetchDevMapData=async()=>{refreshCalls++; await waitForInventory(); state.devMapsCache.sorento=reply; return reply;}; renderSelectedLotDetail=()=>selectedUpdates++;');
+  const first = run('refreshVisibleInventory()');
+  await run('refreshVisibleInventory()');
+  assert.equal(run('refreshCalls'), 1);
+  resolveRequest();
+  await first;
+  assert.equal(run('state.zoom'), 3);
+  assert.equal(run('state.panX'), 42);
+  assert.equal(run('state.selectedLotId'), 'L1');
+  assert.equal(run('state.mapStatusFilter'), 'disponible');
+  assert.equal(run('state.mapProtoFilter'), 'ruche');
+  assert.equal(run('selectedUpdates'), 1);
+  assert.match(layer.innerHTML, /selected/);
+  assert.match(layer.innerHTML, /opacity="0.14"/);
+  context.document.hidden = true;
+  await run('refreshVisibleInventory()');
+  assert.equal(run('refreshCalls'), 1);
+});
+
+test('la sincronización automática usa 60 s, reanuda al volver y conserva la copia ante errores', async () => {
+  const { run, context, element } = setup();
+  const listeners = {};
+  let tick, interval;
+  context.setInterval = (callback, ms) => { tick=callback; interval=ms; return 1; };
+  context.document.addEventListener = (event, callback) => { listeners[event]=callback; };
+  context.window = {addEventListener:(event,callback)=>{listeners[event]=callback;}};
+  run('var autoCalls=0; refreshVisibleInventory=async()=>autoCalls++; initInventoryAutoSync(); initInventoryAutoSync();');
+  assert.equal(interval, 60000);
+  await tick();
+  context.document.hidden = false;
+  await listeners.visibilitychange();
+  await listeners.online();
+  assert.equal(run('autoCalls'), 3);
+  // A failed refresh must label existing data as stale rather than stamp it as a new sync.
+  context.oldMap = {source:'planos.qavalta.com',syncedAt:'2026-11-17T18:00:00Z'};
+  const label=element('sync-label'); context.syncLabel=label;
+  run('setInventorySyncLabel(syncLabel,oldMap,true)');
+  assert.equal(label.dataset.syncState, 'stale');
+  assert.match(label.textContent, /Sin respuesta de Qavalta/);
+  assert.doesNotMatch(label.textContent, /Automática cada/);
+});
+
+test('el CMS conserva la asignación histórica al editar lotes de modelos retirados de la oferta', () => {
+  const {run,context,element}=setup();
+  const {withSalesCatalog}=require('../data/sales-catalog');
+  context.projectedPrototypes=require('../data/seed').buildInitialData().prototypes.map(withSalesCatalog);
+  context.mapData={slug:'oporto',lots:[{id:'L1',n:'1',pr:'Montello',s:'disponible',a:90}]};
+  run('state.prototypes=projectedPrototypes;state.cmsDevSlug="oporto";state.devMapsCache.oporto=mapData');
+  element('lotStatusFilter').value='all';run('renderCmsLotsTable()');
+  assert.match(element('cmsLotsBody').innerHTML, /value="Montello" selected/);
+});

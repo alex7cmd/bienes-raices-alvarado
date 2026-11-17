@@ -223,9 +223,10 @@ async function renderCmsPrototypesGrid() {
       <div class="cms-proto-location-chips">
         ${(p.developments || []).map(id => {
           const development = state.developments.find(d => d.id === id);
-          return `<span>${escapeHtml(development?.name || id)} → ${escapeHtml(p.name)}</span>`;
+          return `<span>${escapeHtml(development?.name || id)} → ${escapeHtml(p.name)}${p.availabilityByDevelopment?.[id] === 'sold-out' ? ' · Agotado' : ''}</span>`;
         }).join('') || '<span>Sin desarrollo asignado</span>'}
       </div>
+      ${p.mediaByDevelopment?.montalese?.pending ? '<p class="cms-field-help">Ruche de Montalese: fotografías pendientes. La galería actual corresponde a Sorento y no se muestra en Montalese.</p>' : ''}
       </div>
       <div class="cms-proto-card-body">
       <div class="cms-proto-visual">
@@ -276,14 +277,8 @@ function updateCmsHomePreview() {
   }
 }
 
-async function renderAdminCms() {
-  const { prototypes, developments, site } = state;
-  const slug = state.cmsDevSlug || 'sorento';
-  state.cmsDevSlug = slug;
-  if ($('cmsDevSelect')) $('cmsDevSelect').value = slug;
-
-  const mapData = await fetchDevMapData(slug);
-  if (slug !== state.cmsDevSlug) return;
+function renderCmsInventoryStatus(mapData, slug) {
+  if ($('cmsAutoSyncStatus')) $('cmsAutoSyncStatus').dataset.inventorySync = slug;
   const counts = getMapCounts(mapData.lots);
   if ($('cmsSyncStatus')) {
     const sources = { 'planos.qavalta.com': 'Catálogo remoto', 'local-cache': 'Copia local', 'stale-cache': 'Última sincronización disponible' };
@@ -300,6 +295,23 @@ async function renderAdminCms() {
     <div class="stat-box"><small>Vendidos</small><strong style="color:#ef4444">${counts.vendido}</strong></div>
   `;
 
+  updateInventorySyncLabels(slug, mapData);
+}
+function refreshAdminInventory(mapData, slug) {
+  renderCmsInventoryStatus(mapData, slug);
+  renderCmsLotsTable();
+}
+
+async function renderAdminCms() {
+  const { prototypes, developments, site } = state;
+  const slug = state.cmsDevSlug || 'sorento';
+  state.cmsDevSlug = slug;
+  if ($('cmsDevSelect')) $('cmsDevSelect').value = slug;
+
+  const mapData = await fetchDevMapData(slug);
+  if (slug !== state.cmsDevSlug) return;
+  renderCmsInventoryStatus(mapData, slug);
+
   renderCmsLotsTable();
   renderCmsPrototypesGrid();
   $('editHeroEyebrow').value = site.eyebrow;
@@ -315,6 +327,7 @@ function renderCmsLotsTable() {
   const slug = state.cmsDevSlug || 'sorento';
   const mapData = state.devMapsCache[slug];
   if (!mapData) return;
+  const assignedPrototypes = getMappedDevPrototypes(mapData);
   const q = $('lotSearchInput').value.trim().toLowerCase();
   const statusF = $('lotStatusFilter').value;
   const filtered = mapData.lots.filter(l => {
@@ -334,7 +347,7 @@ function renderCmsLotsTable() {
       <td>
         <select class="lot-proto-select">
           <option value="">Sin asignar</option>
-          ${getDevMapPrototypes(slug).map(p => `<option value="${escapeHtml(p.name)}" ${String(l.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('')}
+          ${assignedPrototypes.map(p => `<option value="${escapeHtml(p.name)}" ${String(l.pr).toLowerCase() === p.name.toLowerCase() ? 'selected' : ''}>${escapeHtml(p.name)}</option>`).join('')}
         </select>
       </td>
       <td>
@@ -607,6 +620,7 @@ async function initAdminApp() {
   $('loginView').classList.add('checking-session'); $('loginDescription').textContent = 'Verificando tu sesión…'; showOnlyView('login');
   try { await Promise.all([loadPublicData(),checkAuth()]); await restoreAdminRoute(); }
   finally { $('loginView').classList.remove('checking-session'); $('loginDescription').textContent = 'Ingresa para administrar el inventario, los precios y la portada.'; }
+  initInventoryAutoSync();
   setInterval(updateSessionNotice,1000);
   document.addEventListener('visibilitychange', () => {if (!document.hidden) handleAsync(checkAuth)();});
 }

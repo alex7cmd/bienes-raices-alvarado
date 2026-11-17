@@ -243,3 +243,15 @@ test('sitio y administrador tienen documentos, código y ámbitos instalables in
   assert.notEqual(manifests[0].id,manifests[1].id);
   assert.notEqual(manifests[0].icons[0].src,manifests[1].icons[0].src);
 });
+
+test('la oferta comercial y Ruche por desarrollo se aplican sin escribir el inventario persistente', async () => {
+  const file=path.join(fixture,'data/db.json');
+  const before=fs.readFileSync(file,'utf8');
+  const data=await (await request('/api/public/site')).json();
+  assert.deepEqual(data.prototypes.filter(p=>p.developments.includes('oporto')).map(p=>p.id).sort(), ['areni-3r','belora']);
+  const ruche=data.prototypes.find(p=>p.id==='ruche');
+  assert.equal(ruche.availabilityByDevelopment.sorento,'sold-out');
+  assert.equal(ruche.mediaByDevelopment.montalese.pending,true);
+  assert.equal(data.developments.find(d=>d.id==='sorento').startingPrice,3200000);
+  assert.equal(fs.readFileSync(file,'utf8'),before);
+});

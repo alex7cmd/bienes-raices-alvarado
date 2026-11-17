@@ -7,6 +7,9 @@ const { ensureDatabase, DB_PATH } = require('./data/seed');
 const { DATA_DIR, UPLOADS_DIR } = require('./data/storage');
 const { createSessionStore } = require('./data/sessions');
 const { withPrototypeGallery } = require('./data/galleries');
+const { withSalesCatalog, withSalesDevelopment } = require('./data/sales-catalog');
+const projectPrototype = p => withSalesCatalog(withPrototypeGallery(p));
+const projectDevelopments = db => db.developments.map(d => withSalesDevelopment(d, db.prototypes));
 
 ensureDatabase();
 
@@ -326,8 +329,8 @@ app.get('/api/public/site', (req, res) => {
   const db = readDB();
   res.json({
     site: db.site,
-    developments: db.developments,
-    prototypes: db.prototypes.map(withPrototypeGallery)
+    developments: projectDevelopments(db),
+    prototypes: db.prototypes.map(projectPrototype)
   });
 });
 
@@ -370,8 +373,8 @@ app.get('/api/admin/lots', requireAdmin, (req, res) => {
   }
   res.json({
     lots: db.lots,
-    prototypes: db.prototypes.map(withPrototypeGallery),
-    developments: db.developments,
+    prototypes: db.prototypes.map(projectPrototype),
+    developments: projectDevelopments(db),
     counts
   });
 });
@@ -415,7 +418,7 @@ app.patch('/api/admin/prototypes/:id', requireAdmin, (req, res) => {
   }
 
   writeDB(db);
-  res.json({ ok: true, prototype: withPrototypeGallery(proto) });
+  res.json({ ok: true, prototype: projectPrototype(proto) });
 });
 
 app.patch('/api/admin/developments/:id', requireAdmin, (req, res) => {

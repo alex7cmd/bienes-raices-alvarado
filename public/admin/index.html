@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-17" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-20" />
   <meta name="theme-color" content="#10243b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Alvarado Studio" />
@@ -21,7 +21,7 @@
     <div class="map-topbar">
       <div class="map-topbar-left">
         <span class="map-loc-badge" id="mapLocBadge">📍 Qavalta · Sorento</span>
-        <span class="map-avail-badge" id="mapAvailCount">• 0 lotes disponibles</span>
+        <span class="map-avail-badge" id="mapAvailCount">• 0 lotes disponibles</span><small class="inventory-sync-status" data-inventory-sync="map" role="status">Actualización automática cada 60 s</small>
       </div>
       <div class="map-dev-pills" id="mapDevPills"></div>
       <div class="map-mode-tabs">
@@ -136,7 +136,7 @@
           <div style="display:flex;align-items:center;gap:10px;">
             <span class="cms-session-notice" id="cmsSessionNotice" role="status"></span>
             <span class="cms-live-pill" id="cmsSyncBadge">Consultando fuente de datos…</span>
-            <button type="button" class="install-app-btn hidden" data-install-app>Instalar app</button>
+            <button type="button" class="install-app-btn hidden" data-install-app aria-label="Instalar app" title="Instalar app"><svg class="install-app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m-4-4 4 4 4-4"/><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg><span class="install-app-label">Instalar app</span></button>
             <button class="icon-user-btn" id="cmsThemeToggleBtn" title="Cambiar tema claro u oscuro" aria-label="Cambiar tema claro u oscuro"></button>
             <div class="cms-account">
               <button type="button" class="icon-user-btn" id="cmsUserMenuBtn" aria-label="Menú de usuario" aria-haspopup="menu" aria-expanded="false" aria-controls="cmsUserMenu">
@@ -156,7 +156,8 @@
       <div class="cms-panel" id="cmsTabLots">
         <div class="cms-sync-bar">
           <div class="cms-sync-info">
-            <strong>Sincronización en vivo con planos.qavalta.com</strong>
+            <strong>Actualización automática cada 60 segundos</strong>
+            <small class="inventory-sync-status" data-inventory-sync="sorento" id="cmsAutoSyncStatus" role="status"></small>
             <small id="cmsSyncStatus">Fuente activa: planos.qavalta.com</small>
           </div>
           <div class="cms-sync-controls">
@@ -272,7 +273,7 @@
       <a href="/sitio/" class="admin-login-back" id="loginBackBtn">← Volver al sitio</a>
       <div class="admin-login-brand"><span>A</span> Alvarado Studio</div>
       <h1 id="adminLoginTitle">Acceso Administrador</h1>
-      <button type="button" class="install-app-btn hidden" data-install-app>Instalar app</button>
+      <button type="button" class="install-app-btn hidden" data-install-app aria-label="Instalar app" title="Instalar app"><svg class="install-app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m-4-4 4 4 4-4"/><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg><span class="install-app-label">Instalar app</span></button>
       <p id="loginDescription">Ingresa para administrar el inventario, los precios y la portada.</p>
       <form id="loginForm">
         <label>Correo<input type="email" id="loginEmail" autocomplete="username" required value="admin@bienesraicesalvarado.com.mx" /></label>
@@ -286,8 +287,8 @@
   <!-- PROTOTYPE QUICK-VIEW MODAL (PUBLIC) -->
 
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
-  <script src="/js/shared.js?v=1.0.0-17" defer></script>
-  <script src="/js/admin.js?v=1.0.0-17" defer></script>
+  <script src="/js/shared.js?v=1.0.0-20" defer></script>
+  <script src="/js/admin.js?v=1.0.0-20" defer></script>
   <script src="/js/install.js?v=1.0.0-14" defer></script>
 </body>
 </html>

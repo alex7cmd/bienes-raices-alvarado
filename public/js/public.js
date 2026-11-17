@@ -104,6 +104,7 @@ function renderPublicSite() {
 }
 
 function renderPrototypeDetailPanel(p, slideIdx = 0) {
+  p = getPrototypeForDevelopment(p);
   if (!p) return '';
   const gallery = getProtoGallery(p);
   const activeIdx = Math.max(0, Math.min(slideIdx, gallery.length - 1));
@@ -112,8 +113,10 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
     <div class="proto-tab-panel" data-active-proto="${escapeHtml(p.id)}" data-slide-idx="${activeIdx}">
       <div class="proto-panel-media">
         <div class="proto-panel-stage">
+          ${p.mediaPending ? renderPendingPrototypeMedia() : `
           <img class="proto-panel-main-img" src="${escapeHtml(gallery[activeIdx])}" alt="${escapeHtml(p.name)}" loading="lazy" />
           <button type="button" class="proto-gallery-btn" data-proto-gallery="${escapeHtml(p.id)}" aria-label="Ver galería de ${escapeHtml(p.name)}">${svgIcon('gallery')} Ver galería</button>
+          `}
           ${gallery.length > 1 ? `
             <span class="proto-photo-counter proto-panel-counter">${activeIdx + 1} / ${gallery.length}</span>
             <button type="button" class="proto-photo-arrow proto-photo-prev proto-panel-prev" aria-label="Foto anterior">‹</button>
@@ -147,7 +150,7 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
         <div class="proto-panel-head">
           <div>
             ${p.propertyId ? `<span class="proto-panel-id">ID ${escapeHtml(p.propertyId)}</span>` : ''}
-            <h3>${escapeHtml(p.name)}</h3>
+            <h3>${escapeHtml(p.name)} ${renderSoldOutBadge(p)}</h3>
           </div>
           <strong class="proto-panel-price">${mxn.format(p.price)}</strong>
         </div>
@@ -172,7 +175,7 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
 }
 
 function setPanelSlide(panel, protoId, nextIdx) {
-  const p = state.prototypes.find(x => x.id === protoId);
+  const p = getPrototypeForDevelopment(state.prototypes.find(x => x.id === protoId), state.currentView === 'map' ? state.mapDevSlug : state.publicDevSlug);
   if (!p || !panel) return;
   const gallery = getProtoGallery(p);
   if (!gallery.length) return;
@@ -255,7 +258,8 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
   const container = $('developmentAccordion');
   if (!container || !state.developments.length) return;
   const activeDev = state.developments.find(d => d.id === openDevId) || state.developments[0];
-  const devProtos = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(activeDev.id));
+  state.publicDevSlug = activeDev.id;
+  const devProtos = getDevelopmentPrototypes(activeDev.id);
   const firstProto = devProtos[0];
   const info = DEV_DETAILS[activeDev.id] || {
     description: activeDev.tagline || '',
@@ -272,7 +276,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
   const tabsHtml = `
     <div class="unified-dev-tabs" role="tablist" aria-label="Desarrollos residenciales">
       ${state.developments.map(dev => {
-        const count = state.prototypes.filter(p => Array.isArray(p.developments) && p.developments.includes(dev.id)).length;
+        const count = getDevelopmentPrototypes(dev.id).filter(p => p.salesStatus !== 'sold-out').length;
         const isActive = dev.id === activeDev.id;
         return `
           <button type="button" role="tab" class="unified-dev-tab ${isActive ? 'active' : ''}" aria-selected="${isActive}" data-dev-tab="${escapeHtml(dev.id)}">
@@ -302,7 +306,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
                 ${specBox('home', activeDev.id === 'torres-qavalta' ? 'Tipo' : 'Privada', activeDev.id === 'torres-qavalta' ? 'Departamentos' : activeDev.name)}
                 ${specBox('area', activeDev.id === 'torres-qavalta' ? 'Unidades' : 'Capacidad', 'Cargando plano…', 'capacity')}
                 ${specBox('tag', 'Desde', mxn.format(activeDev.startingPrice))}
-                ${specBox('gallery', 'Modelos', `${devProtos.length} prototipo${devProtos.length === 1 ? '' : 's'}`)}
+                ${specBox('gallery', 'Modelos', `${devProtos.filter(p => p.salesStatus !== 'sold-out').length} disponibles${devProtos.some(p => p.salesStatus === 'sold-out') ? ' · 1 agotado' : ''}`)}
               </div>
             </div>
             <div class="dev-overview-map">
@@ -324,7 +328,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
           <div class="dev-proto-tabs" role="tablist" aria-label="Prototipos de ${escapeHtml(activeDev.name)}">
             ${devProtos.map((p, idx) => `
               <button type="button" role="tab" class="dev-proto-tab ${idx === 0 ? 'active' : ''}" aria-selected="${idx === 0}" data-proto-tab="${escapeHtml(p.id)}">
-                <span class="dev-proto-tab-name">${escapeHtml(p.name)}</span>
+                <span class="dev-proto-tab-name">${escapeHtml(p.name)} ${renderSoldOutBadge(p)}</span>
                 <span class="dev-proto-tab-price">${mxn.format(p.price)}</span>
               </button>
             `).join('')}
@@ -341,6 +345,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
               <div>
                 <span class="dev-inline-map-kicker">PLANO MAESTRO INTERACTIVO</span>
                 <h4>Mapa de lotes · ${escapeHtml(activeDev.name)}</h4>
+                <small class="inventory-sync-status" data-inventory-sync="${escapeHtml(activeDev.id)}" role="status">Actualización automática cada 60 s</small>
               </div>
               <div class="dev-inline-map-actions">
                 <div class="dev-inline-legend">
@@ -372,7 +377,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
 }
 
 function openPrototypeModal(protoId, initialIdx = 0) {
-  const p = state.prototypes.find(x => x.id === protoId);
+  const p = getPrototypeForDevelopment(state.prototypes.find(x => x.id === protoId), state.currentView === 'map' ? state.mapDevSlug : state.publicDevSlug);
   if (!p) return;
   const gallery = getProtoGallery(p);
   let activeIdx = Math.max(0, Math.min(initialIdx, gallery.length - 1));
@@ -380,8 +385,10 @@ function openPrototypeModal(protoId, initialIdx = 0) {
   $('protoModalContent').innerHTML = `
     <div class="proto-modal-gallery">
       <div class="proto-modal-stage">
+        ${p.mediaPending ? renderPendingPrototypeMedia() : `
         <img id="protoModalMainImg" src="${escapeHtml(gallery[activeIdx])}" alt="${escapeHtml(p.name)}" />
         <button type="button" class="proto-gallery-btn" id="protoModalFullscreenBtn" aria-label="Ver galería a pantalla completa">⤢ Pantalla completa</button>
+        `}
         ${gallery.length > 1 ? `
           <span class="proto-photo-counter" id="protoModalCounter">${activeIdx + 1} / ${gallery.length}</span>
           <button type="button" class="proto-photo-arrow proto-photo-prev" id="protoModalPrev" aria-label="Foto anterior">‹</button>
@@ -400,7 +407,7 @@ function openPrototypeModal(protoId, initialIdx = 0) {
     </div>
     ${p.video ? `<video preload="none" src="${escapeHtml(p.video)}" controls style="width:100%;border-radius:12px;margin-bottom:16px;max-height:220px;"></video>` : ''}
     <div style="display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px;">
-      <h2 style="font-size:24px;">${escapeHtml(p.name)}</h2>
+      <h2 style="font-size:24px;">${escapeHtml(p.name)} ${renderSoldOutBadge(p)}</h2>
       <strong style="font-size:22px;color:var(--accent);">${mxn.format(p.price)}</strong>
     </div>
     <p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:16px;">${escapeHtml(p.description)}</p>
@@ -473,9 +480,10 @@ function renderFullscreenSlide(nextIdx) {
 }
 
 function openFullscreenGallery(protoId, initialIdx = 0) {
-  const p = state.prototypes.find(x => x.id === protoId);
+  const p = getPrototypeForDevelopment(state.prototypes.find(x => x.id === protoId), state.currentView === 'map' ? state.mapDevSlug : state.publicDevSlug);
   if (!p) return;
   const gallery = getProtoGallery(p);
+  if (!gallery.length) return;
   fsGalleryState = { protoId: p.id, gallery, idx: initialIdx };
   $('fsGalleryTitle').textContent = p.name;
   $('fsGalleryPrice').textContent = mxn.format(p.price);
@@ -495,6 +503,44 @@ function closeFullscreenGallery() {
 }
 
 // --- VIEW SWITCHING ---
+function renderInlineSelectedLot(mapSec, lot, slug) {
+        const bar = mapSec.querySelector('.dev-inline-lot-bar');
+        const stKey = normalizeStatus(lot.s);
+        const stLabel = { disponible: 'Disponible', reservado: 'Apartado', 'no-disponible': 'No disponible', vendido: 'Vendido' }[stKey] || lot.s;
+        const devName = state.developments.find(d => d.id === slug)?.name || slug;
+        const lotProto = resolveLotPrototype(lot, slug);
+        const waMsg = encodeURIComponent(`Hola, me interesa información sobre ${lot.n} (${lotProto?.name || ''}) en ${devName} (${lot.a} m²).`);
+        bar.innerHTML = `
+          <div class="dev-inline-lot-info">
+            <span class="lot-status-pill ${escapeHtml(stKey)}">${escapeHtml(stLabel)}</span>
+            <strong>${escapeHtml(lot.n)}</strong>
+            <span>${svgIcon('area')} ${lot.a ? `${escapeHtml(lot.a)} m²` : 'N/A'}</span>
+            ${lotProto ? `<span>${svgIcon('home')} ${escapeHtml(lotProto.name)}</span>` : ''}
+            ${lot.p > 0 ? `<span>${svgIcon('tag')} ${mxn.format(lot.p)}</span>` : ''}
+          </div>
+          <a href="https://wa.me/${escapeHtml(state.site?.whatsapp || '525537560931')}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa-mini">Cotizar por WhatsApp →</a>
+        `;
+        bar.classList.remove('hidden');
+}
+
+function refreshInlineInventory(slug, data) {
+  const section = document.querySelector(`.dev-inline-map-section[data-inline-map="${slug}"]`);
+  if (!section) return;
+  const counts = getMapCounts(data.lots);
+  for (const key of ['disponible','reservado','no_disponible','vendido']) {
+    const label = section.querySelector(`[data-c="${key}"]`);
+    if (label) label.textContent = counts[key];
+  }
+  const selectedLotId = section.dataset.selectedLotId;
+  patchInventoryMap(section.querySelector('.dev-inline-svg'), data, {floorId:section.dataset.floorId, selectedLotId});
+  const lot = data.lots.find(l => l.id === selectedLotId);
+  if (lot) renderInlineSelectedLot(section, lot, slug);
+  section.querySelectorAll('[data-inline-floor]').forEach(button => {
+    const floor = data.floors?.find(f => f.id === Number(button.dataset.inlineFloor));
+    if (floor) button.title = `${floor.lots.filter(l => normalizeStatus(l.s) === 'disponible').length} disponibles`;
+  });
+}
+
 async function loadInlineDevMap(slug, floorId = null) {
   const section = document.querySelector(`.dev-inline-map-section[data-inline-map="${slug}"]`);
   if (!section) return;
@@ -502,6 +548,7 @@ async function loadInlineDevMap(slug, floorId = null) {
   if (!svg || (svg.dataset.loaded === slug && floorId === null)) return;
   try {
     const mapData = await fetchDevMapData(slug);
+    updateInventorySyncLabels(slug, mapData);
     const capacity = section.closest('.dev-pill-body')?.querySelector('[data-spec="capacity"] strong');
     if (capacity) capacity.textContent = `${mapData.lots.length} ${mapData.isTowerFloors ? 'unidades en plano' : 'lotes en plano'}`;
     const counts = getMapCounts(mapData.lots);
@@ -532,6 +579,7 @@ async function loadInlineDevMap(slug, floorId = null) {
 
     svg.setAttribute('viewBox', `0 0 ${mapData.w} ${mapData.h}`);
     svg.innerHTML = buildDevMapSvgMarkup(mapData, { floorId: activeFloorId });
+    section.dataset.floorId = activeFloorId || '';
     svg.dataset.loaded = slug;
     observeMapMotion(svg);
   } catch (err) {
@@ -739,23 +787,8 @@ function bindPublicEvents() {
       if (mapSec && lot) {
         mapSec.querySelectorAll('.qmap-lot').forEach(el => el.classList.remove('selected'));
         inlineLot.classList.add('selected');
-        const bar = mapSec.querySelector('.dev-inline-lot-bar');
-        const stKey = normalizeStatus(lot.s);
-        const stLabel = { disponible: 'Disponible', reservado: 'Apartado', 'no-disponible': 'No disponible', vendido: 'Vendido' }[stKey] || lot.s;
-        const devName = state.developments.find(d => d.id === slug)?.name || slug;
-        const lotProto = resolveLotPrototype(lot, slug);
-        const waMsg = encodeURIComponent(`Hola, me interesa información sobre ${lot.n} (${lotProto?.name || ''}) en ${devName} (${lot.a} m²).`);
-        bar.innerHTML = `
-          <div class="dev-inline-lot-info">
-            <span class="lot-status-pill ${escapeHtml(stKey)}">${escapeHtml(stLabel)}</span>
-            <strong>${escapeHtml(lot.n)}</strong>
-            <span>${svgIcon('area')} ${lot.a ? `${escapeHtml(lot.a)} m²` : 'N/A'}</span>
-            ${lotProto ? `<span>${svgIcon('home')} ${escapeHtml(lotProto.name)}</span>` : ''}
-            ${lot.p > 0 ? `<span>${svgIcon('tag')} ${mxn.format(lot.p)}</span>` : ''}
-          </div>
-          <a href="https://wa.me/${escapeHtml(state.site?.whatsapp || '525537560931')}?text=${waMsg}" target="_blank" rel="noopener" class="btn-wa-mini">Cotizar por WhatsApp →</a>
-        `;
-        bar.classList.remove('hidden');
+        mapSec.dataset.selectedLotId = lot.id;
+        renderInlineSelectedLot(mapSec, lot, slug);
       }
       return;
     }
@@ -884,6 +917,7 @@ function bindPublicEvents() {
 async function initPublicApp() {
   initThemeScheduler(); bindPublicEvents(); bindMapEvents(); initDevelopmentDockLayout();
   await loadPublicData();
+  initInventoryAutoSync();
   const slug = new URLSearchParams(location.search).get('desarrollo');
   if (state.developments.some(d => d.id === slug)) { renderDevelopmentAccordion(slug); await loadInlineDevMap(slug); }
 }
