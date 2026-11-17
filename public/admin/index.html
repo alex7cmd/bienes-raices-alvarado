@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-20" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-23" />
   <meta name="theme-color" content="#10243b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Alvarado Studio" />
@@ -131,11 +131,20 @@
         <div class="cms-topbar">
           <div class="cms-title-group">
             <h1 class="cms-page-title">Alvarado Studio · Centro de Gestión</h1>
-            <span class="cms-note">Administración integral de inventario, precios y desarrollos · Qavalta · Versión 1.0</span>
+            <span class="cms-note">Inventario, precios y desarrollos · Qavalta</span>
           </div>
-          <div style="display:flex;align-items:center;gap:10px;">
-            <span class="cms-session-notice" id="cmsSessionNotice" role="status"></span>
-            <span class="cms-live-pill" id="cmsSyncBadge">Consultando fuente de datos…</span>
+          <div class="cms-topbar-actions">
+            <details class="cms-info" id="cmsInfo">
+              <summary class="icon-user-btn" aria-label="Información de sesión y datos" title="Información de sesión y datos"><svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><circle cx="12" cy="7" r=".8"/></svg></summary>
+              <div class="cms-info-panel">
+                <strong>Tu sesión</strong>
+                <span class="cms-session-notice" id="cmsSessionNotice" role="status"></span>
+                <span class="cms-info-detail" id="cmsSessionDetail"></span>
+                <strong>Datos de los lotes</strong>
+                <span id="cmsSyncBadge" role="status">Consultando fuente de datos…</span>
+                <p>La oferta de modelos y las fotos se administran en este sitio.</p>
+              </div>
+            </details>
             <button type="button" class="install-app-btn hidden" data-install-app aria-label="Instalar app" title="Instalar app"><svg class="install-app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m-4-4 4 4 4-4"/><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg><span class="install-app-label">Instalar app</span></button>
             <button class="icon-user-btn" id="cmsThemeToggleBtn" title="Cambiar tema claro u oscuro" aria-label="Cambiar tema claro u oscuro"></button>
             <div class="cms-account">
@@ -288,7 +297,7 @@
 
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
   <script src="/js/shared.js?v=1.0.0-20" defer></script>
-  <script src="/js/admin.js?v=1.0.0-20" defer></script>
+  <script src="/js/admin.js?v=1.0.0-22" defer></script>
   <script src="/js/install.js?v=1.0.0-14" defer></script>
 </body>
 </html>

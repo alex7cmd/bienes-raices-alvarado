@@ -1793,10 +1793,10 @@ html[data-app="admin"] .btn-map-info-tour {display:none;}
   .dock-svg { width:21px; height:21px; }
   .site-header .icon-user-btn > svg { width:22px; height:22px; }
   .hero-dev-dock .unified-dev-tabs { padding:8px; gap:8px; }
-  .unified-dev-tab { height:72px; min-height:72px; padding:8px 44px 8px 10px; gap:2px; }
+  .unified-dev-tab { height:60px; min-height:60px; padding:6px 42px 6px 10px; gap:2px; }
   .unified-dev-tab-top strong { font-size:13px; line-height:1.15; }
   .unified-dev-tab small { font-size:11px; line-height:1.3; }
-  .unified-dev-tab-count { width:32px; height:32px; right:8px; font-size:17px; }
+  .unified-dev-tab-count { width:28px; height:28px; right:8px; font-size:16px; }
   .dev-inline-map-head { justify-content:center; text-align:center; }
   .dev-inline-map-head > div:first-child { width:100%; }
   .dev-inline-map-actions { width:100%; flex-direction:column; justify-content:center; gap:12px; }
@@ -1816,3 +1816,109 @@ html[data-app="admin"] .btn-map-info-tour {display:none;}
   .unified-dev-tab-top strong { font-size:12px; }
   .unified-dev-tab small { font-size:10px; }
 }
+
+/* Transport accordion: protect the circular indicator and give text its own space. */
+#transportPillTrigger .dev-pill-arrow { width:44px; height:44px; min-width:44px; min-height:44px; flex:0 0 44px; aspect-ratio:1; padding:0; }
+#transportPillTrigger .dev-pill-right { min-width:0; }
+#transportPillTrigger .dev-pill-price { max-width:250px; line-height:1.45; }
+#transportPillTrigger .dev-pill-arrow svg { width:18px; height:18px; display:block; }
+@media (max-width:768px) {
+  #transportPillTrigger { display:grid; grid-template-columns:minmax(0,1fr) 44px; gap:12px 16px; padding:20px; }
+  #transportPillTrigger .dev-pill-left { grid-column:1; grid-row:1; min-width:0; flex-direction:column; align-items:flex-start; gap:10px; }
+  #transportPillTrigger .dev-pill-title { font-size:16px; line-height:1.4; }
+  #transportPillTrigger .dev-pill-meta { padding:5px 10px; line-height:1.4; }
+  #transportPillTrigger .dev-pill-right { display:contents; }
+  #transportPillTrigger .dev-pill-price { grid-column:1; grid-row:2; max-width:none; font-size:13px; line-height:1.5; }
+  #transportPillTrigger .dev-pill-arrow { grid-column:2; grid-row:1 / span 2; align-self:center; justify-self:center; }
+  .floating-stack { gap:12px; }
+  .floating-stack .stack-btn { height:52px; min-height:52px; padding:0 18px; font-size:14px; max-width:calc(100vw - 32px); }
+  .floating-stack .stack-btn svg { width:24px; height:24px; flex-shrink:0; }
+}
+
+@media (max-width:768px) {
+  #contacto .contact-map-col { width:100vw; max-width:none; margin-inline:calc(50% - 50vw); }
+  #contacto .contact-map-col iframe { display:block; width:100%; height:360px; border-radius:0; box-shadow:none; }
+}
+
+/* Shared reading scale: readable copy, labels and forms in public and admin. */
+body { font-size:1rem; line-height:1.5; }
+.proto-panel-desc,.proto-desc,.dev-overview-desc,.transport-hero-text p,
+.transport-info-card p,.smart-lead,.contact-lead,.footer-about,.footer-contact-list,
+.cms-proto-preview-description,.cms-home-preview-content > p,.modal-desc,
+.empty-lot-state p,.qavalta-videos-head p,.qavalta-video-info p {
+  font-size:1rem; line-height:1.6;
+}
+.form-grid label,.cms-form-card label,.login-card label,.tour-fields label,
+.admin-login-content label { font-size:.9375rem; line-height:1.45; }
+.cms-form-card input,.cms-form-card textarea,.cms-form-card select,
+.cms-toolbar input,.cms-toolbar select,.cms-table select,.map-admin-edit-box select,
+.contact-form input,.contact-form textarea,.login-card input,.tour-fields input,
+.tour-fields select,.tour-fields textarea { font-size:1rem; line-height:1.5; min-height:44px; }
+.cms-form-card textarea { min-height:128px; height:128px; }
+.cms-note,.cms-field-help,.cms-session-notice,.cms-sync-info small,
+.cms-proto-location-chips > span,.cms-proto-preview-label,.cms-preview-label,
+.cms-preview-image-state,.cms-proto-preview-specs > span,.stat-box small,
+.cms-user-pill small,.cms-brand small,.cms-nav-label,.cms-location-pill,
+.cms-status-badge,.inventory-sync-status,.section-helper,.dev-pill-tagline,
+.dev-pill-meta,.proto-panel-subtitle,.proto-panel-id,.proto-panel-location,
+.dev-overview-label,.dev-overview-addr strong,.dev-overview-addr span,
+.dev-overview-route,.dev-overview-map-link,.dev-inline-legend,.dev-inline-map-kicker,
+.lot-spec-box small,.proto-specs,.smart-feature span,.amen-sidebar-head p,
+.amen-list-text,.footer-bottom,.footer-mini-prop strong,.footer-mini-prop span,
+.dev-proto-tab-price,.dev-pill-price,.prototype-sold-out,.contact-status,
+.form-error,.advisor-pill,.map-admin-edit-title,.map-admin-edit-box label {
+  font-size:.875rem; line-height:1.5;
+}
+.cms-tab,.cms-side-action,.cms-table,.cms-table select,.cms-form-card .btn-primary,
+.cms-form-card .btn-secondary,.cms-save-btn,.cms-delete-btn,.cms-upload-btn,
+.cms-filter-bar input,.cms-filter-bar select,.dock-link,.btn-primary,
+.btn-secondary,.dev-inline-fs-btn,.dev-proto-tab-name,.lot-spec-box strong,
+.smart-feature strong,.footer-col h4 { font-size:1rem; }
+.cms-proto-preview-heading > strong { font-size:1.25rem; }
+.cms-proto-preview-heading > [data-proto-preview="price"] { font-size:1.125rem; }
+.cms-proto-preview-specs strong { font-size:1rem; }
+.cms-proto-editor h4,.cms-form-card h3 { font-size:1.125rem; }
+.cms-page-title,.cms-proto-card-header h3 { font-size:1.375rem; line-height:1.3; }
+.cms-proto-preview-heading { flex-wrap:wrap; gap:6px 12px; }
+.cms-note,.cms-session-notice,.cms-field-help { overflow-wrap:anywhere; }
+#transportPillTrigger .dev-pill-price { font-size:.9375rem; }
+@media(max-width:768px) {
+  .unified-dev-tab { height:auto; min-height:60px; padding:5px 8px; gap:2px; justify-content:center; }
+  .unified-dev-tab-top { display:flex; align-items:center; justify-content:space-between; min-height:24px; gap:4px; }
+  .unified-dev-tab-top strong { font-size:.875rem; line-height:1.15; }
+  .unified-dev-tab-count { position:static; transform:none; width:24px; height:24px; font-size:.9375rem; }
+  .unified-dev-tab small { font-size:.8125rem; line-height:1.3; white-space:nowrap; }
+  .dev-inline-legend { gap:8px 12px; }
+  .lot-spec-box strong { white-space:normal; overflow-wrap:anywhere; }
+  .cms-topbar { gap:12px; align-items:flex-start; }
+  .cms-topbar > div { min-width:0; flex-wrap:wrap; }
+  .cms-topbar-actions { justify-content:flex-start; }
+  .floating-stack { right:16px; }
+}
+
+/* Compact admin heading with session/source details on demand. */
+.cms-topbar-actions { display:flex; align-items:center; gap:8px; flex-wrap:nowrap; }
+.cms-info { position:relative; flex-shrink:0; }
+.cms-info > summary { list-style:none; cursor:pointer; display:grid; place-items:center; }
+.cms-info > summary::-webkit-details-marker { display:none; }
+.cms-info > summary::marker { content:""; }
+.cms-info > summary:focus-visible { outline:3px solid var(--accent); outline-offset:3px; }
+.cms-info[open] > summary { background:var(--surface); }
+.cms-info-panel { position:absolute; top:calc(100% + 10px); right:0; width:320px; max-width:calc(100vw - 32px); padding:18px; border:1px solid var(--border); border-radius:14px; background:var(--card-bg); color:var(--text); box-shadow:var(--shadow); display:flex; flex-direction:column; gap:6px; font-size:.875rem; line-height:1.5; z-index:70; overflow-wrap:anywhere; }
+.cms-info-panel > strong { font-size:1rem; }
+.cms-info-panel > strong:not(:first-child) { margin-top:8px; }
+.cms-info-panel p { margin:0; color:var(--muted); }
+.cms-info-detail { color:var(--muted); }
+.cms-topbar .cms-title-group { flex:1 1 320px; min-width:0; }
+@media(max-width:768px) {
+  .cms-topbar { position:relative; display:grid; grid-template-columns:minmax(0,1fr); padding:16px; gap:12px; }
+  .cms-topbar .cms-topbar-actions { margin-left:0; max-width:100%; width:100%; justify-content:flex-end; flex-wrap:nowrap; }
+  .cms-topbar .cms-note { font-size:.875rem; line-height:1.4; }
+  .cms-topbar .cms-page-title { font-size:1.25rem; }
+  .cms-topbar .cms-info { margin-right:auto; }
+  .cms-info-panel { left:0; right:auto; }
+}
+
+.cms-topbar .icon-user-btn,.cms-topbar .install-app-btn { min-width:44px; height:44px; min-height:44px; }
+.cms-topbar .icon-user-btn > svg { width:22px; height:22px; }
+@media(max-width:768px) { .hero-dev-dock .unified-dev-tabs { grid-auto-rows:1fr; } }

@@ -189,3 +189,15 @@ La sincronización manual también devuelve la oferta comercial proyectada para 
 
 ## Icono de transporte aprobado · 17 noviembre
 Se sustituye el símbolo lateral por el autobús frontal aprobado: parabrisas, espejos, faros y ruedas en SVG nativo, manteniendo el enlace a #transporte y los estilos y tamaños del menú. Cambio limitado al HTML público; respaldo previo verificado.
+
+
+## Espaciado y contacto móvil · 17 noviembre
+Transporte: indicador circular44x44sincontracción, chevronSVGcentrado ydistribuciónmobilecontexto/horariospuntodeencuentroseparados. BotonesWhatsApp/InfoTour52pxdealto,iconos24pxyseparación12pxenmóvil. MapaGoogledecontactoa100vwenmobile, sinmárgeneslateralesniacortarlapáginaconoverflow. EstilosCSSversión21enambosHTML;sin cambiosAPI,inventariooformularios.
+
+- Ajuste adicional solicitado: seis botones de desarrollo a60px de alto en móvil (antes72), menor relleno y contador28px, conservando dos columnas.
+
+- Tipografía compartida ampliada: lectura y formularios16px, etiquetas15px, auxiliares14px, títulos diferenciados en rem. Tarjetas compactas con contador en flujo y precio en fila completa.
+
+- Encabezado admin compacto: información de sesión y procedencia de lotes en panel ⓘ, cierre exterior/Escape, conserva aviso de caducidad; ya no muestra Catálogo remoto como insignia.
+
+Verificación:52pruebas existentes aprobadas, JS válido ydiffcheckcorrecto. Chrome local320/390sin desbordes, mapa contacto100%, controles52/círculo44, tarjetas60px(63en320paraTorres), tipografíaformularios16px. Admininfoabre/cierraalrepetir,fuera/Escape;desktop1440conservafichahorizontal.

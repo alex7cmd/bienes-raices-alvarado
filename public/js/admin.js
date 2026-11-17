@@ -39,7 +39,8 @@ function updateSessionNotice() {
   const minutes = Math.ceil(remaining / 60000);
   const duration = minutes >= 60 ? `${Math.floor(minutes / 60)} h ${minutes % 60} min` : `${minutes} min`;
   label.textContent = `Acceso válido por ${duration} más`;
-  label.title = `Vuelve a iniciar sesión a las ${new Date(state.sessionExpiresAt).toLocaleTimeString('es-MX')}. Recargar no amplía el plazo.`;
+  const detail = $('cmsSessionDetail');
+  if (detail) detail.textContent = `Termina a las ${new Date(state.sessionExpiresAt).toLocaleTimeString('es-MX', { hour:'2-digit', minute:'2-digit', hour12:false })}. Recargar no amplía el plazo.`;
   label.classList.toggle('session-warning', remaining <= 5 * 60000);
   if (remaining <= 5 * 60000 && !state.sessionWarningShown) {
     state.sessionWarningShown = true;
@@ -281,10 +282,14 @@ function renderCmsInventoryStatus(mapData, slug) {
   if ($('cmsAutoSyncStatus')) $('cmsAutoSyncStatus').dataset.inventorySync = slug;
   const counts = getMapCounts(mapData.lots);
   if ($('cmsSyncStatus')) {
-    const sources = { 'planos.qavalta.com': 'Catálogo remoto', 'local-cache': 'Copia local', 'stale-cache': 'Última sincronización disponible' };
+    const sources = { 'planos.qavalta.com': 'Fuente: planos.qavalta.com', 'local-cache': 'Copia local', 'stale-cache': 'Última sincronización disponible' };
     const label = sources[mapData.source] || 'Copia local';
     $('cmsSyncStatus').textContent = `${label} · ${mapData.lots.length} lotes/unidades`;
-    $('cmsSyncBadge').textContent = label;
+    $('cmsSyncBadge').textContent = mapData.source === 'planos.qavalta.com'
+      ? 'Los datos de lotes se consultan en planos.qavalta.com.'
+      : mapData.source === 'stale-cache'
+        ? 'Sin respuesta de la fuente. Mostramos la última copia disponible.'
+        : 'Mostramos la copia local de los datos de lotes.';
   }
 
   $('cmsLotStats').innerHTML = `
@@ -375,6 +380,16 @@ async function loadPublicData() {
   Object.assign(state, {site:data.site, developments:data.developments, prototypes:data.prototypes});
 }
 function bindAdminEvents() {
+  const info = $('cmsInfo');
+  document.addEventListener('click', event => {
+    if (info?.open && !info.contains(event.target)) info.open = false;
+  });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && info?.open) {
+      info.open = false;
+      info.querySelector('summary').focus();
+    }
+  });
   const accountButton = $('cmsUserMenuBtn');
   const accountMenu = $('cmsUserMenu');
   const openAccountMenu = () => {
