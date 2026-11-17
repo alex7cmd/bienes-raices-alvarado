@@ -74,7 +74,7 @@ test('el carrusel usa fotografías panorámicas separadas de la ficha', () => {
 test('el aviso de sesión calcula tiempo real y alerta antes de vencer', () => {
   const { run, element } = setup();
   run("Date.now = () => 1000000; state.isAdmin = true; state.sessionExpiresAt = 1000000 + 2 * 60000; updateSessionNotice();");
-  assert.equal(element('cmsSessionNotice').textContent, 'La sesión se cierra en 2 min');
+  assert.equal(element('cmsSessionNotice').textContent, 'Acceso válido por 2 min más');
   assert.match(element('toast').textContent, /menos de 5 minutos/);
   run("location.pathname = '/admin'; state.currentView = 'admin'; state.sessionExpiresAt = 999999; updateSessionNotice();");
   assert.equal(run('state.isAdmin'), false);
@@ -106,4 +106,18 @@ test('mapas simultáneos usan referencias propias para los autos y Torres no tie
     for (const match of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids(html).includes(match[1]));
   }
   assert.equal(run("buildMapLifeOverlay({slug:'torres-qavalta', bg:'map.webp', isTowerFloors:true})"), '');
+});
+
+
+test('Ruche y Malvasia resaltan las asignaciones oficiales del plano Sorento', () => {
+  const { run, context } = setup();
+  context.sorento = JSON.parse(fs.readFileSync(path.join(__dirname, '../public/assets/maps/data/sorento.json')));
+  assert.equal(run('getMappedDevPrototypes(sorento).length'), 4);
+  for (const [prototype, count] of [['ruche', 25], ['malvasia', 28]]) {
+    context.prototype = prototype;
+    const html = run('buildDevMapSvgMarkup(sorento, {protoFilter:prototype})');
+    const lots = [...html.matchAll(/class="qmap-lot [^"]*"[^>]*opacity="([^"]+)"/g)];
+    assert.equal(lots.filter(match => match[1] === '1').length, count);
+    assert.equal(lots.filter(match => match[1] === '0.14').length, 262 - count);
+  }
 });

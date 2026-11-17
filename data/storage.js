@@ -65,4 +65,4 @@ function initializeStorage() {
   fs.writeFileSync(marker, JSON.stringify({ completedAt: new Date().toISOString(), databaseSha256: sourceHash, uploads }, null, 2), { flag: 'wx', mode: 0o600 });
 }
 
-module.exports = { DB_PATH, UPLOADS_DIR, initializeStorage };
+module.exports = { DATA_DIR, DB_PATH, UPLOADS_DIR, initializeStorage };

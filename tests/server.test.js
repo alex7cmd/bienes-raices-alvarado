@@ -26,7 +26,7 @@ before(async () => {
     await new Promise(resolve => setTimeout(resolve, 20));
     if (upstreamFails) return new Response('{}', { status: 503 });
     if (String(url).includes('/torres?')) return Response.json([{ pisos: [{ nombre: 'Planta Baja', departamentos: [{ svgSlotId: 'Flat1Dpto2', estatus: 'no-disponible', nombre: 'Depto2' }] }] }]);
-    if (String(url).endsWith('/lotes')) return Response.json([{ svgId: 'test-unknown-id', status: 'disponible' }]);
+    if (String(url).includes('/lotes?slug=')) return Response.json([{ svgId: 'test-unknown-id', status: 'disponible' }, { svgId: 'Mza1Lote2', status: 'vendido', protoName: 'Malvasia', protoPrecio: 4450000 }]);
     // Simulate a contact arriving while the administrator waits for upstream sync.
     const dbPath = path.join(fixture, 'data/db.json');
     const db = JSON.parse(fs.readFileSync(dbPath));
@@ -202,4 +202,13 @@ test('la sesión expirada se rechaza y no se recupera al refrescar', async () =>
     assert.equal(me.authenticated, false);
     assert.equal(me.expiresAt, null);
   } finally { Date.now = realNow; }
+});
+
+
+test('la sincronización obtiene la asignación oficial protoName para el filtro', async () => {
+  upstreamFails = false;
+  const data = await (await request('/api/public/qavalta-map/sorento')).json();
+  const lot = data.lots.find(l => l.id === 'Mza1Lote2');
+  assert.equal(lot.pr, 'Malvasia');
+  assert.equal(lot.pp, 4450000);
 });

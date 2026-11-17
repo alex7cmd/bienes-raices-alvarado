@@ -4,7 +4,8 @@ const path = require('path');
 const crypto = require('crypto');
 const multer = require('multer');
 const { ensureDatabase, DB_PATH } = require('./data/seed');
-const { UPLOADS_DIR } = require('./data/storage');
+const { DATA_DIR, UPLOADS_DIR } = require('./data/storage');
+const { createSessionStore } = require('./data/sessions');
 
 ensureDatabase();
 
@@ -17,7 +18,7 @@ const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || (process.env.NODE_ENV === '
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 const secureCookie = process.env.NODE_ENV === 'production' ? '; Secure' : '';
 const loginAttempts = new Map();
-const activeSessions = new Map();
+const activeSessions = createSessionStore(path.join(DATA_DIR, 'sessions'), { email: ADMIN_EMAIL, password: ADMIN_PASSWORD });
 
 app.disable('x-powered-by');
 app.use((req, res, next) => {
@@ -32,7 +33,7 @@ app.use((req, res, next) => {
 app.use(express.json({ limit: '256kb' }));
 const cleanup = setInterval(() => {
   const now = Date.now();
-  for (const [token, session] of activeSessions) if (session.expiresAt <= now) activeSessions.delete(token);
+  try { activeSessions.cleanup(now); } catch { console.error('No se pudieron limpiar las sesiones vencidas.'); }
   for (const [ip, attempt] of loginAttempts) if (attempt.resetAt <= now) loginAttempts.delete(ip);
 }, 60 * 1000);
 cleanup.unref();
@@ -205,7 +206,7 @@ async function getQavaltaMapWithLiveSync(slug, forceRefresh = false) {
     if (!qavaltaPending.has(safeSlug)) {
       const pending = (async () => {
         try {
-          const remotePath = safeSlug === 'torres-qavalta' ? '/torres?desarrolloId=6' : `/desarrollos/${QAVALTA_DEV_IDS[safeSlug]}/lotes`;
+          const remotePath = safeSlug === 'torres-qavalta' ? '/torres?desarrolloId=6' : `/lotes?slug=${encodeURIComponent(safeSlug)}`;
           const resp = await fetch(`https://planos.qavalta.com/api${remotePath}`, { signal: AbortSignal.timeout(5000) });
           if (!resp.ok) throw new Error('Sin respuesta del catálogo remoto');
           const payload = await resp.json();
@@ -242,7 +243,8 @@ async function getQavaltaMapWithLiveSync(slug, forceRefresh = false) {
       a: live?.area ?? l.a,
       p: ov?.precio ?? (live?.precio ?? l.p),
       s: ov?.status || live?.status || l.s,
-      pr: ov?.prototipo ?? (live?.prototipo || l.pr)
+      pr: ov?.prototipo ?? (live ? (live.protoName ?? (typeof live.prototipo === 'string' ? live.prototipo : live.prototipo?.nombre) ?? '') : l.pr),
+      pp: live?.protoPrecio ?? l.pp ?? null
     };
   });
 

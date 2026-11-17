@@ -253,14 +253,42 @@ function initThemeScheduler() {
   $('cmsThemeToggleBtn')?.addEventListener('click', toggleTheme);
 }
 
+// Keep the overlapping menu aligned when badges, names, or row counts change.
+function initDevelopmentDockLayout() {
+  const dock = $('heroDevDock');
+  const header = $('siteHeader');
+  const root = document.documentElement;
+  const update = () => {
+    const height = dock.getBoundingClientRect().height;
+    if (height > 0) root.style.setProperty('--dev-dock-height', `${height}px`);
+    if (header.getBoundingClientRect().height > 0) {
+      root.style.setProperty('--dev-dock-top', `${header.getBoundingClientRect().bottom + 14}px`);
+    }
+  };
+  if (window.ResizeObserver) {
+    const observer = new ResizeObserver(update);
+    observer.observe(dock);
+    observer.observe(header);
+  } else window.addEventListener('resize', update);
+  update();
+}
+
 // --- INITIALIZATION ---
 async function init() {
   initThemeScheduler();
   bindEvents();
-  if (/^\/admin\/?$/.test(location.pathname)) showOnlyView('login');
+  initDevelopmentDockLayout();
+  if (/^\/admin\/?$/.test(location.pathname)) {
+    $('loginView').classList.add('checking-session');
+    $('loginDescription').textContent = 'Verificando tu sesión…';
+    showOnlyView('login');
+  }
   const results = await Promise.allSettled([loadPublicData(), checkAuth()]);
   results.forEach(result => { if (result.status === 'rejected') showToast(result.reason.message); });
-  await restoreAdminRoute();
+  try { await restoreAdminRoute(); } finally {
+    $('loginView').classList.remove('checking-session');
+    $('loginDescription').textContent = 'Ingresa para administrar el inventario, los precios y la portada.';
+  }
   window.addEventListener('popstate', handleAsync(restoreAdminRoute));
   setInterval(updateSessionNotice, 1000);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) updateSessionNotice(); });
@@ -298,7 +326,7 @@ function getHeroSlides() {
   return HERO_SLIDES.map((slide, i) => {
     const development = state.developments.find(d => d.id === slide.slug);
     const configured = i === 0 ? state.site?.heroImage : development?.heroImage;
-    // The original hero.jpg and development photos were demo defaults, separate from the hero carousel.
+    // Legacy card photos are separate from the panoramic hero carousel.
     const image = configured && configured !== '/assets/images/hero.jpg' ? configured : slide.image;
     return { ...slide, image };
   });
@@ -724,8 +752,17 @@ function getDevMapPrototypes(slug) {
 function resolveLotPrototype(lot, slug) {
   if (!lot.pr) return null;
   const pool = getDevMapPrototypes(slug);
-  const exact = pool.find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase());
-  return exact || { id: String(lot.pr).toLowerCase().replace(/\s+/g, '-'), name: lot.pr, price: Number(lot.p) || 0, image: '' };
+  const exact = [...pool, ...state.prototypes].find(p => p.name.toLowerCase() === String(lot.pr).toLowerCase());
+  return exact || { id: String(lot.pr).toLowerCase().replace(/\s+/g, '-'), name: lot.pr, price: Number(lot.pp ?? lot.p) || 0, image: '' };
+}
+
+function getMappedDevPrototypes(mapData) {
+  const prototypes = new Map();
+  for (const lot of mapData.lots) {
+    const prototype = resolveLotPrototype(lot, mapData.slug);
+    if (prototype) prototypes.set(prototype.id, prototype);
+  }
+  return [...prototypes.values()].sort((a, b) => a.name.localeCompare(b.name, 'es'));
 }
 
 const devMapFetchedAt = new Map();
@@ -806,19 +843,19 @@ const MAP_LIFE_CONFIG = {
         "color": "#ffffff",
         "dur": "42s",
         "begin": "0s",
-        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4815.0 Q 2080 4885 2013.9 4907.9 L 1866.1 4959.1 Q 1800 4982 1730.6 4990.8 L 1569.4 5011.2 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
+        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4800.0 Q 2080 4870 2013.5 4891.9 L 1866.5 4940.1 Q 1800 4962 1731.3 4975.3 L 1568.7 5006.7 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
       },
       {
         "color": "#1e3a5f",
         "dur": "42s",
         "begin": "-14s",
-        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4815.0 Q 2080 4885 2013.9 4907.9 L 1866.1 4959.1 Q 1800 4982 1730.6 4990.8 L 1569.4 5011.2 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
+        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4800.0 Q 2080 4870 2013.5 4891.9 L 1866.5 4940.1 Q 1800 4962 1731.3 4975.3 L 1568.7 5006.7 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
       },
       {
         "color": "#d6b68a",
         "dur": "42s",
         "begin": "-28s",
-        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4815.0 Q 2080 4885 2013.9 4907.9 L 1866.1 4959.1 Q 1800 4982 1730.6 4990.8 L 1569.4 5011.2 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
+        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4800.0 Q 2080 4870 2013.5 4891.9 L 1866.5 4940.1 Q 1800 4962 1731.3 4975.3 L 1568.7 5006.7 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
       }
     ]
   },
@@ -878,7 +915,7 @@ function buildMapLifeOverlay(mapData) {
     <g class="qmap-life-layer" pointer-events="none">
       <defs>
         ${cfg.cars.map((car, index) => `<path class="qmap-car-route" id="${routePrefix}-${index}" d="${car.path}" />`).join('')}
-        <g id="${routePrefix}-car">
+        <g id="${routePrefix}-car" transform="scale(1.15)">
           <ellipse cx="3" cy="6" rx="56" ry="27" fill="rgba(15,23,42,0.24)" />
           <rect x="-54" y="-23" width="108" height="46" rx="15" fill="currentColor" stroke="#0f172a" stroke-width="3" />
           <rect x="-24" y="-17" width="52" height="34" rx="9" fill="#e2e8f0" opacity="0.92" />
@@ -925,6 +962,14 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
     bgMarkup = `<defs><clipPath id="${clipId}"><polygon points="100,80 6900,80 6900,3000 4900,6600 100,6600"/></clipPath></defs><image href="${escapeHtml(mapData.bg)}" x="0" y="0" width="9000" height="6600" clip-path="url(#${clipId})"/>`;
   } else if (mapData.bg) {
     bgMarkup = `<image href="${escapeHtml(mapData.bg)}${mapData.bg.includes('?') ? '&' : '?'}v=1.10.3" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
+  }
+
+  // Remove printed vehicle sprites with local SVG masks; keep the source raster,
+  // architectural geometry and vegetation intact in both map views.
+  if (mapData.staticVehicleMasks?.length) {
+    const maskId = `stationary-vehicles-${++mapRenderSequence}`;
+    const masks = mapData.staticVehicleMasks;
+    bgMarkup = `<defs><mask id="${maskId}" maskUnits="userSpaceOnUse" x="0" y="0" width="${mapData.w}" height="${mapData.h}"><rect width="${mapData.w}" height="${mapData.h}" fill="white"/>${masks.map(mask => `<path d="${escapeHtml(mask.d)}" fill="black"/>`).join('')}</mask></defs><g mask="url(#${maskId})">${bgMarkup}</g><g class="qmap-vehicle-cleanup" pointer-events="none">${masks.filter(mask => mask.road).map(mask => `<path d="${escapeHtml(mask.d)}" fill="white"/>`).join('')}</g>`;
   }
 
   const sw = mapData.isTowerFloors ? 12 : 9;
@@ -1010,8 +1055,8 @@ function updateSessionNotice() {
   if (remaining <= 0) { expireAdminSession(); return; }
   const minutes = Math.ceil(remaining / 60000);
   const duration = minutes >= 60 ? `${Math.floor(minutes / 60)} h ${minutes % 60} min` : `${minutes} min`;
-  label.textContent = `La sesión se cierra en ${duration}`;
-  label.title = `Cierre de sesión: ${new Date(state.sessionExpiresAt).toLocaleTimeString('es-MX')}. Recargar no amplía el plazo.`;
+  label.textContent = `Acceso válido por ${duration} más`;
+  label.title = `Vuelve a iniciar sesión a las ${new Date(state.sessionExpiresAt).toLocaleTimeString('es-MX')}. Recargar no amplía el plazo.`;
   label.classList.toggle('session-warning', remaining <= 5 * 60000);
   if (remaining <= 5 * 60000 && !state.sessionWarningShown) {
     state.sessionWarningShown = true;
@@ -1042,6 +1087,8 @@ async function restoreAdminRoute() {
 }
 
 async function openAdminCms() {
+  // Another tab may have signed in; consult the cookie-backed server session.
+  await checkAuth();
   if (!state.isAdmin) {
     showOnlyView('login');
     return;
@@ -1203,7 +1250,7 @@ async function renderInteractiveMap() {
     `).join('');
   }
 
-  const devProtos = getDevMapPrototypes(slug);
+  const devProtos = getMappedDevPrototypes(mapData);
   $('mapProtoFilters').innerHTML = [
     `<button class="${state.mapProtoFilter === 'all' ? 'active' : ''}" data-mproto="all"><span>Todos los prototipos</span><small>${devProtos.length}</small></button>`,
     ...devProtos.map(p => `<button class="${state.mapProtoFilter === p.id ? 'active' : ''}" data-mproto="${escapeHtml(p.id)}"><span>${escapeHtml(p.name)}</span><small>${mxn.format(p.price)}</small></button>`)
@@ -1794,8 +1841,10 @@ function bindEvents() {
     const protoSection = $('prototipos');
     if (protoSection) {
       const rect = protoSection.getBoundingClientRect();
-      if (rect.top > window.innerHeight * 0.65 || rect.top < 140) {
-        const y = protoSection.getBoundingClientRect().top + window.scrollY - 155;
+      const dock = $('heroDevDock');
+      const targetTop = Number.parseFloat(getComputedStyle(dock).top) + dock.getBoundingClientRect().height + 16;
+      if (rect.top > window.innerHeight * 0.65 || rect.top < targetTop) {
+        const y = rect.top + window.scrollY - targetTop;
         window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
       }
     }

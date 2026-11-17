@@ -24,7 +24,7 @@ En el árbol observado de SiteGround cada build contiene `app_source`; la carpet
 
 ## Conservación de datos
 
-`data/storage.js` prepara `db.json` y `uploads/` fuera de los builds. La primera ejecución copia la base de la versión anterior, valida JSON y SHA-256, guarda un respaldo de la base y comprueba las copias de las cargas. Al terminar escribe `migration-complete.json`.
+`data/storage.js` prepara `db.json` y `uploads/` fuera de los builds. Desde Versión 1.0 las sesiones privadas se conservan también en `APP_DATA_DIR/sessions/`, sin servirse por HTTP. Se preserva el vencimiento absoluto de ocho horas entre reinicios; las sesiones anteriores que existían solo en memoria requieren volver a ingresar una vez. La primera ejecución copia la base de la versión anterior, valida JSON y SHA-256, guarda un respaldo de la base y comprueba las copias de las cargas. Al terminar escribe `migration-complete.json`.
 
 Los reinicios posteriores utilizan los datos compartidos; no vuelven a copiar el catálogo anterior. Si la base persistente desaparece, el inicio se detiene para evitar reemplazarla con datos de demostración. Si falla la primera migración, debe revisarse la causa antes de eliminar archivos o reintentar; no se debe sustituir una base distinta automáticamente.
 

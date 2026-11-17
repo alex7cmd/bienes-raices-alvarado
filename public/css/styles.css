@@ -290,10 +290,10 @@ html[data-theme="dark"] .dock-icon-circle {
 /* HERO (planos.qavalta.com inspired) */
 .hero-catalog-wrap { position: relative; }
 .hero-section {
-  position: relative; z-index: 20; min-height: 100vh; padding-top: 64px; padding-bottom: 112px;
+  position: relative; z-index: 20; min-height: 100vh; padding-top: 64px; padding-bottom: calc(var(--dev-dock-height, 110px) + 24px);
   display: flex; flex-direction: column; justify-content: space-between;
   color: #fff; overflow: hidden;
-  box-shadow: 0 12px 32px rgba(10, 22, 40, 0.14);
+  box-shadow: none;
 }
 .hero-slideshow {
   position: absolute; inset: 0; background-color: #0f172a; overflow: hidden;
@@ -642,25 +642,26 @@ html[data-theme="dark"] .dock-icon-circle {
 
 /* HERO STICKY SECOND MENU & EMERGING PANEL SHADOW */
 .hero-dev-dock {
-  position: sticky; top: 82px; z-index: 35;
-  max-width: var(--container-max); margin: -94px auto 0; padding: 0 24px;
+  position: sticky; top: var(--dev-dock-top, 82px); z-index: 35;
+  max-width: var(--container-max); margin: calc(-1 * var(--dev-dock-height, 110px)) auto 0; padding: 0 var(--catalog-gutter, 24px);
 }
 .hero-dev-dock .unified-dev-tabs {
   background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.85); border-radius: 16px;
-  box-shadow: 0 10px 26px rgba(10, 22, 40, 0.12);
+  box-shadow: 0 3px 12px rgba(10, 22, 40, 0.10);
   padding: 10px 12px;
 }
 html[data-theme="dark"] .hero-dev-dock .unified-dev-tabs {
   background: rgba(15, 23, 38, 0.92);
   border-color: rgba(255, 255, 255, 0.14);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.36);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.28);
 }
 .hero-emerged-section {
   position: relative; z-index: 10; padding-top: 34px;
+  scroll-margin-top: calc(var(--dev-dock-top, 82px) + var(--dev-dock-height, 110px) + 16px);
 }
 .hero-emerged-section::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 28px;
+  content: none; position: absolute; top: 0; left: 0; right: 0; height: 0;
   background: linear-gradient(180deg, rgba(10, 22, 40, 0.06) 0%, transparent 100%);
   pointer-events: none;
 }
@@ -668,7 +669,7 @@ html[data-theme="dark"] .hero-dev-dock .unified-dev-tabs {
 /* UNIFIED DEVELOPMENT TABS SHELL */
 .unified-dev-shell {
   border: 1px solid var(--border); border-radius: 18px; background: #fff;
-  box-shadow: 0 18px 40px rgba(10, 22, 40, 0.10); overflow: hidden;
+  box-shadow: 0 3px 14px rgba(10, 22, 40, 0.08); overflow: hidden;
 }
 .unified-dev-tabs {
   display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -683,7 +684,7 @@ html[data-theme="dark"] .hero-dev-dock .unified-dev-tabs {
 .unified-dev-tab:hover { border-color: var(--text); transform: translateY(-1px); }
 .unified-dev-tab.active {
   background: var(--text); color: #fff; border-color: var(--text);
-  box-shadow: 0 6px 18px rgba(18, 22, 25, 0.16);
+  box-shadow: 0 2px 7px rgba(18, 22, 25, 0.12);
 }
 .unified-dev-tab-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
 .unified-dev-tab-top strong { font-size: 14px; font-weight: 700; }
@@ -1619,6 +1620,7 @@ html[data-theme="dark"] .toast.toast-sync-success {
 }
 
 @media (max-width: 480px) {
+  :root { --catalog-gutter: 16px; }
   .header-inner { padding: 6px 10px; }
   .brand-mark { height: 38px; width: 34px; }
   .proto-features-chips { grid-template-columns: 1fr; }
@@ -1684,3 +1686,29 @@ html[data-theme="dark"] .panel-dev-logo { filter: brightness(0) invert(1); }
 #cmsDevsGrid { align-items: start; }
 #cmsDevsGrid .cms-form-card { display: flex; flex-direction: column; gap: 14px; }
 #cmsDevsGrid .cms-card-location { margin: 0; }
+
+.admin-login-page.checking-session #loginForm { display: none; }
+
+/* Qavalta accents: restrained red strokes across public and management views. */
+:root { --qavalta-red: #c6174c; --qavalta-stroke: rgba(198,23,76,.27); --qavalta-soft: #fff1f5; }
+html[data-theme="dark"] { --qavalta-red: #f36a92; --qavalta-stroke: rgba(243,106,146,.32); --qavalta-soft: #33202e; }
+:focus-visible { outline: 2px solid var(--qavalta-red); outline-offset: 3px; }
+.site-header { border-color: var(--qavalta-stroke); }
+.dock-icon-circle { color: var(--qavalta-red); border-color: var(--qavalta-stroke); }
+.hero-eyebrow::before { content: ''; display: inline-block; width: 6px; height: 6px; margin: 0 9px 2px 0; border-radius: 50%; background: #e52b60; }
+.hero-slide-dot.active { background: #e52b60; }
+.hero-dev-dock .unified-dev-tabs { border-color: var(--qavalta-stroke); }
+.unified-dev-tab.active { border-color: var(--qavalta-red); box-shadow: inset 0 2px 0 var(--qavalta-red), 0 2px 7px rgba(18,22,25,.12); }
+.dev-overview-kicker { color: var(--qavalta-red); }
+.dev-proto-tab.active { border-color: var(--qavalta-red); }
+.proto-panel-map-head, .dev-inline-map-head { border-bottom-color: var(--qavalta-stroke); }
+.map-dev-pill.active, .panel-proto-filters button.active { box-shadow: inset 3px 0 0 var(--qavalta-red); }
+#transporte, #contacto, .financing-section { border-top: 1px solid var(--qavalta-stroke); }
+footer { border-top-color: var(--qavalta-stroke); }
+.cms-topbar { border-bottom-color: var(--qavalta-stroke); }
+.cms-tab.active { box-shadow: inset 3px 0 0 var(--qavalta-red); }
+.cms-form-card { border-top: 2px solid var(--qavalta-stroke); }
+.cms-preview-context { color: var(--qavalta-red); background: var(--qavalta-soft); }
+.cms-carousel-slide.is-current { border-color: var(--qavalta-red); }
+.admin-login-brand span { background: #c6174c; }
+.admin-login-content input:focus { border-color: var(--qavalta-red); }

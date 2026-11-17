@@ -1,8 +1,8 @@
 # Seguimiento: Bienes Raíces Alvarado / Qavalta
 
-Actualización vigente: 2026-11-16 · revisión `v1.10.6`.
+Actualización vigente: 2026-11-16 · Versión 1.0 (`1.0.0`).
 
-Estado actual: cambios preparados y verificados localmente para publicación autorizada. La versión pública de partida es1.10.5 (dfc89c7). El historial que sigue conserva las comprobaciones de cada revisión; el alcance1.10.6 se detalla al final.
+Estado actual: Versión 1.0 preparada y verificada para publicación autorizada. Base de esta revisión: d99085a. El historial inferior conserva resultados de revisiones anteriores; el apartado Versión 1.0 describe el comportamiento vigente.
 
 ## Historial de la revisión inicial1.10.0
 Proyecto: `/Users/alejandrofernandez/Documents/bienes-raices-alvarado`.
@@ -18,7 +18,7 @@ El seguimiento anterior se conserva dentro del respaldo original verificado. Sus
 - Frontend: HTML, CSS y JavaScript, sin Next.js, React ni Vite.
 - Servidor: Node.js con Express 5 y Multer.
 - Datos persistentes: `data/db.json`; no hay SQLite, MySQL ni PostgreSQL implementados. Este archivo está excluido de Git.
-- Sesiones: tokens en memoria, cookie HttpOnly y SameSite=Lax, expiración de ocho horas. En producción la cookie también usa Secure; las sesiones terminan al reiniciar el proceso.
+- Sesiones: archivos privados persistentes en APP_DATA_DIR/sessions, cookie HttpOnly y SameSite=Lax, Secure en producción y vencimiento absoluto de ocho horas. Reiniciar o recargar no amplía el plazo; cerrar sesión revoca el archivo compartido.
 - Imágenes y videos subidos: `public/uploads/`, también excluidos de Git.
 - Planos: geometría local en `public/assets/maps/data/`; cinco desarrollos consultan la API de Qavalta. Torres usa pisos locales. La API combina los datos disponibles con las modificaciones del administrador.
 - La caché remota dura un minuto y reutiliza peticiones simultáneas. Ante un fallo se identifica la copia local o la última sincronización; no se declara una actualización exitosa.
@@ -117,3 +117,14 @@ Indicadores de prototipos48×48px y número22px, centrados verticalmente en la t
 - Revisión geométrica externa:2696 posiciones con huella118×60 (auto108×46), sin cruces de lotes, césped ni zonas transparentes. Se separaron los píxeles de dos autos amarillos impresos en los mapas originales del clasificador de vegetación. Es un muestreo geométrico, complementado con inspección visual en Chrome.
 - Chrome1440×1000 y390×844: acceso sólido, cierre de sesión, restauración de Prototipos al recargar, selección de seis imágenes, borradores, guardado local de Oporto y ausencia de desborde horizontal. Mapas de seis desarrollos inspeccionados; recorridos compartidos en vista integrada y pantalla completa.
 - Pruebas automatizadas:31 aprobadas; incluyen referencias independientes de animación y acceso al caducar. No se usaron credenciales de producción. Base operativa y uploads se excluyen de los archivos de publicación.
+
+
+## Versión 1.0 — selección oficial y ajustes de interfaz
+- Fuente privada correcta: /api/lotes?slug= del sitio oficial, campos protoName y protoPrecio. Torres conserva departamentos por piso. Los filtros se construyen desde asignaciones reales; las modificaciones administrativas conservan prioridad.
+- Cotejo completo: 1,877 unidades, seis planos, cero diferencias de identificador, estado o prototipo. Los 32 filtros renderizados resaltan exactamente los identificadores oficiales. Sorento: Ruche25 y Malvasia28.
+- Menú medido por ResizeObserver: su borde inferior coincide con el hero y sus laterales con el panel a1440/1024/390px, sin desborde horizontal. Sombras cortas y sin franja rectangular.
+- Autos móviles15% mayores. Máscaras SVG precisas retiran63 autos fijos de los cinco fondos; no se alteran imágenes originales. Huella real y sombra verificadas en2694 posiciones sin invadir lotes, césped ni exterior.
+- Rojo Qavalta sutil en bordes, iconos, foco, pestañas, selección y formularios del sitio y administrador; colores de disponibilidad conservados.
+- Sesiones persistentes entre procesos; firma vinculada al token y credenciales configuradas. No se guardan token bruto ni contraseña. Nueva validación al abrir el administrador, sin destello de formulario durante restauración. Acceso válido por ocho horas, con vencimiento fijo. Una sesión creada antes de esta publicación puede requerir un nuevo inicio.
+-37 pruebas aprobadas. Acceso local, navegación público/admin y reinicio de Node comprobados conservando el mismo vencimiento.
+- TikTok @itzealva solicitado como siguiente trabajo: únicamente videos de Qavalta confirmados y clasificados por desarrollo, antes del mapa. No forma parte de esta entrega todavía.
