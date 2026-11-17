@@ -1738,6 +1738,11 @@ footer { border-top-color: var(--qavalta-stroke); }
 .video-unavailable .qavalta-video-fallback { position: static; min-height: 170px; }
 
 /* Independent install actions use the browser's own installation dialog. */
-.install-app-btn {border:1px solid var(--border);border-radius:999px;background:var(--panel);color:var(--text);font-family:inherit;font-weight:600;font-size:12px;padding:9px 12px;cursor:pointer;white-space:nowrap;}
+.install-app-btn {border:1px solid var(--border);border-radius:999px;background:var(--card-bg);color:var(--text);font-family:inherit;font-weight:600;font-size:12px;padding:9px 12px;cursor:pointer;white-space:nowrap;}
 html[data-app="admin"] .btn-map-info-tour {display:none;}
 @media(max-width:600px) {.install-app-btn {font-size:11px;padding:8px;} .cms-topbar {flex-wrap:wrap;} .cms-topbar > div {flex-wrap:wrap;}}
+
+/* The sign-in page keeps a dark background in either theme. */
+.admin-login-page .install-app-btn { background: #ffffff; color: #10243b; border-color: #ffffff; margin-bottom: 12px; }
+.admin-login-page .install-app-btn:hover { background: #e4edf6; border-color: #e4edf6; }
+.admin-login-page .install-app-btn:focus-visible { outline: 2px solid #ffffff; outline-offset: 3px; }

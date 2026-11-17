@@ -166,3 +166,7 @@ Indicadores de prototipos48×48px y número22px, centrados verticalmente en la t
 - Fondos originales HD9000×6600 exactos bajo assets/maps/hd, se solicitan al ampliar>=200% y vuelven a vista ligera al alejar. Fondo sigue raster; lotes y autos SVG. No inventar números ni afirmar plano100%vectorial.
 - Cuatro autos en cuatro calles/regiones distintas por privada, sin tránsito en pisos de Torres. Pausa SMIL fuera del viewport/pestaña oculta/movimiento reducido. Mantener recortes y63máscaras de autos impresos existentes.
 - No subir __perf_local.js ni herramientas locales de medición, DB, sesiones o uploads.
+
+
+## 17 de noviembre: contraste del botón de instalación en el acceso
+El fondo del login es azul fijo; el texto del botón heredaba el azul del tema claro y su fondo usaba --panel (variable inexistente), quedando ilegible. Cambiado el fondo genérico a --card-bg y agregado estilo propio de login: fondo blanco, texto #10243b, hover claro y foco blanco. Mantener esta combinación en ambos temas. CSS con versión1.0.0-15.
