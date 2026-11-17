@@ -185,3 +185,7 @@ Actualización automática60s en plano/tabla visible, al volverpestaña yonline.
 Móvil: tarjetas72pxenlugar100; controles44px; menú64px, instalacióniconodedescargaaccesible (escritorio conserva texto), pantallacompleta44pxcentrada yleyendacentrada. A320pxmenú2filassin desborde,360/390unafila. 52pruebaspass enetapa;Chrome2peticionesobservadas60.0007sseparación,zoom1.25/selecciónMza1Lote1/markupautosconservados. Recursosversión20. Fotos de RucheMontalese siguenpendientesdelcliente.
 
 La sincronización manual también devuelve la oferta comercial proyectada para conservar orden y precio Desde en el administrador; mantiene la actualización remota almacenada y las solicitudes concurrentes. Prueba de integración ampliada.
+
+
+## Icono de transporte aprobado · 17 noviembre
+Se sustituye el símbolo lateral por el autobús frontal aprobado: parabrisas, espejos, faros y ruedas en SVG nativo, manteniendo el enlace a #transporte y los estilos y tamaños del menú. Cambio limitado al HTML público; respaldo previo verificado.
