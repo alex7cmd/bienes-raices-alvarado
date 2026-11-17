@@ -294,7 +294,7 @@ app.post('/api/admin/qavalta-sync', requireAdmin, async (req, res) => {
       }
     }
     writeDB(db);
-    res.json({ ok: true, syncedAt: new Date().toISOString(), developments: db.developments });
+    res.json({ ok: true, syncedAt: new Date().toISOString(), developments: projectDevelopments(db) });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

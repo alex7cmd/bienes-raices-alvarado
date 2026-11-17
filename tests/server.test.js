@@ -169,6 +169,9 @@ test('sincronizar no elimina solicitudes que llegaron mientras se esperaba la AP
   assert.equal(res.status, 200);
   const db = JSON.parse(fs.readFileSync(path.join(fixture, 'data/db.json')));
   assert.ok(db.leads.some(l => l.id === 'concurrent-contact'));
+  const published = await res.json();
+  assert.equal(published.developments.find(d => d.id === 'sorento').startingPrice, 3200000);
+  assert.deepEqual(published.developments.find(d => d.id === 'oporto').prototypeOrder, ['areni-3r','belora']);
   assert.equal(db.developments.find(d => d.id === 'sorento').startingPrice, 2700000);
 });
 test('un fallo remoto usa datos locales y no declara una sincronización exitosa', async () => {
