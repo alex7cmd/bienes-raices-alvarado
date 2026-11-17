@@ -9,7 +9,7 @@ function setup() {
     if (!elements.has(id)) elements.set(id, { value: '', innerHTML: '', textContent: '', dataset: {}, style: {}, classList: { add() {}, remove() {}, toggle() {} }, querySelectorAll: () => [], querySelector: () => null, setAttribute() {} });
     return elements.get(id);
   };
-  const context = vm.createContext({ Intl, console, setTimeout, clearTimeout, setInterval, clearInterval, AbortSignal, FormData, document: { getElementById: element, querySelectorAll: () => [] } });
+  const context = vm.createContext({ Intl, console, location: { pathname: "/" }, setTimeout, clearTimeout, setInterval, clearInterval, AbortSignal, FormData, document: { getElementById: element, querySelectorAll: () => [] } });
   let source = fs.readFileSync(path.join(__dirname, '../public/js/app.js'), 'utf8');
   source = source.replace(/\ninit\(\)\.catch[^\n]+;\s*$/, '');
   vm.runInContext(source, context);
@@ -59,7 +59,23 @@ test('la galería usa la imagen guardada y fotografías asociadas sin añadir ca
 });
 test('el carrusel respeta la portada y las imágenes de desarrollo configuradas', () => {
   const { run } = setup();
-  run("state.site.heroImage = '/uploads/cover.webp'; state.developments.find(d => d.id === 'oporto').image = '/uploads/oporto.webp';");
+  run("state.site.heroImage = '/uploads/cover.webp'; state.developments.find(d => d.id === 'oporto').heroImage = '/uploads/oporto.webp';");
   assert.equal(run('getHeroSlides()[0].image'), '/uploads/cover.webp');
   assert.equal(run('getHeroSlides()[1].image'), '/uploads/oporto.webp');
+});
+
+test('el carrusel usa fotografías panorámicas separadas de la ficha', () => {
+  const { run } = setup();
+  run("state.site.heroImage = '/assets/images/hero.jpg'; state.developments.find(d => d.id === 'oporto').image = '/uploads/ficha.webp'");
+  assert.equal(run('getHeroSlides()[0].image'), '/assets/images/hero-sorento.webp');
+  assert.equal(run('getHeroSlides()[1].image'), '/assets/images/hero-oporto.webp');
+});
+
+test('el aviso de sesión calcula tiempo real y alerta antes de vencer', () => {
+  const { run, element } = setup();
+  run("Date.now = () => 1000000; state.isAdmin = true; state.sessionExpiresAt = 1000000 + 2 * 60000; updateSessionNotice();");
+  assert.equal(element('cmsSessionNotice').textContent, 'La sesión se cierra en 2 min');
+  assert.match(element('toast').textContent, /menos de 5 minutos/);
+  run("state.sessionExpiresAt = 999999; updateSessionNotice();");
+  assert.equal(run('state.isAdmin'), false);
 });

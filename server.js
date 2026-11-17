@@ -39,7 +39,7 @@ cleanup.unref();
 
 // Cache-Control: evitar caché en HTML y API para actualizaciones inmediatas
 app.use((req, res, next) => {
-  if (req.path.startsWith('/api/') || req.path === '/' || req.path.endsWith('.html')) {
+  if (req.path.startsWith('/api/') || ['/', '/admin', '/admin/'].includes(req.path) || req.path.endsWith('.html')) {
     res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     res.setHeader('Pragma', 'no-cache');
     res.setHeader('Expires', '0');
@@ -144,7 +144,9 @@ function validateFields(body, numericFields = [], textFields = [], mediaFields =
 
 // --- AUTH ROUTES ---
 app.get('/api/auth/me', (req, res) => {
-  res.json({ authenticated: isAdmin(req), email: isAdmin(req) ? ADMIN_EMAIL : null });
+  const authenticated = isAdmin(req);
+  const session = authenticated ? activeSessions.get(parseCookies(req).qvalta_admin) : null;
+  res.json({ authenticated, email: session?.email || null, expiresAt: session?.expiresAt || null });
 });
 
 app.post('/api/auth/login', (req, res) => {
@@ -162,7 +164,7 @@ app.post('/api/auth/login', (req, res) => {
     loginAttempts.delete(key);
     activeSessions.set(token, { email, expiresAt: now + SESSION_TTL_MS });
     res.setHeader('Set-Cookie', `qvalta_admin=${token}; HttpOnly; Path=/; SameSite=Lax; Max-Age=${SESSION_TTL_MS / 1000}${secureCookie}`);
-    return res.json({ ok: true, email });
+    return res.json({ ok: true, email, expiresAt: now + SESSION_TTL_MS });
   }
   loginAttempts.set(key, { count: attempt && attempt.resetAt > now ? attempt.count + 1 : 1, resetAt: attempt && attempt.resetAt > now ? attempt.resetAt : now + 15 * 60 * 1000 });
   return res.status(401).json({ error: 'Credenciales incorrectas.' });
@@ -199,13 +201,17 @@ async function getQavaltaMapWithLiveSync(slug, forceRefresh = false) {
   }
   const baseMap = baseMaps.get(safeSlug);
   let cached = qavaltaLiveCache.get(safeSlug);
-  if (safeSlug !== 'torres-qavalta' && (forceRefresh || !cached || Date.now() - cached.ts >= QAVALTA_CACHE_TTL_MS)) {
+  if (forceRefresh || !cached || Date.now() - cached.ts >= QAVALTA_CACHE_TTL_MS) {
     if (!qavaltaPending.has(safeSlug)) {
       const pending = (async () => {
         try {
-          const resp = await fetch(`https://planos.qavalta.com/api/desarrollos/${QAVALTA_DEV_IDS[safeSlug]}/lotes`, { signal: AbortSignal.timeout(5000) });
+          const remotePath = safeSlug === 'torres-qavalta' ? '/torres?desarrolloId=6' : `/desarrollos/${QAVALTA_DEV_IDS[safeSlug]}/lotes`;
+          const resp = await fetch(`https://planos.qavalta.com/api${remotePath}`, { signal: AbortSignal.timeout(5000) });
           if (!resp.ok) throw new Error('Sin respuesta del catálogo remoto');
-          const rows = await resp.json();
+          const payload = await resp.json();
+          const rows = safeSlug === 'torres-qavalta' && Array.isArray(payload)
+            ? payload.flatMap(t => (t.pisos || []).flatMap(f => (f.departamentos || []).map(d => ({ svgId: d.svgSlotId, nombre: d.nombre, manzana: f.nombre, area: d.metros, precio: d.precio ?? d.prototipo?.precio, status: d.estatus, prototipo: d.prototipo?.nombre }))))
+            : payload;
           if (!Array.isArray(rows) || !rows.length) throw new Error('Catálogo remoto vacío');
           const bySvgId = Object.create(null);
           for (const row of rows) if (typeof row.svgId === 'string') bySvgId[row.svgId] = row;
@@ -409,13 +415,14 @@ app.patch('/api/admin/developments/:id', requireAdmin, (req, res) => {
   const dev = db.developments.find(d => d.id === req.params.id);
   if (!dev) return res.status(404).json({ error: 'Desarrollo no encontrado.' });
 
-  const error = validateFields(req.body, ['startingPrice'], ['name', 'tagline'], ['image']);
+  const error = validateFields(req.body, ['startingPrice'], ['name', 'tagline'], ['image', 'heroImage']);
   if (error) return res.status(400).json({ error });
-  const { name, tagline, startingPrice, image } = req.body || {};
+  const { name, tagline, startingPrice, image, heroImage } = req.body || {};
   if (name !== undefined) dev.name = String(name);
   if (tagline !== undefined) dev.tagline = String(tagline);
   if (startingPrice !== undefined) dev.startingPrice = Number(startingPrice);
   if (image !== undefined) dev.image = String(image);
+  if (heroImage !== undefined) dev.heroImage = String(heroImage);
 
   writeDB(db);
   res.json({ ok: true, development: dev });

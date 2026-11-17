@@ -87,3 +87,14 @@ El usuario autorizó configurar la contraseña del administrador y publicar en a
 El CMS muestra una vista previa de imagen, precio, descripción, superficie, recámaras, baños y video por prototipo. Indica los desarrollos en los que aparece y aclara que Guardar actualiza la ficha compartida. Los borradores no modifican el catálogo publicado. Portada muestra seis miniaturas numeradas: la primera corresponde a su formulario y las otras llevan al campo de imagen del desarrollo.
 
 También se eliminó la pausa de logos de financiamiento al pasar el mouse y se aumentaron los indicadores de cantidad de prototipos a círculos de 36 píxeles con números de 17 píxeles.
+
+
+## Correcciones de mapas, carrusel y sesión — 1.10.3
+- /admin restaura el panel y la sección seleccionada al recargar si la sesión sigue válida. Aviso de tiempo restante basado en expiresAt del servidor, plazo absoluto de ocho horas, alerta antes de cinco minutos y solicitud de acceso al expirar. Recargar no renueva la sesión. Las sesiones en memoria terminan también si el servidor se reinicia.
+- Carrusel y sus miniaturas usan el mismo origen. Cada desarrollo tiene heroImage independiente de image de la ficha; las fotografías panorámicas originales son los valores de respaldo. La primera se edita en Portada principal; las otras en el campo específico de cada desarrollo.
+- Oporto recupera el fondo original oficial con recorte SVG que conserva los lotes; logo completo centrado con contraste en ambos temas. Fondo y logo comparten un único WebP de 953948 bytes.
+- Torres consulta /api/torres?desarrolloId=6 para sincronizar departamentos. Se agregó la geometría oficial del lote _Mza17Lote16 de Vittoria. CMS y mapa de inicio muestran los cuatro estados.
+- Cotejo completo de identificadores y estados: Sorento262, Oporto422, Ardenza285, Montalese392, Torres43 y Vittoria473; sin faltantes, sobrantes ni diferencias al verificar. Los cambios explícitos de estado del administrador siguen teniendo prioridad.
+- Validación: pruebas de ruta/cache, caducidad, fotografías separadas, sincronización, persistencia y revisión visual de escritorio/móvil. La publicación se comprueba por HTTPS tras el push.
+
+El cierre de sesión se movió a un menú del icono de usuario en la esquina superior derecha. Admite cierre con Escape, clic fuera y navegación por teclado.

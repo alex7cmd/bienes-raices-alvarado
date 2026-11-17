@@ -25,6 +25,7 @@ before(async () => {
     remoteCalls++;
     await new Promise(resolve => setTimeout(resolve, 20));
     if (upstreamFails) return new Response('{}', { status: 503 });
+    if (String(url).includes('/torres?')) return Response.json([{ pisos: [{ nombre: 'Planta Baja', departamentos: [{ svgSlotId: 'Flat1Dpto2', estatus: 'no-disponible', nombre: 'Depto2' }] }] }]);
     if (String(url).endsWith('/lotes')) return Response.json([{ svgId: 'test-unknown-id', status: 'disponible' }]);
     // Simulate a contact arriving while the administrator waits for upstream sync.
     const dbPath = path.join(fixture, 'data/db.json');
@@ -71,6 +72,9 @@ test('cookies malformadas y rutas inexistentes producen respuestas correctas', a
 });
 test('HTML no se cachea y los recursos estáticos tienen caché y MIME seguros', async () => {
   assert.match((await request('/')).headers.get('cache-control'), /no-store/);
+  const adminPage = await request('/admin?seccion=site');
+  assert.equal(adminPage.status, 200);
+  assert.match(adminPage.headers.get('cache-control'), /no-store/);
   const res = await request('/js/app.js');
   assert.match(res.headers.get('cache-control'), /max-age=86400/);
   assert.equal(res.headers.get('x-content-type-options'), 'nosniff');
@@ -81,7 +85,12 @@ test('login emite cookie HttpOnly con caducidad', async () => {
   const setCookie = res.headers.get('set-cookie');
   assert.match(setCookie, /HttpOnly/); assert.match(setCookie, /Max-Age=28800/);
   cookie = setCookie.split(';')[0];
-  assert.equal((await (await request('/api/auth/me', { authenticated: true })).json()).authenticated, true);
+  const login = await res.json();
+  const me = await (await request('/api/auth/me', { authenticated: true })).json();
+  assert.equal(me.authenticated, true);
+  assert.equal(me.expiresAt, login.expiresAt);
+  assert.ok(me.expiresAt > Date.now() + 28790000);
+  assert.equal((await (await request('/api/auth/me', { authenticated: true })).json()).expiresAt, me.expiresAt, 'refrescar no renueva la sesión');
 });
 test('CMS rechaza precios inválidos y URLs ejecutables sin cambiar los datos', async () => {
   const before = JSON.parse(fs.readFileSync(path.join(fixture, 'data/db.json')));
@@ -100,6 +109,17 @@ test('CMS guarda precios y contenido válido que se refleja en la API pública',
   const data = await (await request('/api/public/site')).json();
   assert.equal(data.prototypes.find(p => p.id === 'areni').price, 2345678);
 });
+test('el CMS guarda fotos distintas para el carrusel y la ficha del desarrollo', async () => {
+  const before = await (await request('/api/public/site')).json();
+  const originalImage = before.developments.find(d => d.id === 'oporto').image;
+  const response = await request('/api/admin/developments/oporto', { method: 'PATCH', authenticated: true, body: { heroImage: '/uploads/hero-test.webp' } });
+  assert.equal(response.status, 200);
+  const site = await (await request('/api/public/site')).json();
+  const dev = site.developments.find(d => d.id === 'oporto');
+  assert.equal(dev.heroImage, '/uploads/hero-test.webp');
+  assert.equal(dev.image, originalImage);
+});
+
 test('las solicitudes de contacto validan texto, correo y teléfono', async () => {
   for (const body of [{ nombre: '  ', email: 'a@b.com', telefono: '12345678' }, { nombre: 'Ana', email: 'invalido', telefono: '12345678' }, { nombre: {}, email: 'a@b.com', telefono: '12345678' }]) {
     assert.equal((await request('/api/public/contact', { method: 'POST', body })).status, 400);
@@ -136,6 +156,14 @@ test('ediciones de departamentos se reflejan también en los conteos de cada pis
   const data = await (await request('/api/public/qavalta-map/torres-qavalta')).json();
   assert.equal(data.floors[0].lots[0].s, 'reservado');
 });
+test('Torres consulta estados de departamentos y los refleja en sus pisos', async () => {
+  const map = await (await request('/api/public/qavalta-map/torres-qavalta')).json();
+  assert.equal(map.source, 'planos.qavalta.com');
+  const flat = map.lots.find(l => l.id === 'Flat1Dpto2');
+  assert.equal(flat.s, 'reservado', 'conserva la modificación explícita del administrador');
+  assert.equal(map.floors[0].lots.find(l => l.id === flat.id).s, flat.s);
+});
+
 test('sincronizar no elimina solicitudes que llegaron mientras se esperaba la API remota', async () => {
   const res = await request('/api/admin/qavalta-sync', { method: 'POST', authenticated: true, body: {} });
   assert.equal(res.status, 200);
@@ -160,4 +188,18 @@ test('solicitudes de otro origen no modifican datos y logout invalida la sesión
   assert.equal((await request('/api/admin/site', { method: 'PATCH', authenticated: true, body: {}, headers: { Origin: 'https://otro.example' } })).status, 403);
   assert.equal((await request('/api/auth/logout', { method: 'POST', authenticated: true })).status, 200);
   assert.equal((await request('/api/admin/leads', { authenticated: true })).status, 401);
+});
+
+test('la sesión expirada se rechaza y no se recupera al refrescar', async () => {
+  const login = await request('/api/auth/login', { method: 'POST', body: { email: 'admin@bienesraicesalvarado.com.mx', password } });
+  cookie = login.headers.get('set-cookie').split(';')[0];
+  const realNow = Date.now;
+  const future = realNow() + 8 * 60 * 60 * 1000 + 1;
+  try {
+    Date.now = () => future;
+    assert.equal((await request('/api/admin/lots', { authenticated: true })).status, 401);
+    const me = await (await request('/api/auth/me', { authenticated: true })).json();
+    assert.equal(me.authenticated, false);
+    assert.equal(me.expiresAt, null);
+  } finally { Date.now = realNow; }
 });

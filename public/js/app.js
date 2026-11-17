@@ -6,6 +6,8 @@ const state = {
   counts: { disponible: 0, no_disponible: 0, vendido: 0 },
   isAdmin: false,
   adminEmail: null,
+  sessionExpiresAt: null,
+  currentView: 'public',
   selectedLotId: null,
   mapProtoFilter: 'all',
   mapDevSlug: 'sorento',
@@ -206,6 +208,7 @@ async function api(url, options = {}) {
   });
   let data;
   try { data = await res.json(); } catch { throw new Error('El servidor devolvió una respuesta no válida. Intenta de nuevo.'); }
+  if (res.status === 401 && url.startsWith('/api/admin/')) expireAdminSession();
   if (!res.ok) throw new Error(data.error || 'Error en la solicitud');
   return data;
 }
@@ -254,6 +257,10 @@ async function init() {
   bindEvents();
   const results = await Promise.allSettled([loadPublicData(), checkAuth()]);
   results.forEach(result => { if (result.status === 'rejected') showToast(result.reason.message); });
+  await restoreAdminRoute();
+  window.addEventListener('popstate', handleAsync(restoreAdminRoute));
+  setInterval(updateSessionNotice, 1000);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) updateSessionNotice(); });
 }
 
 async function loadPublicData() {
@@ -268,8 +275,11 @@ async function checkAuth() {
   const res = await api('/api/auth/me');
   state.isAdmin = res.authenticated;
   state.adminEmail = res.email;
+  state.sessionExpiresAt = res.expiresAt;
+  updateSessionNotice();
   $('adminActiveDot').classList.toggle('hidden', !state.isAdmin);
   $('adminEmailLabel').textContent = state.adminEmail || '';
+  $('cmsAdminEmail').textContent = state.adminEmail || '';
 }
 
 const HERO_SLIDES = [
@@ -282,7 +292,13 @@ const HERO_SLIDES = [
 ];
 
 function getHeroSlides() {
-  return HERO_SLIDES.map((slide, i) => ({ ...slide, image: (i === 0 && state.site?.heroImage) || state.developments.find(d => d.id === slide.slug)?.image || slide.image }));
+  return HERO_SLIDES.map((slide, i) => {
+    const development = state.developments.find(d => d.id === slide.slug);
+    const configured = i === 0 ? state.site?.heroImage : development?.heroImage;
+    // The original hero.jpg and development photos were demo defaults, separate from the hero carousel.
+    const image = configured && configured !== '/assets/images/hero.jpg' ? configured : slide.image;
+    return { ...slide, image };
+  });
 }
 
 function setHeroSlide(idx) {
@@ -533,6 +549,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
                 <div class="dev-inline-legend">
                   <span><i class="dot disponible"></i> Disp. <strong data-c="disponible">-</strong></span>
                   <span><i class="dot reservado"></i> Apart. <strong data-c="reservado">-</strong></span>
+                  <span><i class="dot no_disponible"></i> No disp. <strong data-c="no_disponible">-</strong></span>
                   <span><i class="dot vendido"></i> Vend. <strong data-c="vendido">-</strong></span>
                 </div>
                 <button type="button" class="dev-inline-fs-btn" data-open-fs-map="${escapeHtml(activeDev.id)}">⤢ Pantalla completa</button>
@@ -681,11 +698,16 @@ function closeFullscreenGallery() {
 
 // --- VIEW SWITCHING ---
 function showOnlyView(viewName) {
+  state.currentView = viewName;
+  const route = viewName === 'admin' ? '/admin' : '/';
+  if (location.pathname !== route) history.pushState({}, '', route);
+  updateSessionNotice();
   $('publicView').classList.toggle('hidden', viewName !== 'public');
   $('siteHeader').classList.toggle('hidden', viewName !== 'public');
   $('mapView').classList.toggle('hidden', viewName !== 'map');
   $('adminView').classList.toggle('hidden', viewName !== 'admin');
   $('adminDropdown').classList.add('hidden');
+  closeCmsUserMenu();
   if ($('floatingStack')) {
     $('floatingStack').classList.toggle('hidden', viewName !== 'public');
   }
@@ -876,6 +898,7 @@ function buildMapLifeOverlay(mapData) {
   `;
 }
 
+let mapRenderSequence = 0;
 function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'all', protoFilter = 'all', floorId = null } = {}) {
   const colors = {
     disponible: { fill: 'rgba(16, 185, 129, 0.52)', stroke: '#047857' },
@@ -898,8 +921,11 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
   let bgMarkup = '';
   if (mapData.isTowerFloors && activeBg) {
     bgMarkup = `<image href="${escapeHtml(activeBg)}" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
+  } else if (mapData.slug === 'oporto' && mapData.bg) {
+    const clipId = `oporto-plan-${++mapRenderSequence}`;
+    bgMarkup = `<defs><clipPath id="${clipId}"><polygon points="100,80 6900,80 6900,3000 4900,6600 100,6600"/></clipPath></defs><image href="${escapeHtml(mapData.bg)}" x="0" y="0" width="9000" height="6600" clip-path="url(#${clipId})"/>`;
   } else if (mapData.bg) {
-    bgMarkup = `<image href="${escapeHtml(mapData.bg)}?v=1.10.0" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
+    bgMarkup = `<image href="${escapeHtml(mapData.bg)}${mapData.bg.includes('?') ? '&' : '?'}v=1.10.3" x="0" y="0" width="${mapData.w}" height="${mapData.h}" preserveAspectRatio="xMidYMid meet" />`;
   }
 
   const sw = mapData.isTowerFloors ? 12 : 9;
@@ -933,7 +959,7 @@ async function loadInlineDevMap(slug, floorId = null) {
     const capacity = section.closest('.dev-pill-body')?.querySelector('[data-spec="capacity"] strong');
     if (capacity) capacity.textContent = `${mapData.lots.length} ${mapData.isTowerFloors ? 'unidades en plano' : 'lotes en plano'}`;
     const counts = getMapCounts(mapData.lots);
-    ['disponible', 'reservado', 'vendido'].forEach(k => {
+    ['disponible', 'reservado', 'no_disponible', 'vendido'].forEach(k => {
       const el = section.querySelector(`[data-c="${k}"]`);
       if (el) el.textContent = counts[k];
     });
@@ -977,8 +1003,48 @@ async function openInteractiveMap(devSlug = null) {
   await renderInteractiveMap();
 }
 
+function updateSessionNotice() {
+  const label = $('cmsSessionNotice');
+  if (!label) return;
+  if (!state.isAdmin || !state.sessionExpiresAt) { label.textContent = ''; return; }
+  const remaining = state.sessionExpiresAt - Date.now();
+  if (remaining <= 0) { expireAdminSession(); return; }
+  const minutes = Math.ceil(remaining / 60000);
+  const duration = minutes >= 60 ? `${Math.floor(minutes / 60)} h ${minutes % 60} min` : `${minutes} min`;
+  label.textContent = `La sesión se cierra en ${duration}`;
+  label.title = `Cierre de sesión: ${new Date(state.sessionExpiresAt).toLocaleTimeString('es-MX')}. Recargar no amplía el plazo.`;
+  label.classList.toggle('session-warning', remaining <= 5 * 60000);
+  if (remaining <= 5 * 60000 && !state.sessionWarningShown) {
+    state.sessionWarningShown = true;
+    showToast('Tu sesión se cerrará en menos de 5 minutos. Guarda tus cambios.');
+  }
+}
+
+function expireAdminSession() {
+  const wasAdmin = state.isAdmin;
+  state.isAdmin = false;
+  state.sessionExpiresAt = null;
+  closeCmsUserMenu();
+  $('adminActiveDot').classList.add('hidden');
+  if ($('cmsSessionNotice')) $('cmsSessionNotice').textContent = 'La sesión terminó. Inicia sesión para continuar.';
+  if (state.currentView === 'admin' || location.pathname.startsWith('/admin')) {
+    $('loginModal').classList.remove('hidden');
+    $('loginError').textContent = 'La sesión terminó. Inicia sesión para continuar.';
+    $('loginError').classList.remove('hidden');
+  }
+  if (wasAdmin) showToast('La sesión terminó. Inicia sesión para continuar.');
+}
+
+async function restoreAdminRoute() {
+  if (/^\/admin\/?$/.test(location.pathname)) {
+    if (state.isAdmin) await openAdminCms();
+    else { showOnlyView('admin'); $('loginModal').classList.remove('hidden'); }
+  } else showOnlyView('public');
+}
+
 async function openAdminCms() {
   if (!state.isAdmin) {
+    showOnlyView('admin');
     $('loginModal').classList.remove('hidden');
     return;
   }
@@ -989,6 +1055,8 @@ async function openAdminCms() {
   state.counts = data.counts;
   await renderAdminCms();
   showOnlyView('admin');
+  const section = new URLSearchParams(location.search).get('seccion');
+  if (['lots', 'prototypes', 'site'].includes(section)) document.querySelector(`.cms-tab[data-cmstab="${section}"]`)?.click();
 }
 
 // --- INTERACTIVE SVG MAP (REDRAWN PER DEVELOPMENT + FULLSCREEN) ---
@@ -1112,7 +1180,7 @@ async function renderInteractiveMap() {
   const titleEl = $('mapPanelTitle');
   if (titleEl) {
     if (slug === 'oporto') {
-      titleEl.innerHTML = `<img src="/assets/maps/logo-oporto.png?v=1.8.3" alt="Oporto" class="panel-dev-logo" />`;
+      titleEl.innerHTML = `<svg class="panel-dev-logo" role="img" aria-label="Oporto" xmlns="http://www.w3.org/2000/svg" viewBox="5850 3900 3000 2200"><defs><clipPath id="oporto-logo-clip"><polygon points="5850,4950 6800,4950 6800,3900 7950,3900 7950,4950 8850,4950 8850,6100 5850,6100"/></clipPath><filter id="oporto-ink" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 -1 -1 -1 0 2.7"/></filter></defs><g clip-path="url(#oporto-logo-clip)"><image filter="url(#oporto-ink)" width="9000" height="6600" href="/assets/maps/oporto-original.webp?v=1.10.3"/></g></svg>`;
     } else {
       titleEl.innerHTML = `
         <span class="panel-dev-crest">
@@ -1474,6 +1542,7 @@ async function renderAdminCms() {
     <div class="stat-box"><small>Total (${slug})</small><strong>${mapData.lots.length}</strong></div>
     <div class="stat-box"><small>Disponibles</small><strong style="color:var(--green)">${counts.disponible}</strong></div>
     <div class="stat-box"><small>Apartados</small><strong style="color:var(--amber)">${counts.reservado}</strong></div>
+    <div class="stat-box"><small>No disponibles</small><strong>${counts.no_disponible}</strong></div>
     <div class="stat-box"><small>Vendidos</small><strong style="color:#ef4444">${counts.vendido}</strong></div>
   `;
 
@@ -1483,7 +1552,7 @@ async function renderAdminCms() {
   $('editHeroTitle').value = site.heroTitle;
   $('editHeroSubtitle').value = site.heroSubtitle;
   $('editPhoneDisplay').value = site.phoneDisplay;
-  $('editHeroImage').value = site.heroImage;
+  $('editHeroImage').value = getHeroSlides()[0].image;
   updateCmsHomePreview();
   renderCmsCarouselOverview();
 
@@ -1491,7 +1560,7 @@ async function renderAdminCms() {
     <div class="cms-form-card" data-cms-dev="${escapeHtml(d.id)}">
       <img src="${escapeHtml(d.image)}" class="cms-preview-img" alt="${escapeHtml(d.name)}" />
       <h3>Desarrollo: ${escapeHtml(d.name)}</h3>
-      <p class="cms-field-help cms-card-location">${d.id === 'sorento' ? 'Inicio → Información de Sorento. La primera foto del carrusel se edita arriba, en Portada principal.' : `Inicio → Carrusel e información de ${escapeHtml(d.name)}. La imagen cambia su diapositiva del carrusel.`}</p>
+      <p class="cms-field-help cms-card-location">${d.id === 'sorento' ? 'Inicio → Información de Sorento. La primera foto del carrusel se edita arriba, en Portada principal.' : `Inicio → Información de ${escapeHtml(d.name)}. Su imagen de carrusel se edita por separado abajo.`}</p>
       <div class="form-grid">
         <label>Nombre<input type="text" class="d-name" value="${escapeHtml(d.name)}" /></label>
         <label>Precio desde (MXN)<input type="number" class="d-price" value="${escapeHtml(d.startingPrice)}" /></label>
@@ -1499,6 +1568,9 @@ async function renderAdminCms() {
       <label style="margin-bottom:10px;">Descripción corta<input type="text" class="d-tagline" value="${escapeHtml(d.tagline)}" /></label>
       <label style="margin-bottom:10px;">URL Imagen<input type="text" class="d-img" value="${escapeHtml(d.image)}" /></label>
       <label style="margin-bottom:12px;">Subir nueva imagen<input type="file" class="d-upload-img" accept="image/*" /></label>
+      ${d.id !== 'sorento' ? `<label>Imagen del carrusel de inicio · ${escapeHtml(d.name)}<input type="text" class="d-hero-img" value="${escapeHtml(getHeroSlides().find(slide => slide.slug === d.id)?.image || '')}" /></label>
+      <img class="cms-preview-img d-hero-preview" src="${escapeHtml(getHeroSlides().find(slide => slide.slug === d.id)?.image || '')}" alt="Carrusel de ${escapeHtml(d.name)}" loading="lazy" />
+      <label>Subir imagen del carrusel<input type="file" class="d-upload-hero" accept="image/*" /></label>` : ''}
       <button class="btn-primary save-dev-btn">Guardar desarrollo</button>
     </div>
   `).join('');
@@ -1544,22 +1616,42 @@ function renderCmsLotsTable() {
 }
 
 // --- EVENTS ---
+function closeCmsUserMenu() {
+  $('cmsUserMenu')?.classList.add('hidden');
+  $('cmsUserMenuBtn')?.setAttribute('aria-expanded', 'false');
+}
+
 function bindEvents() {
+  const accountButton = $('cmsUserMenuBtn');
+  const accountMenu = $('cmsUserMenu');
+  const openAccountMenu = () => {
+    accountMenu.classList.remove('hidden');
+    accountButton.setAttribute('aria-expanded', 'true');
+  };
+  accountButton.addEventListener('click', () => {
+    if (accountButton.getAttribute('aria-expanded') === 'true') closeCmsUserMenu();
+    else openAccountMenu();
+  });
+  accountButton.addEventListener('keydown', event => {
+    if (event.key === 'ArrowDown') { event.preventDefault(); openAccountMenu(); $('cmsLogoutBtn').focus(); }
+  });
+  document.addEventListener('click', event => { if (!event.target.closest('.cms-account')) closeCmsUserMenu(); });
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && accountButton.getAttribute('aria-expanded') === 'true') {
+      closeCmsUserMenu(); accountButton.focus();
+    }
+  });
   // Top-right User Icon -> go straight to Alvarado Studio when authenticated
   $('userIconBtn').addEventListener('click', (e) => {
     e.stopPropagation();
-    if (state.isAdmin) {
-      openAdminCms();
-    } else {
-      $('loginModal').classList.remove('hidden');
-    }
+    handleAsync(openAdminCms)();
   });
 
   document.addEventListener('click', () => $('adminDropdown').classList.add('hidden'));
   $('adminDropdown').addEventListener('click', (e) => e.stopPropagation());
 
   // Login modal -> go straight into Alvarado Studio on login
-  $('closeLoginModal').addEventListener('click', () => $('loginModal').classList.add('hidden'));
+  $('closeLoginModal').addEventListener('click', () => { $('loginModal').classList.add('hidden'); if (!state.isAdmin) showOnlyView('public'); });
   $('loginForm').addEventListener('submit', handleAsync(async (e) => {
     e.preventDefault();
     $('loginError').classList.add('hidden');
@@ -1572,6 +1664,8 @@ function bindEvents() {
         })
       });
       await checkAuth();
+      state.sessionWarningShown = false;
+      $('loginPassword').value = '';
       $('loginModal').classList.add('hidden');
       showToast('Bienvenido a Alvarado Studio');
       await openAdminCms();
@@ -2033,6 +2127,7 @@ function bindEvents() {
       document.querySelectorAll('.cms-tab').forEach(t => t.classList.remove('active'));
       tab.classList.add('active');
       const target = tab.dataset.cmstab;
+      history.replaceState({}, '', `/admin?seccion=${target}`);
       $('cmsTabLots').classList.toggle('hidden', target !== 'lots');
       $('cmsTabPrototypes').classList.toggle('hidden', target !== 'prototypes');
       $('cmsTabSite').classList.toggle('hidden', target !== 'site');
@@ -2105,7 +2200,7 @@ function bindEvents() {
     const button = event.target.closest('[data-edit-carousel-slide]');
     if (!button) return;
     const slug = button.dataset.editCarouselSlide;
-    const input = slug === HERO_SLIDES[0].slug ? $('editHeroImage') : [...document.querySelectorAll('[data-cms-dev]')].find(card => card.dataset.cmsDev === slug)?.querySelector('.d-img');
+    const input = slug === HERO_SLIDES[0].slug ? $('editHeroImage') : [...document.querySelectorAll('[data-cms-dev]')].find(card => card.dataset.cmsDev === slug)?.querySelector('.d-hero-img');
     if (input) {
       input.scrollIntoView({ behavior: 'smooth', block: 'center' });
       input.focus({ preventScroll: true });
@@ -2186,15 +2281,22 @@ function bindEvents() {
   }));
 
   $('cmsDevsGrid').addEventListener('change', handleAsync(async (e) => {
-    if (!e.target.classList.contains('d-upload-img')) return;
+    if (!e.target.matches('.d-upload-img, .d-upload-hero')) return;
     const card = e.target.closest('[data-cms-dev]');
     const file = e.target.files[0];
     if (!file) return;
     const res = await uploadMedia(file);
-    card.querySelector('.d-img').value = res.url;
-    card.querySelector('.cms-preview-img').src = res.url;
+    const isHero = e.target.classList.contains('d-upload-hero');
+    card.querySelector(isHero ? '.d-hero-img' : '.d-img').value = res.url;
+    card.querySelector(isHero ? '.d-hero-preview' : '.cms-preview-img').src = res.url;
     showToast('Imagen subida. Haz clic en Guardar desarrollo.');
   }));
+
+  $('cmsDevsGrid').addEventListener('input', e => {
+    if (!e.target.matches('.d-img, .d-hero-img')) return;
+    const card = e.target.closest('[data-cms-dev]');
+    card.querySelector(e.target.matches('.d-hero-img') ? '.d-hero-preview' : '.cms-preview-img').src = e.target.value;
+  });
 
   $('cmsDevsGrid').addEventListener('click', handleAsync(async (e) => {
     if (!e.target.classList.contains('save-dev-btn')) return;
@@ -2206,10 +2308,12 @@ function bindEvents() {
         name: card.querySelector('.d-name').value,
         startingPrice: card.querySelector('.d-price').value,
         tagline: card.querySelector('.d-tagline').value,
-        image: card.querySelector('.d-img').value
+        image: card.querySelector('.d-img').value,
+        ...(card.querySelector('.d-hero-img') ? { heroImage: card.querySelector('.d-hero-img').value } : {})
       })
     });
     await loadPublicData();
+    renderCmsCarouselOverview();
     showToast(`Desarrollo ${id} guardado`);
   }));
 }

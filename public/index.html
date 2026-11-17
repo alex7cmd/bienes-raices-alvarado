@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.10.2-2" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.10.3-6" />
 </head>
 <body>
   <!-- DOCK SUPERIOR FLOTANTE iOS 27 LIQUID GLASS -->
@@ -431,13 +431,6 @@
           </button>
         </nav>
 
-        <div class="cms-sidebar-footer">
-          <div class="cms-user-pill">
-            <span class="cms-user-dot"></span>
-            <small id="cmsAdminEmail">admin@bienesraicesalvarado.com.mx</small>
-          </div>
-          <button class="cms-logout-btn" id="cmsLogoutBtn">Cerrar sesión</button>
-        </div>
       </aside>
 
       <div class="cms-main">
@@ -447,8 +440,18 @@
             <span class="cms-note">Administración integral de inventario, precios y desarrollos · Qavalta</span>
           </div>
           <div style="display:flex;align-items:center;gap:10px;">
+            <span class="cms-session-notice" id="cmsSessionNotice" role="status"></span>
             <span class="cms-live-pill" id="cmsSyncBadge">Consultando fuente de datos…</span>
             <button class="icon-user-btn" id="cmsThemeToggleBtn" title="Cambiar tema claro u oscuro" aria-label="Cambiar tema claro u oscuro"></button>
+            <div class="cms-account">
+              <button type="button" class="icon-user-btn" id="cmsUserMenuBtn" aria-label="Menú de usuario" aria-haspopup="menu" aria-expanded="false" aria-controls="cmsUserMenu">
+                <svg class="ui-icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 22v-3a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v3"/></svg>
+              </button>
+              <div class="cms-account-menu hidden" id="cmsUserMenu" role="menu" aria-label="Cuenta del administrador">
+                <small id="cmsAdminEmail"></small>
+                <button type="button" class="dropdown-item danger" id="cmsLogoutBtn" role="menuitem">Cerrar sesión</button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -682,6 +685,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.10.2-2" defer></script>
+  <script src="/js/app.js?v=1.10.3-6" defer></script>
 </body>
 </html>

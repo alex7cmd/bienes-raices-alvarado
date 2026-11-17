@@ -1634,3 +1634,19 @@ html[data-theme="dark"] .toast.toast-sync-success {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* Session and centered development logo */
+.panel-dev-logo { margin: 0 auto 12px; width: 180px; height: 130px; max-width: 100%; object-fit: contain; }
+.cms-session-notice { color: var(--muted); font-size: 13px; }
+.cms-session-notice.session-warning { color: #b45309; font-weight: 700; }
+.cms-topbar > div:last-child { flex-wrap: wrap; }
+
+html[data-theme="dark"] .panel-dev-logo { filter: brightness(0) invert(1); }
+
+.cms-account { position: relative; }
+.cms-account-menu { position: absolute; z-index: 100; right: 0; top: calc(100% + 10px); width: 260px; max-width: calc(100vw - 32px); padding: 10px; background: var(--card-bg); color: var(--text); border: 1px solid var(--border); border-radius: 14px; box-shadow: 0 12px 30px rgba(0,0,0,.18); }
+.cms-account-menu small { display: block; overflow-wrap: anywhere; padding: 8px 10px; color: var(--muted); }
+.cms-account-menu .dropdown-item { width: 100%; text-align: left; }
+.cms-topbar { position: sticky; z-index: 50; }
+
+.cms-topbar > div:last-child { margin-left: auto; max-width: 100%; justify-content: flex-end; }
