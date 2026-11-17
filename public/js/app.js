@@ -298,7 +298,7 @@ async function init() {
 async function loadPublicData() {
   const [data, videos] = await Promise.all([
     api('/api/public/site'),
-    api('/assets/qavalta-videos.json?v=1.0.0-3').catch(() => [])
+    api('/assets/qavalta-videos.json?v=1.0.0-6').catch(() => [])
   ]);
   state.videos = Array.isArray(videos) ? videos : [];
   state.site = data.site;
@@ -509,11 +509,12 @@ function renderDevelopmentVideos(development) {
     </div>
     <div class="qavalta-video-grid">${videos.map(video => {
       const id = video.url.split('/').pop();
-      return `<article class="qavalta-video-card">
-        <div class="qavalta-video-player"><iframe title="${escapeHtml(video.title)} · Itzel Alva"
+      const embedEnabled = video.embedEnabled !== false;
+      return `<article class="qavalta-video-card" data-video-id="${id}">
+        <div class="qavalta-video-player ${embedEnabled ? '' : 'video-unavailable'}">${embedEnabled ? `<iframe title="${escapeHtml(video.title)} · Itzel Alva"
           src="https://www.tiktok.com/player/v1/${id}?embed_from=webapp_share&amp;music_info=1&amp;description=1&amp;autoplay=1&amp;muted=1"
-          loading="lazy" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
-          <div class="qavalta-video-fallback hidden" role="status">
+          loading="lazy" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>` : ''}
+          <div class="qavalta-video-fallback ${embedEnabled ? 'hidden' : ''}" role="status">
             <p>Este recorrido está disponible en TikTok.</p>
             <a href="${escapeHtml(video.url)}" target="_blank" rel="noopener noreferrer">Abrir video ↗</a>
           </div>
@@ -530,6 +531,7 @@ function renderDevelopmentVideos(development) {
 function showVideoFallback(frame) {
   if (!frame.isConnected) return;
   frame.classList.add('hidden');
+  frame.closest('.qavalta-video-player')?.classList?.add('video-unavailable');
   frame.closest('.qavalta-video-player')?.querySelector('.qavalta-video-fallback')?.classList.remove('hidden');
 }
 

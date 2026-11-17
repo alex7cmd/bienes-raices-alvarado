@@ -5,7 +5,8 @@
     "developments": [
       "sorento"
     ],
-    "sharedModel": false
+    "sharedModel": false,
+    "embedEnabled": false
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7605332429020171538",
@@ -13,7 +14,8 @@
     "developments": [
       "sorento"
     ],
-    "sharedModel": false
+    "sharedModel": false,
+    "embedEnabled": false
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7606539250288315656",
@@ -21,7 +23,8 @@
     "developments": [
       "sorento"
     ],
-    "sharedModel": false
+    "sharedModel": false,
+    "embedEnabled": false
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7520069670469160210",
@@ -29,7 +32,8 @@
     "developments": [
       "oporto"
     ],
-    "sharedModel": false
+    "sharedModel": false,
+    "embedEnabled": false
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7604688571139706119",
@@ -37,7 +41,8 @@
     "developments": [
       "oporto"
     ],
-    "sharedModel": false
+    "sharedModel": false,
+    "embedEnabled": false
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7608434676860046612",
@@ -45,7 +50,8 @@
     "developments": [
       "ardenza"
     ],
-    "sharedModel": false
+    "sharedModel": false,
+    "embedEnabled": false
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7574163128146038034",
@@ -54,7 +60,8 @@
       "montalese",
       "vittoria"
     ],
-    "sharedModel": true
+    "sharedModel": true,
+    "embedEnabled": false
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7621695933620768020",
@@ -63,6 +70,7 @@
       "montalese",
       "vittoria"
     ],
-    "sharedModel": true
+    "sharedModel": true,
+    "embedEnabled": false
   }
 ]

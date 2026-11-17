@@ -1733,3 +1733,6 @@ footer { border-top-color: var(--qavalta-stroke); }
 .qavalta-video-player { position: relative; }
 .qavalta-video-fallback { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 18px; padding: 25px; text-align: center; background: var(--surface); color: var(--text); }
 .qavalta-video-fallback a { border: 1px solid var(--qavalta-stroke); border-radius: 999px; padding: 12px 20px; background: var(--card-bg); }
+
+.qavalta-video-player.video-unavailable { max-width: none; aspect-ratio: auto; min-height: 170px; }
+.video-unavailable .qavalta-video-fallback { position: static; min-height: 170px; }

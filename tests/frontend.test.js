@@ -129,8 +129,9 @@ test('los videos son solo la selección Qavalta y aparecen en la pestaña correc
   const counts = { sorento: 3, oporto: 2, ardenza: 1, montalese: 2, vittoria: 2, 'torres-qavalta': 0 };
   for (const [slug, count] of Object.entries(counts)) {
     const html = run(`renderDevelopmentVideos(state.developments.find(d => d.id === ${JSON.stringify(slug)}))`);
-    assert.equal((html.match(/<iframe /g) || []).length, count, slug);
-    const ids = [...html.matchAll(/player\/v1\/(\d+)/g)].map(m => m[1]);
+    assert.equal((html.match(/<article class="qavalta-video-card"/g) || []).length, count, slug);
+    assert.equal((html.match(/<iframe /g) || []).length, 0, 'La inserción está suspendida mientras TikTok la rechaza.');
+    const ids = [...html.matchAll(/data-video-id="(\d+)"/g)].map(m => m[1]);
     const expected = context.videos.filter(v => v.developments.includes(slug)).map(v => v.url.split('/').pop());
     assert.deepEqual(ids, expected);
   }
