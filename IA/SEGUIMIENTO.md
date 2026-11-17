@@ -170,3 +170,7 @@ Indicadores de prototipos48×48px y número22px, centrados verticalmente en la t
 
 ## 17 de noviembre: contraste del botón de instalación en el acceso
 El fondo del login es azul fijo; el texto del botón heredaba el azul del tema claro y su fondo usaba --panel (variable inexistente), quedando ilegible. Cambiado el fondo genérico a --card-bg y agregado estilo propio de login: fondo blanco, texto #10243b, hover claro y foco blanco. Mantener esta combinación en ambos temas. CSS con versión1.0.0-15.
+
+
+## 17 noviembre: fichas horizontales y controles
+Se publica un prototipo por fila, vista previa izquierda y campos derecha, apilado en celular. Instalar app precede al control de tema en el administrador, como en el público. Datos del catálogo preservados.

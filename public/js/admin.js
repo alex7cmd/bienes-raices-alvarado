@@ -216,8 +216,8 @@ async function renderCmsPrototypesGrid() {
     return;
   }
   grid.innerHTML = list.map(p => `
-    <div class="cms-form-card" data-cms-proto="${escapeHtml(p.id)}">
-      <h3>Prototipo: ${escapeHtml(p.name)}</h3>
+    <div class="cms-form-card cms-proto-horizontal" data-cms-proto="${escapeHtml(p.id)}">
+      <div class="cms-proto-card-header"><h3>Prototipo: ${escapeHtml(p.name)}</h3>
       <span class="cms-location-pill">Estás editando: ficha de ${escapeHtml(p.name)}</span>
       <p class="cms-field-help cms-proto-location-title">Se muestra en la página de inicio, dentro de:</p>
       <div class="cms-proto-location-chips">
@@ -226,8 +226,14 @@ async function renderCmsPrototypesGrid() {
           return `<span>${escapeHtml(development?.name || id)} → ${escapeHtml(p.name)}</span>`;
         }).join('') || '<span>Sin desarrollo asignado</span>'}
       </div>
+      </div>
+      <div class="cms-proto-card-body">
+      <div class="cms-proto-visual">
       ${renderCmsPrototypePreview(p)}
-      <p class="cms-field-help cms-card-location">Esta vista cambia mientras editas. Guardar cambios actualiza la ficha en todos los desarrollos indicados.</p>
+      <p class="cms-field-help cms-card-location">La vista previa cambia mientras editas. Los cambios se publican al guardar.</p>
+      </div>
+      <div class="cms-proto-editor">
+      <h4>Datos del prototipo</h4>
       <div class="form-grid">
         <label>Precio (MXN)<input type="number" class="p-price" value="${escapeHtml(p.price)}" /></label>
         <label>Terreno (m²)<input type="number" class="p-area" value="${escapeHtml(p.area)}" /></label>
@@ -239,6 +245,7 @@ async function renderCmsPrototypesGrid() {
       <label style="margin-bottom:10px;">Subir nueva imagen<input type="file" class="p-upload-img" accept="image/*" /></label>
       <label style="margin-bottom:12px;">URL Video (opcional)<input type="text" class="p-video" value="${escapeHtml(p.video || '')}" placeholder="https://... o sube archivo" /></label>
       <button class="btn-primary save-proto-btn">Guardar cambios</button>
+      </div></div>
     </div>
   `).join('');
 }
