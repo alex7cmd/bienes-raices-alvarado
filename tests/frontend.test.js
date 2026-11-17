@@ -102,7 +102,7 @@ test('mapas simultáneos usan referencias propias para los autos y Torres no tie
   const ids = html => [...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]);
   assert.ok(ids(a).every(id => !ids(b).includes(id)));
   for (const html of [a, b]) {
-    assert.equal((html.match(/<animateMotion /g) || []).length, 3);
+    assert.equal((html.match(/<animateMotion /g) || []).length, 4);
     for (const match of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids(html).includes(match[1]));
   }
   assert.equal(run("buildMapLifeOverlay({slug:'torres-qavalta', bg:'map.webp', isTowerFloors:true})"), '');

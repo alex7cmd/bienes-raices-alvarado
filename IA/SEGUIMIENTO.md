@@ -143,3 +143,9 @@ Indicadores de prototipos48×48px y número22px, centrados verticalmente en la t
 - Comprobación final de c5cd5e4 en producción: TikTok mantiene authentication_failed; los ocho videos siguen disponibles por enlace público. La alternativa de enlaces se muestra correctamente tras el fallo, sin exponer el error interno ni cambiar la selección. Se compacta a170px de alto para evitar espacios vacíos. La reproducción incrustada en producción queda PENDIENTE por la respuesta de TikTok; no declarar esa parte terminada ni atribuirle requisitos de cuenta no comprobados. Los demás ajustes de Versión1.0 y los enlaces clasificados están publicados y verificados.
 
 - Para que los visitantes no vean el error durante la espera, la selección publicada tiene embedEnabled:false: muestra de inmediato las tarjetas con enlaces correctos y no solicita los iframes que TikTok rechaza. El reproductor y su recuperación permanecen implementados y probados localmente; reactivar únicamente después de verificar que TikTok acepte el dominio. No presentar los enlaces como reproducción incrustada ya resuelta.
+
+
+## Cuatro autos separados en cada plano con calles
+- Petición del usuario: cuatro autos por mapa en puntos diferentes, sin circular juntos.
+- Sorento, Oporto, Ardenza, Montalese y Vittoria: cuatro autos con desfases de0,10.5,21 y31.5segundos sobre el circuito de42segundos. Distribución a un cuarto del recorrido y velocidad uniforme explícita para conservar la distancia.
+- Se conservan las rutas ya comprobadas y el tamaño aumentado15%. Torres muestra planos interiores de departamentos, sin calles ni vehículos.
