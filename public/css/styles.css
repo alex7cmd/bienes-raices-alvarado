@@ -1162,7 +1162,7 @@ html[data-theme="dark"] .footer-mini-prop:hover { background: rgba(255, 255, 255
 }
 .dot.disponible { background: var(--green); --dot-rgb: 22, 163, 74; }
 .dot.reservado { background: var(--amber); --dot-rgb: 245, 158, 11; }
-.dot.no_disponible { background: #d97706; --dot-rgb: 217, 119, 6; }
+.dot.no_disponible { background: #f97316; --dot-rgb: 249, 115, 22; }
 .dot.vendido { background: var(--blue); --dot-rgb: 37, 99, 235; }
 .status-filter-label { display: inline-flex; align-items: center; gap: 9px; }
 
@@ -1210,7 +1210,7 @@ html[data-theme="dark"] .footer-mini-prop:hover { background: rgba(255, 255, 255
   font-weight: 700; text-transform: uppercase; margin-bottom: 8px;
 }
 .lot-status-pill.disponible { background: #dcfce7; color: #166534; }
-.lot-status-pill.no_disponible, .lot-status-pill.no-disponible { background: #fef3c7; color: #92400e; }
+.lot-status-pill.no_disponible, .lot-status-pill.no-disponible { background: #ffedd5; color: #9a3412; }
 .lot-status-pill.vendido { background: #dbeafe; color: #1e40af; }
 .lot-detail-price { font-size: 24px; font-weight: 700; color: var(--accent); margin: 6px 0 12px; }
 .lot-specs-grid {

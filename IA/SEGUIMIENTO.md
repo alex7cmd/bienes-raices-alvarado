@@ -149,3 +149,5 @@ Indicadores de prototipos48×48px y número22px, centrados verticalmente en la t
 - Petición del usuario: cuatro autos por mapa en puntos diferentes, sin circular juntos.
 - Sorento, Oporto, Ardenza, Montalese y Vittoria: cuatro autos con desfases de0,10.5,21 y31.5segundos sobre el circuito de42segundos. Distribución a un cuarto del recorrido y velocidad uniforme explícita para conservar la distancia.
 - Se conservan las rutas ya comprobadas y el tamaño aumentado15%. Torres muestra planos interiores de departamentos, sin calles ni vehículos.
+
+- Petición adicional: sustituir el gris de No disponible por naranja, como en el plano original. Se aplica al relleno y trazo SVG en todos los planos, y a su leyenda e insignia de estado. No cambia estados ni asignaciones.

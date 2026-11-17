@@ -1042,7 +1042,7 @@ function buildDevMapSvgMarkup(mapData, { selectedLotId = null, statusFilter = 'a
     disponible: { fill: 'rgba(16, 185, 129, 0.52)', stroke: '#047857' },
     reservado: { fill: 'rgba(245, 158, 11, 0.58)', stroke: '#b45309' },
     vendido: { fill: 'rgba(59, 130, 246, 0.52)', stroke: '#1d4ed8' },
-    'no-disponible': { fill: 'rgba(100, 116, 139, 0.42)', stroke: '#475569' }
+    'no-disponible': { fill: 'rgba(255, 152, 0, 0.50)', stroke: '#ea580c' }
   };
 
   let activeBg = mapData.bg;
