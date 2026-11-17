@@ -476,6 +476,11 @@ app.use((err, req, res, next) => {
   res.status(status).json({ error: status === 500 ? 'Error interno. Intenta de nuevo.' : (err.code === 'LIMIT_FILE_SIZE' ? 'El archivo excede el límite de 25 MB.' : err.message) });
 });
 
+// Explicit entry route also works on hosts that do not resolve named SPA wildcards.
+app.get(['/admin', '/admin/'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // Fallback to index.html for SPA routes
 app.get('/{*splat}', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
