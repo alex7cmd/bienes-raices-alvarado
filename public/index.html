@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.10.5" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.10.6-2" />
 </head>
 <body>
   <!-- DOCK SUPERIOR FLOTANTE iOS 27 LIQUID GLASS -->
@@ -526,15 +526,15 @@
         <div class="cms-form-card">
           <section class="cms-carousel-overview" aria-labelledby="cmsCarouselHeading">
             <h3 id="cmsCarouselHeading">Carrusel de inicio · 6 imágenes</h3>
-            <p class="cms-field-help cms-card-location">Estas son las seis imágenes guardadas. Aquí editas la número 1. Selecciona otra miniatura para ir a su campo de edición en el desarrollo correspondiente.</p>
+            <p class="cms-field-help cms-card-location">Selecciona una foto para editarla aquí. Estas seis imágenes aparecen consecutivamente en el banner grande de la página de inicio.</p>
             <div class="cms-carousel-grid" id="cmsCarouselOverview"></div>
           </section>
           <div class="cms-edit-context">
             <span class="cms-location-pill">Estás editando: Inicio → Banner principal</span>
             <button type="button" class="btn-secondary" id="previewHomeSectionBtn">Ver esta sección en la página ↗</button>
           </div>
-          <h3>Imagen 1 de 6 · Portada principal</h3>
-          <p class="cms-field-help cms-card-location" id="heroLocationHelp">Es el bloque grande al inicio de la página, detrás del título. Esta imagen cambia la primera diapositiva; las otras se editan en cada desarrollo.</p>
+          <h3 id="cmsHeroEditorTitle">Imagen 1 de 6 · Sorento</h3>
+          <p class="cms-field-help cms-card-location" id="heroLocationHelp">Esta foto aparece detrás del título de la portada. Guardar foto actualiza únicamente la imagen seleccionada.</p>
           <figure class="cms-home-preview" aria-label="Vista previa de la portada principal">
             <img id="cmsHeroPreviewImage" alt="Primera imagen del carrusel de inicio" decoding="async" />
             <div class="cms-home-preview-content">
@@ -545,18 +545,25 @@
               <small class="cms-preview-image-state hidden" id="cmsHeroPreviewImageState">Añade una imagen válida para previsualizarla.</small>
             </div>
           </figure>
-          <p class="cms-field-help cms-card-location">La vista previa muestra tus cambios. Pulsa Guardar portada para publicarlos. El botón de arriba abre la portada guardada.</p>
+          <p class="cms-field-help cms-card-location">Vista previa de la foto seleccionada. Tus cambios se publican al pulsar Guardar foto.</p>
+          <div class="form-grid">
+            <label><span id="cmsHeroImageLabel">Imagen de Sorento (URL)</span><input type="text" id="editHeroImage" aria-describedby="heroLocationHelp" /></label>
+            <label>Subir foto seleccionada<input type="file" id="uploadHeroFile" accept="image/*" /></label>
+          </div>
+          <button class="btn-primary" id="saveHeroSlideBtn">Guardar foto de Sorento</button>
+        </div>
+        <div class="cms-form-card cms-copy-editor">
+          <h3>Textos de portada y contacto</h3>
+          <p class="cms-field-help cms-card-location">El título y los textos aparecen sobre todas las fotos del carrusel. El teléfono se muestra al final de la página, en Contáctanos.</p>
           <div class="form-grid">
             <label>Texto pequeño sobre el título<input type="text" id="editHeroEyebrow" aria-describedby="heroTextHelp" /><small class="cms-field-help" id="heroTextHelp">Aparece en la parte superior del banner.</small></label>
             <label>Título principal del banner<input type="text" id="editHeroTitle" /></label>
             <label>Texto debajo del título<input type="text" id="editHeroSubtitle" /></label>
             <label>Teléfono del pie de página<input type="text" id="editPhoneDisplay" aria-describedby="footerPhoneHelp" /><small class="cms-field-help" id="footerPhoneHelp">Se muestra en Contáctanos, al final de la página.</small></label>
-            <label>Primera imagen del carrusel (URL)<input type="text" id="editHeroImage" aria-describedby="heroLocationHelp" /></label>
-            <label>Subir primera imagen del carrusel<input type="file" id="uploadHeroFile" accept="image/*" /></label>
           </div>
-          <button class="btn-primary" id="saveSiteBtn">Guardar Portada</button>
+          <button class="btn-primary" id="saveSiteBtn">Guardar textos y contacto</button>
         </div>
-        <h3 class="cms-subhead">Desarrollos Activos</h3>
+        <h3 class="cms-subhead">Datos de los desarrollos</h3>
         <div class="cms-cards-grid" id="cmsDevsGrid"></div>
       </div>
     </div>
@@ -564,25 +571,21 @@
     </div>
   </section>
 
-  <!-- LOGIN MODAL -->
-  <div class="modal-backdrop hidden" id="loginModal">
-    <div class="modal-card login-card">
-      <button class="modal-close" id="closeLoginModal">✕</button>
-      <h3>Acceso Administrador</h3>
-      <p class="modal-desc">Ingresa para presentar el plano interactivo o actualizar precios, disponibilidad e imágenes.</p>
+  <!-- DEDICATED ADMIN SIGN-IN PAGE -->
+  <section class="admin-login-page hidden" id="loginView" aria-labelledby="adminLoginTitle">
+    <div class="admin-login-content">
+      <a href="/" class="admin-login-back" id="loginBackBtn">← Volver al sitio</a>
+      <div class="admin-login-brand"><span>A</span> Alvarado Studio</div>
+      <h1 id="adminLoginTitle">Acceso Administrador</h1>
+      <p>Ingresa para administrar el inventario, los precios y la portada.</p>
       <form id="loginForm">
-        <label>Correo
-          <input type="email" id="loginEmail" autocomplete="username" required value="admin@bienesraicesalvarado.com.mx" />
-        </label>
-        <label>Contraseña
-          <input type="password" id="loginPassword" autocomplete="current-password" required placeholder="••••••••" />
-        </label>
-
-        <p class="form-error hidden" id="loginError"></p>
+        <label>Correo<input type="email" id="loginEmail" autocomplete="username" required value="admin@bienesraicesalvarado.com.mx" /></label>
+        <label>Contraseña<input type="password" id="loginPassword" autocomplete="current-password" required /></label>
+        <p class="form-error hidden" id="loginError" role="alert"></p>
         <button type="submit" class="btn-primary full-width">Entrar</button>
       </form>
     </div>
-  </div>
+  </section>
 
   <!-- PROTOTYPE QUICK-VIEW MODAL (PUBLIC) -->
   <div class="modal-backdrop hidden" id="protoModal">
@@ -685,6 +688,6 @@
     </a>
   </div>
 
-  <script src="/js/app.js?v=1.10.5" defer></script>
+  <script src="/js/app.js?v=1.10.6-2" defer></script>
 </body>
 </html>

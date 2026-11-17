@@ -6,7 +6,7 @@ const vm = require('node:vm');
 function setup() {
   const elements = new Map();
   const element = id => {
-    if (!elements.has(id)) elements.set(id, { value: '', innerHTML: '', textContent: '', dataset: {}, style: {}, classList: { add() {}, remove() {}, toggle() {} }, querySelectorAll: () => [], querySelector: () => null, setAttribute() {} });
+    if (!elements.has(id)) elements.set(id, { value: '', innerHTML: '', textContent: '', dataset: {}, style: {}, classList: { add() {}, remove() {}, toggle() {} }, querySelectorAll: () => [], querySelector: () => null, getAttribute(name) { return this[name] ?? null; }, setAttribute(name, value) { this[name] = value; }, removeAttribute(name) { delete this[name]; } });
     return elements.get(id);
   };
   const context = vm.createContext({ Intl, console, location: { pathname: "/" }, setTimeout, clearTimeout, setInterval, clearInterval, AbortSignal, FormData, document: { getElementById: element, querySelectorAll: () => [] } });
@@ -76,6 +76,34 @@ test('el aviso de sesión calcula tiempo real y alerta antes de vencer', () => {
   run("Date.now = () => 1000000; state.isAdmin = true; state.sessionExpiresAt = 1000000 + 2 * 60000; updateSessionNotice();");
   assert.equal(element('cmsSessionNotice').textContent, 'La sesión se cierra en 2 min');
   assert.match(element('toast').textContent, /menos de 5 minutos/);
-  run("state.sessionExpiresAt = 999999; updateSessionNotice();");
+  run("location.pathname = '/admin'; state.currentView = 'admin'; state.sessionExpiresAt = 999999; updateSessionNotice();");
   assert.equal(run('state.isAdmin'), false);
+  assert.equal(run('state.currentView'), 'login');
+  assert.match(element('loginError').textContent, /La sesión terminó/);
+});
+
+test('las seis fotos se seleccionan en un mismo editor sin cambiar el catálogo guardado', () => {
+  const { run, element } = setup();
+  for (const [slug, name] of [['sorento','Sorento'], ['oporto','Oporto'], ['ardenza','Ardenza'], ['montalese','Montalese'], ['torres-qavalta','Torres Qavalta'], ['vittoria','Vittoria']]) {
+    run(`selectCmsHeroSlide('${slug}')`);
+    assert.equal(element('editHeroImage').value, `/assets/images/hero-${slug}.webp`);
+    assert.match(element('saveHeroSlideBtn').textContent, new RegExp(name));
+  }
+  run("state.cmsHeroDrafts.oporto = '/uploads/borrador.webp'; selectCmsHeroSlide('oporto');");
+  assert.equal(element('editHeroImage').value, '/uploads/borrador.webp');
+  assert.equal(run('getHeroSlides()[1].image'), '/assets/images/hero-oporto.webp');
+});
+
+
+test('mapas simultáneos usan referencias propias para los autos y Torres no tiene tráfico', () => {
+  const { run } = setup();
+  const a = run("buildMapLifeOverlay({slug:'ardenza', bg:'map.webp'})");
+  const b = run("buildMapLifeOverlay({slug:'ardenza', bg:'map.webp'})");
+  const ids = html => [...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]);
+  assert.ok(ids(a).every(id => !ids(b).includes(id)));
+  for (const html of [a, b]) {
+    assert.equal((html.match(/<animateMotion /g) || []).length, 3);
+    for (const match of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids(html).includes(match[1]));
+  }
+  assert.equal(run("buildMapLifeOverlay({slug:'torres-qavalta', bg:'map.webp', isTowerFloors:true})"), '');
 });

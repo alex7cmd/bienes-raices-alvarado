@@ -1,6 +1,10 @@
 # Seguimiento: Bienes Raíces Alvarado / Qavalta
 
-Actualización: 2026-11-16 · revisión local `v1.10.0`.
+Actualización vigente: 2026-11-16 · revisión `v1.10.6`.
+
+Estado actual: cambios preparados y verificados localmente para publicación autorizada. La versión pública de partida es1.10.5 (dfc89c7). El historial que sigue conserva las comprobaciones de cada revisión; el alcance1.10.6 se detalla al final.
+
+## Historial de la revisión inicial1.10.0
 Proyecto: `/Users/alejandrofernandez/Documents/bienes-raices-alvarado`.
 Demo de referencia: https://alvarado.commandigital.biz/
 Estado: correcciones verificadas localmente; esta revisión no se ha publicado.
@@ -103,3 +107,13 @@ El cierre de sesión se movió a un menú del icono de usuario en la esquina sup
 ## Compatibilidad de hosting y proporciones — 1.10.5
 Se reprodujo el404 de /admin usando una carpeta de prueba oculta como .nodeapp del servidor. sendFile con ruta absoluta rechazaba ese directorio; ahora sirve index.html relativo a la raíz pública, manteniendo denegado el acceso a archivos ocultos. La prueba pasa en esa misma estructura.
 Indicadores de prototipos48×48px y número22px, centrados verticalmente en la tarjeta. El mapa de ubicación ocupa la altura restante de la columna para alinear su borde con las características del prototipo.
+
+
+## Acceso, editor único y recorridos —1.10.6
+- /admin presenta una página de fondo azul sólido con correo y contraseña, sin modal ni panel de gestión detrás. Conserva la restauración de sesión/sección y el aviso de caducidad absoluta.
+- Las seis fotos del hero se editan desde seis miniaturas y un solo formulario con vista previa. Orden: Sorento, Oporto, Ardenza, Montalese, Torres Qavalta y Vittoria. Sorento guarda site.heroImage; las otras guardan heroImage de su desarrollo.
+- Se retiraron del CMS las imágenes antiguas de tarjetas que no se usan en la página pública. Sus valores almacenados se conservan. Textos/contacto tienen su propio guardado; datos de desarrollo editan solo nombre/precio e indican dónde aparecen.
+- Cinco circuitos de autos trazados sobre calles blancas interiores, tres autos por privada y curvas redondeadas. IDs únicos por SVG para evitar que el plano integrado y pantalla completa compartan referencias. Torres no usa tráfico sobre sus pisos. No se alteraron fondos, lotes ni inventario.
+- Revisión geométrica externa:2696 posiciones con huella118×60 (auto108×46), sin cruces de lotes, césped ni zonas transparentes. Se separaron los píxeles de dos autos amarillos impresos en los mapas originales del clasificador de vegetación. Es un muestreo geométrico, complementado con inspección visual en Chrome.
+- Chrome1440×1000 y390×844: acceso sólido, cierre de sesión, restauración de Prototipos al recargar, selección de seis imágenes, borradores, guardado local de Oporto y ausencia de desborde horizontal. Mapas de seis desarrollos inspeccionados; recorridos compartidos en vista integrada y pantalla completa.
+- Pruebas automatizadas:31 aprobadas; incluyen referencias independientes de animación y acceso al caducar. No se usaron credenciales de producción. Base operativa y uploads se excluyen de los archivos de publicación.

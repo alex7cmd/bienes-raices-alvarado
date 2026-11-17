@@ -6,6 +6,8 @@ const state = {
   counts: { disponible: 0, no_disponible: 0, vendido: 0 },
   isAdmin: false,
   adminEmail: null,
+  cmsHeroSlug: 'sorento',
+  cmsHeroDrafts: {},
   sessionExpiresAt: null,
   currentView: 'public',
   selectedLotId: null,
@@ -255,6 +257,7 @@ function initThemeScheduler() {
 async function init() {
   initThemeScheduler();
   bindEvents();
+  if (/^\/admin\/?$/.test(location.pathname)) showOnlyView('login');
   const results = await Promise.allSettled([loadPublicData(), checkAuth()]);
   results.forEach(result => { if (result.status === 'rejected') showToast(result.reason.message); });
   await restoreAdminRoute();
@@ -699,13 +702,14 @@ function closeFullscreenGallery() {
 // --- VIEW SWITCHING ---
 function showOnlyView(viewName) {
   state.currentView = viewName;
-  const route = viewName === 'admin' ? '/admin' : '/';
+  const route = ['admin', 'login'].includes(viewName) ? '/admin' : '/';
   if (location.pathname !== route) history.pushState({}, '', route);
   updateSessionNotice();
   $('publicView').classList.toggle('hidden', viewName !== 'public');
   $('siteHeader').classList.toggle('hidden', viewName !== 'public');
   $('mapView').classList.toggle('hidden', viewName !== 'map');
   $('adminView').classList.toggle('hidden', viewName !== 'admin');
+  $('loginView').classList.toggle('hidden', viewName !== 'login');
   $('adminDropdown').classList.add('hidden');
   closeCmsUserMenu();
   if ($('floatingStack')) {
@@ -750,78 +754,117 @@ function getMapCounts(lots) {
   return c;
 }
 
+// Closed circuits follow the existing white streets; do not add scenery over lots.
 const MAP_LIFE_CONFIG = {
-  sorento: {
-    cars: [
-      { color: '#ffffff', dur: '34s', begin: '0s', path: 'M 6245 725 L 8175 725 L 8175 1865 L 6245 1865 Z' },
-      { color: '#1e3a5f', dur: '36s', begin: '-12s', path: 'M 6185 1925 L 8235 1925 L 8235 3035 L 6185 3035 Z' },
-      { color: '#d6b68a', dur: '28s', begin: '-6s', path: 'M 6150 4935 L 8205 4935 L 8205 4875 L 6150 4875 Z' }
-    ],
-    walkers: [
-      { color: '#0ea5e9', dur: '36s', begin: '0s', path: 'M 2550 3820 L 3350 3820 L 3350 4040 L 2550 4040 Z' },
-      { color: '#f97316', dur: '40s', begin: '-14s', path: 'M 6900 3800 L 7620 3800 L 7620 4020 L 6900 4020 Z' }
-    ],
-    trees: [
-      { x: 5610, y: 1850, r: 78, d: '0s' }, { x: 5610, y: 3150, r: 82, d: '1.1s' },
-      { x: 5610, y: 4450, r: 76, d: '0.6s' }, { x: 2450, y: 3920, r: 88, d: '1.6s' },
-      { x: 7750, y: 3920, r: 86, d: '2.1s' }
-    ],
-    grass: [{ x: 2950, y: 3930 }, { x: 7260, y: 3910 }]
+  "sorento": {
+    "cars": [
+      {
+        "color": "#ffffff",
+        "dur": "42s",
+        "begin": "0s",
+        "path": "M 2002.9 1924.6 Q 2010 1855 2080.0 1855.0 L 4460.0 1855.0 Q 4530 1855 4530.0 1925.0 L 4530.0 2965.0 Q 4530 3035 4460.0 3035.0 L 1960.0 3035.0 Q 1890 3035 1897.1 2965.4 L 2002.9 1924.6 Z"
+      },
+      {
+        "color": "#1e3a5f",
+        "dur": "42s",
+        "begin": "-14s",
+        "path": "M 2002.9 1924.6 Q 2010 1855 2080.0 1855.0 L 4460.0 1855.0 Q 4530 1855 4530.0 1925.0 L 4530.0 2965.0 Q 4530 3035 4460.0 3035.0 L 1960.0 3035.0 Q 1890 3035 1897.1 2965.4 L 2002.9 1924.6 Z"
+      },
+      {
+        "color": "#d6b68a",
+        "dur": "42s",
+        "begin": "-28s",
+        "path": "M 2002.9 1924.6 Q 2010 1855 2080.0 1855.0 L 4460.0 1855.0 Q 4530 1855 4530.0 1925.0 L 4530.0 2965.0 Q 4530 3035 4460.0 3035.0 L 1960.0 3035.0 Q 1890 3035 1897.1 2965.4 L 2002.9 1924.6 Z"
+      }
+    ]
   },
-  oporto: {
-    cars: [
-      { color: '#ffffff', dur: '26s', begin: '0s', path: 'M 1050 5340 L 4900 5340' },
-      { color: '#1e3a5f', dur: '30s', begin: '-9s', path: 'M 5400 4440 L 3800 4440' },
-      { color: '#d6b68a', dur: '24s', begin: '-5s', path: 'M 3360 6100 L 3360 5360' }
-    ],
-    walkers: [
-      { color: '#0ea5e9', dur: '34s', begin: '0s', path: 'M 3050 4050 L 3450 4050 L 3450 4250 L 3050 4250 Z' },
-      { color: '#f97316', dur: '38s', begin: '-12s', path: 'M 1600 5260 L 2450 5260 L 2450 5310 L 1600 5310 Z' }
-    ],
-    trees: [{ x: 3150, y: 4140, r: 84, d: '0.2s' }, { x: 3360, y: 4140, r: 78, d: '1.4s' }],
-    grass: [{ x: 3250, y: 4180 }]
+  "oporto": {
+    "cars": [
+      {
+        "color": "#ffffff",
+        "dur": "42s",
+        "begin": "0s",
+        "path": "M 3940.0 745.0 Q 3940 675 4010.0 675.0 L 6100.0 675.0 Q 6170 675 6170.0 745.0 L 6170.0 1495.0 Q 6170 1565 6100.0 1565.0 L 4010.0 1565.0 Q 3940 1565 3940.0 1495.0 L 3940.0 745.0 Z"
+      },
+      {
+        "color": "#1e3a5f",
+        "dur": "42s",
+        "begin": "-14s",
+        "path": "M 3940.0 745.0 Q 3940 675 4010.0 675.0 L 6100.0 675.0 Q 6170 675 6170.0 745.0 L 6170.0 1495.0 Q 6170 1565 6100.0 1565.0 L 4010.0 1565.0 Q 3940 1565 3940.0 1495.0 L 3940.0 745.0 Z"
+      },
+      {
+        "color": "#d6b68a",
+        "dur": "42s",
+        "begin": "-28s",
+        "path": "M 3940.0 745.0 Q 3940 675 4010.0 675.0 L 6100.0 675.0 Q 6170 675 6170.0 745.0 L 6170.0 1495.0 Q 6170 1565 6100.0 1565.0 L 4010.0 1565.0 Q 3940 1565 3940.0 1495.0 L 3940.0 745.0 Z"
+      }
+    ]
   },
-  ardenza: {
-    cars: [
-      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 4320 5900 L 4320 2800' },
-      { color: '#1e3a5f', dur: '30s', begin: '-10s', path: 'M 1350 5580 L 4100 5580' },
-      { color: '#d6b68a', dur: '26s', begin: '-6s', path: 'M 4100 5100 L 1350 5100' }
-    ],
-    walkers: [
-      { color: '#0ea5e9', dur: '36s', begin: '0s', path: 'M 2200 5520 L 3000 5520 L 3000 5560 L 2200 5560 Z' },
-      { color: '#f97316', dur: '40s', begin: '-15s', path: 'M 4260 4400 L 4260 3600' }
-    ],
-    trees: [{ x: 4320, y: 4000, r: 78, d: '0.4s' }, { x: 4320, y: 4700, r: 82, d: '1.5s' }],
-    grass: [{ x: 4280, y: 4350 }]
+  "ardenza": {
+    "cars": [
+      {
+        "color": "#ffffff",
+        "dur": "42s",
+        "begin": "0s",
+        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4815.0 Q 2080 4885 2013.9 4907.9 L 1866.1 4959.1 Q 1800 4982 1730.6 4990.8 L 1569.4 5011.2 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
+      },
+      {
+        "color": "#1e3a5f",
+        "dur": "42s",
+        "begin": "-14s",
+        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4815.0 Q 2080 4885 2013.9 4907.9 L 1866.1 4959.1 Q 1800 4982 1730.6 4990.8 L 1569.4 5011.2 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
+      },
+      {
+        "color": "#d6b68a",
+        "dur": "42s",
+        "begin": "-28s",
+        "path": "M 1161.1 2520.0 Q 1160 2450 1229.9 2454.0 L 1440.1 2466.0 Q 1510 2470 1576.8 2490.9 L 1763.2 2549.1 Q 1830 2570 1892.1 2602.3 L 2017.9 2667.7 Q 2080 2700 2080.0 2770.0 L 2080.0 4815.0 Q 2080 4885 2013.9 4907.9 L 1866.1 4959.1 Q 1800 4982 1730.6 4990.8 L 1569.4 5011.2 Q 1500 5020 1430.0 5022.3 L 1270.0 5027.7 Q 1200 5030 1198.9 4960.0 L 1161.1 2520.0 Z"
+      }
+    ]
   },
-  montalese: {
-    cars: [
-      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 950 5280 L 5400 5280' },
-      { color: '#1e3a5f', dur: '31s', begin: '-11s', path: 'M 5400 4180 L 950 4180' },
-      { color: '#d6b68a', dur: '25s', begin: '-5s', path: 'M 3020 5950 L 3020 3550' }
-    ],
-    walkers: [
-      { color: '#0ea5e9', dur: '34s', begin: '0s', path: 'M 2880 4600 L 3160 4600 L 3160 4900 L 2880 4900 Z' },
-      { color: '#f97316', dur: '38s', begin: '-14s', path: 'M 2100 5220 L 2900 5220 L 2900 5255 L 2100 5255 Z' }
-    ],
-    trees: [{ x: 3020, y: 4720, r: 84, d: '0.3s' }, { x: 3020, y: 5050, r: 78, d: '1.3s' }],
-    grass: [{ x: 3020, y: 4880 }]
+  "montalese": {
+    "cars": [
+      {
+        "color": "#ffffff",
+        "dur": "42s",
+        "begin": "0s",
+        "path": "M 3840.0 1520.0 Q 3840 1450 3910.0 1450.0 L 5800.0 1450.0 Q 5870 1450 5870.0 1520.0 L 5870.0 2460.0 Q 5870 2530 5800.0 2530.0 L 3910.0 2530.0 Q 3840 2530 3840.0 2460.0 L 3840.0 1520.0 Z"
+      },
+      {
+        "color": "#1e3a5f",
+        "dur": "42s",
+        "begin": "-14s",
+        "path": "M 3840.0 1520.0 Q 3840 1450 3910.0 1450.0 L 5800.0 1450.0 Q 5870 1450 5870.0 1520.0 L 5870.0 2460.0 Q 5870 2530 5800.0 2530.0 L 3910.0 2530.0 Q 3840 2530 3840.0 2460.0 L 3840.0 1520.0 Z"
+      },
+      {
+        "color": "#d6b68a",
+        "dur": "42s",
+        "begin": "-28s",
+        "path": "M 3840.0 1520.0 Q 3840 1450 3910.0 1450.0 L 5800.0 1450.0 Q 5870 1450 5870.0 1520.0 L 5870.0 2460.0 Q 5870 2530 5800.0 2530.0 L 3910.0 2530.0 Q 3840 2530 3840.0 2460.0 L 3840.0 1520.0 Z"
+      }
+    ]
   },
-  vittoria: {
-    cars: [
-      { color: '#ffffff', dur: '28s', begin: '0s', path: 'M 4020 5250 L 4020 1550' },
-      { color: '#1e3a5f', dur: '32s', begin: '-11s', path: 'M 4620 1550 L 4620 5250' },
-      { color: '#d6b68a', dur: '26s', begin: '-6s', path: 'M 1400 5220 L 3650 5220' }
-    ],
-    walkers: [
-      { color: '#0ea5e9', dur: '36s', begin: '0s', path: 'M 4160 3050 L 4420 3050 L 4420 3350 L 4160 3350 Z' },
-      { color: '#f97316', dur: '40s', begin: '-14s', path: 'M 5050 4150 L 5850 4150 L 5850 4200 L 5050 4200 Z' }
-    ],
-    trees: [
-      { x: 4320, y: 2150, r: 78, d: '0s' }, { x: 4320, y: 3200, r: 88, d: '1.1s' },
-      { x: 4320, y: 4250, r: 80, d: '1.8s' }
-    ],
-    grass: [{ x: 4290, y: 3180 }, { x: 4320, y: 2650 }]
+  "vittoria": {
+    "cars": [
+      {
+        "color": "#ffffff",
+        "dur": "42s",
+        "begin": "0s",
+        "path": "M 4620.0 1515.0 Q 4620 1445 4690.0 1445.0 L 6410.0 1445.0 Q 6480 1445 6475.7 1514.9 L 6414.3 2510.1 Q 6410 2580 6340.0 2580.0 L 4690.0 2580.0 Q 4620 2580 4620.0 2510.0 L 4620.0 1515.0 Z"
+      },
+      {
+        "color": "#1e3a5f",
+        "dur": "42s",
+        "begin": "-14s",
+        "path": "M 4620.0 1515.0 Q 4620 1445 4690.0 1445.0 L 6410.0 1445.0 Q 6480 1445 6475.7 1514.9 L 6414.3 2510.1 Q 6410 2580 6340.0 2580.0 L 4690.0 2580.0 Q 4620 2580 4620.0 2510.0 L 4620.0 1515.0 Z"
+      },
+      {
+        "color": "#d6b68a",
+        "dur": "42s",
+        "begin": "-28s",
+        "path": "M 4620.0 1515.0 Q 4620 1445 4690.0 1445.0 L 6410.0 1445.0 Q 6480 1445 6475.7 1514.9 L 6414.3 2510.1 Q 6410 2580 6340.0 2580.0 L 4690.0 2580.0 Q 4620 2580 4620.0 2510.0 L 4620.0 1515.0 Z"
+      }
+    ]
   }
 };
 
@@ -829,69 +872,25 @@ function buildMapLifeOverlay(mapData) {
   if (mapData.isTowerFloors || !mapData.bg) return '';
   const cfg = MAP_LIFE_CONFIG[mapData.slug];
   if (!cfg) return '';
+  // Inline and full-screen maps coexist: each SVG must resolve its own motion paths.
+  const routePrefix = `car-route-${++mapRenderSequence}`;
   return `
     <g class="qmap-life-layer" pointer-events="none">
       <defs>
-        <radialGradient id="qmapTreeGrad" cx="38%" cy="34%" r="68%">
-          <stop offset="0%" stop-color="#bbf7d0" />
-          <stop offset="45%" stop-color="#22c55e" />
-          <stop offset="100%" stop-color="#15803d" />
-        </radialGradient>
-        <radialGradient id="qmapGrassGlow" cx="50%" cy="50%" r="50%">
-          <stop offset="0%" stop-color="#4ade80" stop-opacity="0.32" />
-          <stop offset="100%" stop-color="#16a34a" stop-opacity="0" />
-        </radialGradient>
-        <g id="qmapCarShape">
+        ${cfg.cars.map((car, index) => `<path class="qmap-car-route" id="${routePrefix}-${index}" d="${car.path}" />`).join('')}
+        <g id="${routePrefix}-car">
           <ellipse cx="3" cy="6" rx="56" ry="27" fill="rgba(15,23,42,0.24)" />
           <rect x="-54" y="-23" width="108" height="46" rx="15" fill="currentColor" stroke="#0f172a" stroke-width="3" />
           <rect x="-24" y="-17" width="52" height="34" rx="9" fill="#e2e8f0" opacity="0.92" />
           <rect x="-12" y="-13" width="26" height="26" rx="6" fill="currentColor" />
-          <circle cx="46" cy="-13" r="4" fill="#fef08a" />
-          <circle cx="46" cy="13" r="4" fill="#fef08a" />
-          <rect x="-52" y="-15" width="4" height="8" rx="1.5" fill="#ef4444" />
-          <rect x="-52" y="7" width="4" height="8" rx="1.5" fill="#ef4444" />
-        </g>
-        <g id="qmapWalkerShape">
-          <ellipse cx="0" cy="4" rx="17" ry="13" fill="rgba(15,23,42,0.18)" />
-          <ellipse cx="0" cy="0" rx="15" ry="11" fill="currentColor" />
-          <circle cx="2" cy="0" r="8.5" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" />
-          <circle cx="3" cy="0" r="5.5" fill="#334155" />
+          <circle cx="46" cy="-13" r="4" fill="#fef08a" /><circle cx="46" cy="13" r="4" fill="#fef08a" />
+          <rect x="-52" y="-15" width="4" height="8" rx="1.5" fill="#ef4444" /><rect x="-52" y="7" width="4" height="8" rx="1.5" fill="#ef4444" />
         </g>
       </defs>
-
-      ${cfg.grass.map(g => `
-        <g transform="translate(${g.x}, ${g.y})">
-          <ellipse cx="0" cy="6" rx="76" ry="34" fill="url(#qmapGrassGlow)" />
-          <g class="qmap-grass-tuft">
-            <path d="M-46 10 Q-54 -14 -64 -24 M-28 12 Q-30 -18 -26 -30 M-10 12 Q-8 -16 -2 -26 M8 12 Q12 -18 20 -30 M26 12 Q34 -14 44 -22 M42 10 Q52 -10 62 -16"
-              fill="none" stroke="#14532d" stroke-width="4.5" stroke-linecap="round" opacity="0.46" />
-          </g>
-        </g>
-      `).join('')}
-
-      ${cfg.trees.map(t => `
-        <g transform="translate(${t.x}, ${t.y})">
-          <g class="qmap-tree-sway" style="animation-delay:${t.d};">
-            <circle cx="12" cy="16" r="${t.r * 1.02}" fill="rgba(15,23,42,0.18)" />
-            <circle cx="${-t.r * 0.28}" cy="${t.r * 0.12}" r="${t.r * 0.72}" fill="url(#qmapTreeGrad)" stroke="#14532d" stroke-width="3.5" opacity="0.94" />
-            <circle cx="${t.r * 0.28}" cy="${t.r * 0.08}" r="${t.r * 0.68}" fill="url(#qmapTreeGrad)" stroke="#14532d" stroke-width="3.5" opacity="0.94" />
-            <circle cx="0" cy="${-t.r * 0.14}" r="${t.r * 0.78}" fill="url(#qmapTreeGrad)" stroke="#14532d" stroke-width="3.5" opacity="0.96" />
-            <circle cx="${-t.r * 0.16}" cy="${-t.r * 0.28}" r="${t.r * 0.36}" fill="#dcfce7" opacity="0.45" />
-          </g>
-        </g>
-      `).join('')}
-
-      ${cfg.cars.map(c => `
-        <g color="${c.color}">
-          <use href="#qmapCarShape" />
-          <animateMotion dur="${c.dur}" begin="${c.begin}" repeatCount="indefinite" rotate="auto" path="${c.path}" />
-        </g>
-      `).join('')}
-
-      ${cfg.walkers.map(w => `
-        <g class="qmap-walker" color="${w.color}">
-          <use href="#qmapWalkerShape" />
-          <animateMotion dur="${w.dur}" begin="${w.begin}" repeatCount="indefinite" rotate="auto" path="${w.path}" />
+      ${cfg.cars.map((car, index) => `
+        <g color="${car.color}">
+          <use href="#${routePrefix}-car" />
+          <animateMotion dur="${car.dur}" begin="${car.begin}" repeatCount="indefinite" rotate="auto"><mpath href="#${routePrefix}-${index}" /></animateMotion>
         </g>
       `).join('')}
     </g>
@@ -1028,7 +1027,7 @@ function expireAdminSession() {
   $('adminActiveDot').classList.add('hidden');
   if ($('cmsSessionNotice')) $('cmsSessionNotice').textContent = 'La sesión terminó. Inicia sesión para continuar.';
   if (state.currentView === 'admin' || location.pathname.startsWith('/admin')) {
-    $('loginModal').classList.remove('hidden');
+    showOnlyView('login');
     $('loginError').textContent = 'La sesión terminó. Inicia sesión para continuar.';
     $('loginError').classList.remove('hidden');
   }
@@ -1038,14 +1037,13 @@ function expireAdminSession() {
 async function restoreAdminRoute() {
   if (/^\/admin\/?$/.test(location.pathname)) {
     if (state.isAdmin) await openAdminCms();
-    else { showOnlyView('admin'); $('loginModal').classList.remove('hidden'); }
+    else showOnlyView('login');
   } else showOnlyView('public');
 }
 
 async function openAdminCms() {
   if (!state.isAdmin) {
-    showOnlyView('admin');
-    $('loginModal').classList.remove('hidden');
+    showOnlyView('login');
     return;
   }
   const data = await api('/api/admin/lots');
@@ -1437,11 +1435,42 @@ function renderCmsCarouselOverview() {
   const grid = $('cmsCarouselOverview');
   if (!grid) return;
   grid.innerHTML = getHeroSlides().map((slide, index) => `
-    <button type="button" class="cms-carousel-slide ${index === 0 ? 'is-current' : ''}" data-edit-carousel-slide="${escapeHtml(slide.slug)}" aria-label="${index === 0 ? 'Editar imagen 1 de portada' : `Editar imagen ${index + 1} de ${escapeHtml(slide.name)}`}">
-      <img src="${escapeHtml(slide.image)}" alt="Imagen ${index + 1}: ${escapeHtml(slide.name)}" loading="lazy" />
-      <strong>${index + 1}. ${index === 0 ? 'Portada principal' : escapeHtml(slide.name)}</strong>
-      <small>${index === 0 ? 'Estás editando esta imagen ↓' : `Editar en ${escapeHtml(slide.name)} ↓`}</small>
+    <button type="button" class="cms-carousel-slide ${slide.slug === state.cmsHeroSlug ? 'is-current' : ''}" aria-pressed="${slide.slug === state.cmsHeroSlug}" data-edit-carousel-slide="${escapeHtml(slide.slug)}" aria-label="Editar imagen ${index + 1} de ${escapeHtml(slide.name)}">
+      <img src="${escapeHtml(state.cmsHeroDrafts[slide.slug] || slide.image)}" alt="Imagen ${index + 1}: ${escapeHtml(slide.name)}" loading="lazy" />
+      <strong>${index + 1}. ${escapeHtml(slide.name)}</strong>
+      <small>${slide.slug === state.cmsHeroSlug ? 'Editando esta foto' : 'Seleccionar foto'}</small>
     </button>
+  `).join('');
+}
+
+function selectCmsHeroSlide(slug) {
+  const slides = getHeroSlides();
+  const index = slides.findIndex(slide => slide.slug === slug);
+  if (index < 0) return;
+  state.cmsHeroSlug = slug;
+  const slide = slides[index];
+  $('editHeroImage').value = state.cmsHeroDrafts[slug] ?? slide.image;
+  $('uploadHeroFile').value = '';
+  $('cmsHeroEditorTitle').textContent = `Imagen ${index + 1} de ${slides.length} · ${slide.name}`;
+  $('cmsHeroImageLabel').textContent = `Imagen de ${slide.name} (URL)`;
+  $('saveHeroSlideBtn').textContent = `Guardar foto de ${slide.name}`;
+  $('cmsHeroPreviewImage').alt = `Foto del carrusel de ${slide.name}`;
+  renderCmsCarouselOverview();
+  updateCmsHomePreview();
+}
+
+function renderCmsDevelopmentsGrid() {
+  $('cmsDevsGrid').innerHTML = state.developments.map(d => `
+    <div class="cms-form-card" data-cms-dev="${escapeHtml(d.id)}">
+      <h3>${escapeHtml(d.name)}</h3>
+      <p class="cms-field-help cms-card-location">Inicio → selector de desarrollos y bloque «Desarrollo seleccionado». Aquí cambias el nombre y el precio «Desde».</p>
+      <div class="form-grid">
+        <label>Nombre del desarrollo<input type="text" class="d-name" value="${escapeHtml(d.name)}" /></label>
+        <label>Precio desde (MXN)<input type="number" class="d-price" value="${escapeHtml(d.startingPrice)}" /></label>
+      </div>
+      <button class="btn-primary save-dev-btn">Guardar datos</button>
+      <button type="button" class="btn-secondary" data-preview-development="${escapeHtml(d.id)}">Ver dónde aparece ↗</button>
+    </div>
   `).join('');
 }
 
@@ -1552,28 +1581,9 @@ async function renderAdminCms() {
   $('editHeroTitle').value = site.heroTitle;
   $('editHeroSubtitle').value = site.heroSubtitle;
   $('editPhoneDisplay').value = site.phoneDisplay;
-  $('editHeroImage').value = getHeroSlides()[0].image;
-  updateCmsHomePreview();
-  renderCmsCarouselOverview();
+  selectCmsHeroSlide(state.cmsHeroSlug);
 
-  $('cmsDevsGrid').innerHTML = developments.map(d => `
-    <div class="cms-form-card" data-cms-dev="${escapeHtml(d.id)}">
-      <img src="${escapeHtml(d.image)}" class="cms-preview-img" alt="${escapeHtml(d.name)}" />
-      <h3>Desarrollo: ${escapeHtml(d.name)}</h3>
-      <p class="cms-field-help cms-card-location">${d.id === 'sorento' ? 'Inicio → Información de Sorento. La primera foto del carrusel se edita arriba, en Portada principal.' : `Inicio → Información de ${escapeHtml(d.name)}. Su imagen de carrusel se edita por separado abajo.`}</p>
-      <div class="form-grid">
-        <label>Nombre<input type="text" class="d-name" value="${escapeHtml(d.name)}" /></label>
-        <label>Precio desde (MXN)<input type="number" class="d-price" value="${escapeHtml(d.startingPrice)}" /></label>
-      </div>
-      <label style="margin-bottom:10px;">Descripción corta<input type="text" class="d-tagline" value="${escapeHtml(d.tagline)}" /></label>
-      <label style="margin-bottom:10px;">URL Imagen<input type="text" class="d-img" value="${escapeHtml(d.image)}" /></label>
-      <label style="margin-bottom:12px;">Subir nueva imagen<input type="file" class="d-upload-img" accept="image/*" /></label>
-      ${d.id !== 'sorento' ? `<label>Imagen del carrusel de inicio · ${escapeHtml(d.name)}<input type="text" class="d-hero-img" value="${escapeHtml(getHeroSlides().find(slide => slide.slug === d.id)?.image || '')}" /></label>
-      <img class="cms-preview-img d-hero-preview" src="${escapeHtml(getHeroSlides().find(slide => slide.slug === d.id)?.image || '')}" alt="Carrusel de ${escapeHtml(d.name)}" loading="lazy" />
-      <label>Subir imagen del carrusel<input type="file" class="d-upload-hero" accept="image/*" /></label>` : ''}
-      <button class="btn-primary save-dev-btn">Guardar desarrollo</button>
-    </div>
-  `).join('');
+  renderCmsDevelopmentsGrid();
 }
 
 function renderCmsLotsTable() {
@@ -1650,8 +1660,8 @@ function bindEvents() {
   document.addEventListener('click', () => $('adminDropdown').classList.add('hidden'));
   $('adminDropdown').addEventListener('click', (e) => e.stopPropagation());
 
-  // Login modal -> go straight into Alvarado Studio on login
-  $('closeLoginModal').addEventListener('click', () => { $('loginModal').classList.add('hidden'); if (!state.isAdmin) showOnlyView('public'); });
+  // Login page -> open Alvarado Studio after authentication
+  $('loginBackBtn').addEventListener('click', event => { event.preventDefault(); showOnlyView('public'); });
   $('loginForm').addEventListener('submit', handleAsync(async (e) => {
     e.preventDefault();
     $('loginError').classList.add('hidden');
@@ -1666,7 +1676,6 @@ function bindEvents() {
       await checkAuth();
       state.sessionWarningShown = false;
       $('loginPassword').value = '';
-      $('loginModal').classList.add('hidden');
       showToast('Bienvenido a Alvarado Studio');
       await openAdminCms();
     } catch (err) {
@@ -2196,15 +2205,11 @@ function bindEvents() {
       updateCmsPrototypePreview(card);
     }
   });
-  $('cmsCarouselOverview').addEventListener('click', (event) => {
+  $('cmsCarouselOverview').addEventListener('click', event => {
     const button = event.target.closest('[data-edit-carousel-slide]');
     if (!button) return;
-    const slug = button.dataset.editCarouselSlide;
-    const input = slug === HERO_SLIDES[0].slug ? $('editHeroImage') : [...document.querySelectorAll('[data-cms-dev]')].find(card => card.dataset.cmsDev === slug)?.querySelector('.d-hero-img');
-    if (input) {
-      input.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      input.focus({ preventScroll: true });
-    }
+    state.cmsHeroDrafts[state.cmsHeroSlug] = $('editHeroImage').value;
+    selectCmsHeroSlide(button.dataset.editCarouselSlide);
   });
 
   // CMS Prototype updates & file uploads
@@ -2245,13 +2250,14 @@ function bindEvents() {
   });
   let heroPreviewTimer;
   $('editHeroImage').addEventListener('input', () => {
+    state.cmsHeroDrafts[state.cmsHeroSlug] = $('editHeroImage').value;
     clearTimeout(heroPreviewTimer);
     heroPreviewTimer = setTimeout(updateCmsHomePreview, 250);
   });
   $('editHeroImage').addEventListener('change', updateCmsHomePreview);
   $('previewHomeSectionBtn').addEventListener('click', () => {
     showOnlyView('public');
-    setHeroSlide(0);
+    setHeroSlide(HERO_SLIDES.findIndex(slide => slide.slug === state.cmsHeroSlug));
     $('top').scrollIntoView({ behavior: 'smooth', block: 'start' });
   });
 
@@ -2259,10 +2265,12 @@ function bindEvents() {
   $('uploadHeroFile').addEventListener('change', handleAsync(async (e) => {
     const file = e.target.files[0];
     if (!file) return;
+    const slug = state.cmsHeroSlug;
     const res = await uploadMedia(file);
-    $('editHeroImage').value = res.url;
-    updateCmsHomePreview();
-    showToast('Imagen de portada subida. Haz clic en Guardar Portada.');
+    state.cmsHeroDrafts[slug] = res.url;
+    if (state.cmsHeroSlug === slug) { $('editHeroImage').value = res.url; updateCmsHomePreview(); }
+    renderCmsCarouselOverview();
+    showToast('Foto subida. Pulsa Guardar foto para publicarla.');
   }));
 
   $('saveSiteBtn').addEventListener('click', handleAsync(async () => {
@@ -2272,33 +2280,39 @@ function bindEvents() {
         eyebrow: $('editHeroEyebrow').value,
         heroTitle: $('editHeroTitle').value,
         heroSubtitle: $('editHeroSubtitle').value,
-        phoneDisplay: $('editPhoneDisplay').value,
-        heroImage: $('editHeroImage').value
+        phoneDisplay: $('editPhoneDisplay').value
       })
     });
     await loadPublicData();
-    showToast('Portada actualizada');
+    showToast('Textos de portada y contacto guardados');
   }));
 
-  $('cmsDevsGrid').addEventListener('change', handleAsync(async (e) => {
-    if (!e.target.matches('.d-upload-img, .d-upload-hero')) return;
-    const card = e.target.closest('[data-cms-dev]');
-    const file = e.target.files[0];
-    if (!file) return;
-    const res = await uploadMedia(file);
-    const isHero = e.target.classList.contains('d-upload-hero');
-    card.querySelector(isHero ? '.d-hero-img' : '.d-img').value = res.url;
-    card.querySelector(isHero ? '.d-hero-preview' : '.cms-preview-img').src = res.url;
-    showToast('Imagen subida. Haz clic en Guardar desarrollo.');
+  $('saveHeroSlideBtn').addEventListener('click', handleAsync(async () => {
+    const slug = state.cmsHeroSlug;
+    const image = $('editHeroImage').value.trim();
+    const button = $('saveHeroSlideBtn');
+    button.disabled = true;
+    try {
+      await api(slug === 'sorento' ? '/api/admin/site' : `/api/admin/developments/${slug}`, {
+        method: 'PATCH', body: JSON.stringify({ heroImage: image })
+      });
+      delete state.cmsHeroDrafts[slug];
+      await loadPublicData();
+      selectCmsHeroSlide(state.cmsHeroSlug);
+      showToast(`Foto de ${HERO_SLIDES.find(slide => slide.slug === slug).name} guardada`);
+    } finally { button.disabled = false; }
   }));
-
-  $('cmsDevsGrid').addEventListener('input', e => {
-    if (!e.target.matches('.d-img, .d-hero-img')) return;
-    const card = e.target.closest('[data-cms-dev]');
-    card.querySelector(e.target.matches('.d-hero-img') ? '.d-hero-preview' : '.cms-preview-img').src = e.target.value;
-  });
 
   $('cmsDevsGrid').addEventListener('click', handleAsync(async (e) => {
+    const previewButton = e.target.closest('[data-preview-development]');
+    if (previewButton) {
+      const slug = previewButton.dataset.previewDevelopment;
+      showOnlyView('public');
+      renderDevelopmentAccordion(slug);
+      await loadInlineDevMap(slug);
+      $('prototipos').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      return;
+    }
     if (!e.target.classList.contains('save-dev-btn')) return;
     const card = e.target.closest('[data-cms-dev]');
     const id = card.dataset.cmsDev;
@@ -2306,10 +2320,7 @@ function bindEvents() {
       method: 'PATCH',
       body: JSON.stringify({
         name: card.querySelector('.d-name').value,
-        startingPrice: card.querySelector('.d-price').value,
-        tagline: card.querySelector('.d-tagline').value,
-        image: card.querySelector('.d-img').value,
-        ...(card.querySelector('.d-hero-img') ? { heroImage: card.querySelector('.d-hero-img').value } : {})
+        startingPrice: card.querySelector('.d-price').value
       })
     });
     await loadPublicData();
