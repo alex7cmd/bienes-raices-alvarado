@@ -1712,3 +1712,20 @@ footer { border-top-color: var(--qavalta-stroke); }
 .cms-carousel-slide.is-current { border-color: var(--qavalta-red); }
 .admin-login-brand span { background: #c6174c; }
 .admin-login-content input:focus { border-color: var(--qavalta-red); }
+
+
+/* Curated development videos, above the full-width lot plan. */
+.qavalta-videos { margin: 26px 0; padding: 24px 0; border-top: 1px solid var(--qavalta-stroke); border-bottom: 1px solid var(--border); }
+.qavalta-videos-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+.qavalta-videos h4 { margin: 5px 0 7px; font-size: 21px; }
+.qavalta-videos-head p { margin: 0; color: var(--muted); font-size: 14px; }
+.qavalta-videos a { color: var(--accent); font-weight: 700; font-size: 13px; }
+.qavalta-video-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.qavalta-video-card { min-width: 0; overflow: hidden; border: 1px solid var(--border); border-top-color: var(--qavalta-stroke); border-radius: 16px; background: var(--card-bg); }
+.qavalta-video-player { width: 100%; max-width: 270px; aspect-ratio: 9 / 16; margin: 0 auto; background: #101015; }
+.qavalta-video-player iframe { display: block; width: 100%; height: 100%; border: 0; }
+.qavalta-video-info { padding: 14px 16px 16px; }
+.qavalta-video-info h5 { margin: 0 0 8px; font-size: 15px; }
+.qavalta-video-info p { margin: 0 0 10px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+@media (max-width: 800px) { .qavalta-video-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; } }
+@media (max-width: 520px) { .qavalta-video-grid { grid-template-columns: minmax(0, 1fr); } .qavalta-videos-head { align-items: flex-start; flex-direction: column; gap: 10px; } .qavalta-video-player { max-width: 270px; } }

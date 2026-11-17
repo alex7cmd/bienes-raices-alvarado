@@ -127,4 +127,13 @@ Indicadores de prototipos48×48px y número22px, centrados verticalmente en la t
 - Rojo Qavalta sutil en bordes, iconos, foco, pestañas, selección y formularios del sitio y administrador; colores de disponibilidad conservados.
 - Sesiones persistentes entre procesos; firma vinculada al token y credenciales configuradas. No se guardan token bruto ni contraseña. Nueva validación al abrir el administrador, sin destello de formulario durante restauración. Acceso válido por ocho horas, con vencimiento fijo. Una sesión creada antes de esta publicación puede requerir un nuevo inicio.
 -37 pruebas aprobadas. Acceso local, navegación público/admin y reinicio de Node comprobados conservando el mismo vencimiento.
-- TikTok @itzealva solicitado como siguiente trabajo: únicamente videos de Qavalta confirmados y clasificados por desarrollo, antes del mapa. No forma parte de esta entrega todavía.
+- TikTok se añadió en una segunda publicación de Versión1.0, descrita abajo.
+
+
+## TikTok de Itzel — segunda publicación Versión1.0
+- Ocho videos públicos de @itzealva, seleccionados a partir de captions y del inventario oficial. No se utiliza el feed personal completo ni fotos. Catálogo revisable: public/assets/qavalta-videos.json.
+- Sorento3, Oporto2, Ardenza1; Montalese2 y Vittoria2 comparten los recorridos de Arveto y Belat, identificados como modelos disponibles en ambas privadas. No se afirma la ubicación del rodaje. Torres permanece sin videos porque no se identificó uno verificable.
+- Bloque antes del plano, ancho completo del mapa conservado. Reproductores oficialesTikTok, carga diferida y sin reproducción automática. Repetición del mismo video y enlace directo alternativo.
+- Implementación basada en https://developers.tiktok.com/docs/en/embed-player y https://developers.tiktok.com/docs/en/embed-videos; se conserva embed_from=oembed del formato oficial.
+- Validación39pruebas completas: selección por pestaña, ordenantesmapa, rechazo de URLs externas/otrosusuarios/fotos yescape de títulos. Chrome: reproducción real de Sorento avanzóa00:36,8reproductores mostraron contenido, cinco pestañas clasificadas yTorressinbloque. Móvil390px: una columna ysin desborde.
+- La selección es editorial; nuevos videos no se incorporan automáticamente al sitio.

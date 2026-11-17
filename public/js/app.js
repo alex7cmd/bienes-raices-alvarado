@@ -2,6 +2,7 @@ const state = {
   site: null,
   developments: [],
   prototypes: [],
+  videos: [],
   lots: [],
   counts: { disponible: 0, no_disponible: 0, vendido: 0 },
   isAdmin: false,
@@ -295,7 +296,11 @@ async function init() {
 }
 
 async function loadPublicData() {
-  const data = await api('/api/public/site');
+  const [data, videos] = await Promise.all([
+    api('/api/public/site'),
+    api('/assets/qavalta-videos.json?v=1.0.0-3').catch(() => [])
+  ]);
+  state.videos = Array.isArray(videos) ? videos : [];
   state.site = data.site;
   state.developments = data.developments;
   state.prototypes = data.prototypes;
@@ -487,6 +492,36 @@ function setPanelSlide(panel, protoId, nextIdx) {
   });
 }
 
+// Curated Qavalta posts only; never embed the personal profile feed.
+function renderDevelopmentVideos(development) {
+  const videos = (state.videos || []).filter(video =>
+    Array.isArray(video.developments) && video.developments.includes(development.id)
+    && /^https:\/\/www\.tiktok\.com\/@itzealva\/video\/[0-9]{19}$/.test(video.url)
+  ).slice(0, 3);
+  if (!videos.length) return '';
+  return `<section class="qavalta-videos" aria-label="Videos de Qavalta: ${escapeHtml(development.name)}">
+    <div class="qavalta-videos-head">
+      <div><span class="dev-overview-kicker">RECORRIDOS CON ITZEL</span>
+        <h4>Conoce ${escapeHtml(development.name)} en video</h4>
+        <p>Recorridos de Qavalta y de sus modelos de casa.</p>
+      </div>
+      <a href="https://www.tiktok.com/@itzealva" target="_blank" rel="noopener noreferrer">@itzealva ↗</a>
+    </div>
+    <div class="qavalta-video-grid">${videos.map(video => {
+      const id = video.url.split('/').pop();
+      return `<article class="qavalta-video-card">
+        <div class="qavalta-video-player"><iframe title="${escapeHtml(video.title)} · Itzel Alva"
+          src="https://www.tiktok.com/player/v1/${id}?embed_from=oembed&amp;autoplay=0&amp;loop=1&amp;description=0&amp;music_info=0&amp;rel=0"
+          loading="lazy" allow="fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>
+        <div class="qavalta-video-info"><h5>${escapeHtml(video.title)}</h5>
+          ${video.sharedModel ? '<p>Modelo disponible en esta privada y en otros desarrollos Qavalta.</p>' : ''}
+          <a href="${escapeHtml(video.url)}" target="_blank" rel="noopener noreferrer">Ver en TikTok ↗</a>
+        </div>
+      </article>`;
+    }).join('')}</div>
+  </section>`;
+}
+
 function renderDevelopmentAccordion(openDevId = 'sorento') {
   const container = $('developmentAccordion');
   if (!container || !state.developments.length) return;
@@ -569,6 +604,8 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
           <div class="dev-proto-panel-wrap">
             ${firstProto ? renderPrototypeDetailPanel(firstProto, 0) : '<p class="muted">Sin prototipos disponibles.</p>'}
           </div>
+
+          ${renderDevelopmentVideos(activeDev)}
 
           <div class="dev-inline-map-section" data-inline-map="${escapeHtml(activeDev.id)}">
             <div class="dev-inline-map-head">
