@@ -2193,6 +2193,13 @@ html[data-theme="dark"] .mobile-drawer-icon {
     line-height: 1;
     font-weight: 600;
   }
+  .proto-panel-map {
+    flex: 0 0 auto;
+  }
+  .proto-panel-map iframe {
+    min-height: 320px;
+    height: 320px;
+  }
   .unified-dev-tabs::-webkit-scrollbar,
   .hero-dev-dock .unified-dev-tabs::-webkit-scrollbar {
     display: none;
