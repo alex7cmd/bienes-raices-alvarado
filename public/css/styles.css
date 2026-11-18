@@ -2263,6 +2263,13 @@ html[data-theme="dark"] .mobile-drawer-icon {
     grid-column: 1 / -1;
     justify-content: center;
   }
+  .admin-login-page {
+    place-items: start center;
+    padding: 24px 20px 40px;
+  }
+  .admin-login-back { margin-bottom: 24px; }
+  .admin-login-brand { margin-bottom: 18px; }
+  .admin-login-content h1 { margin-bottom: 20px; }
   .unified-dev-tabs::-webkit-scrollbar,
   .hero-dev-dock .unified-dev-tabs::-webkit-scrollbar {
     display: none;

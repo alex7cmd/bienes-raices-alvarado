@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-25" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-40" />
   <meta name="theme-color" content="#10243b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Alvarado Studio" />
@@ -312,7 +312,7 @@
       <div class="admin-login-brand"><span>A</span> Alvarado Studio</div>
       <h1 id="adminLoginTitle">Acceso Administrador</h1>
       <button type="button" class="install-app-btn hidden" data-install-app aria-label="Instalar app" title="Instalar app"><svg class="install-app-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v11m-4-4 4 4 4-4"/><path d="M5 14v5a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-5"/></svg><span class="install-app-label">Instalar app</span></button>
-      <p id="loginDescription">Ingresa para administrar el inventario, los precios y la portada.</p>
+      <p id="loginDescription" class="hidden"></p>
       <form id="loginForm">
         <label>Correo<input type="email" id="loginEmail" autocomplete="username" required value="admin@bienesraicesalvarado.com.mx" /></label>
         <label>Contraseña<input type="password" id="loginPassword" autocomplete="current-password" required /></label>
@@ -326,7 +326,7 @@
 
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
   <script src="/js/shared.js?v=1.0.0-20" defer></script>
-  <script src="/js/admin.js?v=1.0.0-23" defer></script>
+  <script src="/js/admin.js?v=1.0.0-24" defer></script>
   <script src="/js/install.js?v=1.0.0-14" defer></script>
 </body>
 </html>

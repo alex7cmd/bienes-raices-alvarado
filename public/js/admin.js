@@ -690,9 +690,9 @@ function renderCmsSocialVideos() {
 }
 async function initAdminApp() {
   initThemeScheduler(); bindAdminEvents(); bindMapEvents();
-  $('loginView').classList.add('checking-session'); $('loginDescription').textContent = 'Verificando tu sesión…'; showOnlyView('login');
+  $('loginView').classList.add('checking-session'); $('loginDescription').textContent = 'Verificando tu sesión…'; $('loginDescription').classList.remove('hidden'); showOnlyView('login');
   try { await Promise.all([loadPublicData(),checkAuth()]); await restoreAdminRoute(); }
-  finally { $('loginView').classList.remove('checking-session'); $('loginDescription').textContent = 'Ingresa para administrar el inventario, los precios y la portada.'; }
+  finally { $('loginView').classList.remove('checking-session'); $('loginDescription').textContent = ''; $('loginDescription').classList.add('hidden'); }
   initInventoryAutoSync();
   setInterval(updateSessionNotice,1000);
   document.addEventListener('visibilitychange', () => {if (!document.hidden) handleAsync(checkAuth)();});
