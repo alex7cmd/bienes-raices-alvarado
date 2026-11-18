@@ -2200,6 +2200,16 @@ html[data-theme="dark"] .mobile-drawer-icon {
     min-height: 320px;
     height: 320px;
   }
+  .dev-proto-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .dev-proto-tab {
+    flex: 1 1 auto;
+    justify-content: center;
+    text-align: center;
+  }
   .unified-dev-tabs::-webkit-scrollbar,
   .hero-dev-dock .unified-dev-tabs::-webkit-scrollbar {
     display: none;
