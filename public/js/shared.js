@@ -992,9 +992,19 @@ function bindMapEvents() {
   });
   window.addEventListener('mouseup', () => { state.dragging = false; });
 
-  // Touch pan for mobile & tablet
+  // Touch pan & two-finger pinch zoom for mobile & tablet
   let touchMoved = false;
+  let pinchState = null;
+  const getPinchDist = (t0, t1) => Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
   vp.addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      const dist = getPinchDist(e.touches[0], e.touches[1]);
+      if (dist > 0) {
+        state.dragging = false;
+        pinchState = { startDist: dist, startScale: state.zoom };
+      }
+      return;
+    }
     if (e.touches.length !== 1) return;
     const t = e.touches[0];
     state.dragging = true;
@@ -1003,6 +1013,14 @@ function bindMapEvents() {
     state.dragStartY = t.clientY - state.panY;
   }, { passive: true });
   vp.addEventListener('touchmove', (e) => {
+    if (pinchState && e.touches.length === 2) {
+      e.preventDefault();
+      const dist = getPinchDist(e.touches[0], e.touches[1]);
+      if (dist <= 0) return;
+      state.zoom = limitMapZoom(+(pinchState.startScale * (dist / pinchState.startDist)).toFixed(2));
+      applyTransform();
+      return;
+    }
     if (!state.dragging || e.touches.length !== 1) return;
     const t = e.touches[0];
     const nextX = t.clientX - state.dragStartX;
@@ -1015,8 +1033,11 @@ function bindMapEvents() {
       applyTransform();
     }
   }, { passive: false });
-  vp.addEventListener('touchend', () => { state.dragging = false; });
-  vp.addEventListener('touchcancel', () => { state.dragging = false; });
+  vp.addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) pinchState = null;
+    if (e.touches.length === 0) state.dragging = false;
+  });
+  vp.addEventListener('touchcancel', () => { state.dragging = false; pinchState = null; });
 
 
   $('exitMapBtn').addEventListener('click', () => showOnlyView(APP_KIND === 'admin' ? 'admin' : 'public'));

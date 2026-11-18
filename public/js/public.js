@@ -682,8 +682,10 @@ function bindPublicEvents() {
     trigger.setAttribute('aria-expanded', String(isOpen));
   });
 
-  // Inline map pan (mouse + touch when zoomed)
+  // Inline map pan + two-finger pinch zoom (mouse + touch)
   let inlineDrag = null;
+  let inlinePinch = null;
+  const getTouchDist = (t0, t1) => Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
   const startInlinePan = (clientX, clientY, target) => {
     const vpInline = target.closest('.dev-inline-map-viewport');
     if (!vpInline || target.closest('.dev-inline-zoom-bar')) return null;
@@ -713,10 +715,44 @@ function bindPublicEvents() {
   });
   window.addEventListener('mouseup', () => { inlineDrag = null; });
   $('developmentAccordion').addEventListener('touchstart', (e) => {
+    if (e.touches.length === 2) {
+      const vpInline = e.target.closest('.dev-inline-map-viewport');
+      if (!vpInline || e.target.closest('.dev-inline-zoom-bar')) return;
+      const wrap = vpInline.querySelector('.dev-inline-svg-wrap');
+      if (!wrap) return;
+      const dist = getTouchDist(e.touches[0], e.touches[1]);
+      if (dist <= 0) return;
+      inlineDrag = null;
+      inlinePinch = {
+        vpInline,
+        wrap,
+        svg: vpInline.querySelector('.dev-inline-svg'),
+        startDist: dist,
+        startScale: Number(wrap.dataset.scale || 1),
+        startPanX: Number(wrap.dataset.panX || 0),
+        startPanY: Number(wrap.dataset.panY || 0)
+      };
+      return;
+    }
     if (e.touches.length !== 1) return;
     inlineDrag = startInlinePan(e.touches[0].clientX, e.touches[0].clientY, e.target);
   }, { passive: true });
   $('developmentAccordion').addEventListener('touchmove', (e) => {
+    if (inlinePinch && e.touches.length === 2) {
+      e.preventDefault();
+      const dist = getTouchDist(e.touches[0], e.touches[1]);
+      if (dist <= 0) return;
+      const sc = limitMapZoom(+(inlinePinch.startScale * (dist / inlinePinch.startDist)).toFixed(2), 1);
+      const px = sc === 1 ? 0 : inlinePinch.startPanX;
+      const py = sc === 1 ? 0 : inlinePinch.startPanY;
+      updateMapResolution(inlinePinch.svg, sc);
+      inlinePinch.wrap.dataset.scale = String(sc);
+      inlinePinch.wrap.dataset.panX = String(px);
+      inlinePinch.wrap.dataset.panY = String(py);
+      inlinePinch.wrap.style.transform = `translate(${px}px, ${py}px) scale(${sc})`;
+      inlinePinch.vpInline.classList.toggle('is-zoomed', sc > 1);
+      return;
+    }
     if (!inlineDrag || e.touches.length !== 1) return;
     e.preventDefault();
     const px = e.touches[0].clientX - inlineDrag.startX;
@@ -725,8 +761,11 @@ function bindPublicEvents() {
     inlineDrag.wrap.dataset.panY = String(py);
     inlineDrag.wrap.style.transform = `translate(${px}px, ${py}px) scale(${inlineDrag.sc})`;
   }, { passive: false });
-  $('developmentAccordion').addEventListener('touchend', () => { inlineDrag = null; });
-  $('developmentAccordion').addEventListener('touchcancel', () => { inlineDrag = null; });
+  $('developmentAccordion').addEventListener('touchend', (e) => {
+    if (e.touches.length < 2) inlinePinch = null;
+    if (e.touches.length === 0) inlineDrag = null;
+  });
+  $('developmentAccordion').addEventListener('touchcancel', () => { inlineDrag = null; inlinePinch = null; });
 
   // Unified development tabs (sticky hero dock + panel) + prototype tabs
   const handleDevTabClick = (e) => {
