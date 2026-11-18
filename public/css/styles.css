@@ -1484,8 +1484,10 @@ textarea { resize: vertical; }
 }
 .proto-modal-card { max-width: 640px; }
 .modal-close {
-  position: absolute; top: 14px; right: 14px; width: 32px; height: 32px;
-  border-radius: 50%; border: 1px solid var(--border); background: #fff; cursor: pointer;
+  position: absolute; top: 14px; right: 14px; width: 40px; height: 40px;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 18px; line-height: 1; font-weight: 600; color: var(--text);
+  border-radius: 50%; border: 1px solid var(--border); background: #fff; cursor: pointer; z-index: 2;
 }
 .login-card h3 { font-size: 20px; margin-bottom: 6px; }
 .modal-desc { font-size: 13px; color: var(--muted); margin-bottom: 18px; }
@@ -1538,7 +1540,7 @@ html[data-theme="dark"] .toast.toast-sync-success {
 .wa-floating-stack:hover { background: #15803d; box-shadow: 0 16px 34px rgba(22, 163, 74, 0.45); }
 
 /* MODAL REQUEST INFO & SCHEDULE A TOUR */
-.inquiry-modal-card { max-width: 460px; }
+.inquiry-modal-card { max-width: 460px; padding-top: 62px; }
 .inquiry-tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; background: var(--surface); padding: 4px; border-radius: 12px; margin-bottom: 14px; }
 .inquiry-tab {
   border: none; background: transparent; padding: 9px; border-radius: 9px;
@@ -1549,12 +1551,17 @@ html[data-theme="dark"] .toast.toast-sync-success {
 .advisor-pill { font-size: 12px; font-weight: 600; background: var(--surface); padding: 6px 10px; border-radius: 999px; border: 1px solid var(--border); }
 .inquiry-form { display: flex; flex-direction: column; gap: 10px; }
 .inquiry-form input, .inquiry-form textarea, .inquiry-form select {
-  width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
+  width: 100%; min-width: 0; max-width: 100%; box-sizing: border-box;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--border);
   font-size: 13.5px; font-family: inherit; background: #fff;
 }
 .tour-fields { display: flex; flex-direction: column; gap: 10px; }
 .tour-datetime-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-.tour-fields label { display: flex; flex-direction: column; gap: 4px; font-size: 11px; font-weight: 600; color: var(--muted); }
+.tour-fields label { display: flex; flex-direction: column; gap: 4px; min-width: 0; font-size: 11px; font-weight: 600; color: var(--muted); }
+@media (max-width: 520px) {
+  .inquiry-modal-card { padding: 62px 18px 22px; }
+  .tour-datetime-grid { grid-template-columns: 1fr; }
+}
 .tour-modality-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .modality-btn {
   padding: 9px 10px; border-radius: 10px; border: 1.5px solid var(--border);
