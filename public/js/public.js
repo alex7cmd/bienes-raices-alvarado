@@ -190,11 +190,17 @@ function setPanelSlide(panel, protoId, nextIdx) {
   });
 }
 
+function isAllowedTiktokVideo(video) {
+  const url = String(video?.url || '');
+  if (/^https:\/\/www\.tiktok\.com\/@(?:itzealva|bienes\.races57)\/video\/[0-9]{19}$/.test(url)) return true;
+  return video?.custom === true && /^https:\/\/www\.tiktok\.com\/@[A-Za-z0-9_.]+\/video\/[0-9]{15,22}$/.test(url);
+}
+
 // Curated Qavalta posts only; never embed the personal profile feed.
 function renderDevelopmentVideos(development) {
   const videos = (state.videos || []).filter(video =>
     Array.isArray(video.developments) && video.developments.includes(development.id)
-    && /^https:\/\/www\.tiktok\.com\/@(?:itzealva|bienes\.races57)\/video\/[0-9]{19}$/.test(video.url)
+    && isAllowedTiktokVideo(video)
   ).slice(0, 3);
   if (!videos.length) return '';
   return `<section class="qavalta-videos" aria-label="Videos de Qavalta: ${escapeHtml(development.name)}">
@@ -590,7 +596,7 @@ async function loadInlineDevMap(slug, floorId = null) {
 
 async function loadPublicData() {
   const [data, videos] = await Promise.all([api('/api/public/site'), api('/assets/qavalta-videos.json?v=1.0.0-6').catch(() => [])]);
-  Object.assign(state, {site:data.site, developments:data.developments, prototypes:data.prototypes, videos:Array.isArray(videos)?videos:[]});
+  Object.assign(state, {site:data.site, developments:data.developments, prototypes:data.prototypes, videos:Array.isArray(data.videos)?data.videos:(Array.isArray(videos)?videos:[])});
   renderPublicSite();
 }
 function bindPublicEvents() {

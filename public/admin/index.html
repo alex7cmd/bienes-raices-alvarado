@@ -113,6 +113,10 @@
             <svg class="ui-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
             Portada y Desarrollos
           </button>
+          <button class="cms-tab" data-cmstab="social">
+            <svg class="ui-icon" viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            Redes y TikTok
+          </button>
 
           <span class="cms-nav-label" style="margin-top:16px;">VISTAS</span>
           <button class="cms-side-action" id="cmsToMapBtn">
@@ -271,6 +275,31 @@
         <h3 class="cms-subhead">Datos de los desarrollos</h3>
         <div class="cms-cards-grid" id="cmsDevsGrid"></div>
       </div>
+
+      <!-- TAB 4: REDES Y TIKTOK -->
+      <div class="cms-panel hidden" id="cmsTabSocial">
+        <div class="cms-form-card">
+          <h3>Añadir video de TikTok</h3>
+          <p class="cms-field-help cms-card-location">Pega cualquier enlace público de TikTok; se mostrará en las privadas seleccionadas.</p>
+          <div class="form-grid">
+            <label>Enlace de TikTok<input type="url" id="newTiktokUrl" placeholder="https://www.tiktok.com/@usuario/video/..." /></label>
+            <label>Título del video<input type="text" id="newTiktokTitle" placeholder="Ej. Recorrido en Montalese" maxlength="160" /></label>
+          </div>
+          <p class="cms-field-help" style="margin-bottom:8px;">Desarrollos donde aparece:</p>
+          <div class="cms-social-checks" id="newTiktokDevs">
+            <label><input type="checkbox" class="tiktok-dev-check" value="sorento" /> Sorento</label>
+            <label><input type="checkbox" class="tiktok-dev-check" value="oporto" /> Oporto</label>
+            <label><input type="checkbox" class="tiktok-dev-check" value="ardenza" /> Ardenza</label>
+            <label><input type="checkbox" class="tiktok-dev-check" value="montalese" checked /> Montalese</label>
+            <label><input type="checkbox" class="tiktok-dev-check" value="torres-qavalta" /> Torres Qavalta</label>
+            <label><input type="checkbox" class="tiktok-dev-check" value="vittoria" /> Vittoria</label>
+          </div>
+          <button type="button" class="btn-primary" id="addTiktokBtn" style="margin-top:14px;">+ Añadir enlace de TikTok</button>
+        </div>
+
+        <h3 class="cms-subhead">Enlaces actuales de TikTok</h3>
+        <div id="cmsVideosList" class="cms-videos-list"></div>
+      </div>
     </div>
       </div>
     </div>
@@ -297,7 +326,7 @@
 
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
   <script src="/js/shared.js?v=1.0.0-20" defer></script>
-  <script src="/js/admin.js?v=1.0.0-22" defer></script>
+  <script src="/js/admin.js?v=1.0.0-23" defer></script>
   <script src="/js/install.js?v=1.0.0-14" defer></script>
 </body>
 </html>

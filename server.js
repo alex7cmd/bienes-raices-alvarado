@@ -325,12 +325,32 @@ app.put('/api/admin/qavalta-lots/:slug/:lotId', requireAdmin, (req, res) => {
 });
 
 // --- PUBLIC SITE DATA ---
+const DEFAULT_VIDEOS_PATH = path.join(__dirname, 'public', 'assets', 'qavalta-videos.json');
+function loadDefaultVideos() {
+  try {
+    const parsed = JSON.parse(fs.readFileSync(DEFAULT_VIDEOS_PATH, 'utf8'));
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
+}
+function getVideos(db) {
+  return Array.isArray(db.videos) ? db.videos : loadDefaultVideos();
+}
+function normalizeTiktokUrl(raw) {
+  const clean = String(raw || '').trim().split('?')[0].replace(/\/+$/, '');
+  const match = /^https:\/\/(?:www\.)?tiktok\.com\/@([A-Za-z0-9_.]+)\/video\/([0-9]{15,22})$/i.exec(clean);
+  if (!match) return null;
+  return `https://www.tiktok.com/@${match[1]}/video/${match[2]}`;
+}
+
 app.get('/api/public/site', (req, res) => {
   const db = readDB();
   res.json({
     site: db.site,
     developments: projectDevelopments(db),
-    prototypes: db.prototypes.map(projectPrototype)
+    prototypes: db.prototypes.map(projectPrototype),
+    videos: getVideos(db)
   });
 });
 
@@ -375,8 +395,49 @@ app.get('/api/admin/lots', requireAdmin, (req, res) => {
     lots: db.lots,
     prototypes: db.prototypes.map(projectPrototype),
     developments: projectDevelopments(db),
+    videos: getVideos(db),
     counts
   });
+});
+
+app.post('/api/admin/videos', requireAdmin, (req, res) => {
+  const normalizedUrl = normalizeTiktokUrl(req.body?.url);
+  if (!normalizedUrl) return res.status(400).json({ error: 'URL de TikTok no válida (usa https://www.tiktok.com/@usuario/video/ID).' });
+  const title = String(req.body?.title || '').trim();
+  if (!title || title.length > 160) return res.status(400).json({ error: 'Ingresa un título válido (máx. 160 caracteres).' });
+  const validDevs = new Set(['sorento', 'oporto', 'ardenza', 'montalese', 'torres-qavalta', 'vittoria']);
+  const developments = Array.isArray(req.body?.developments)
+    ? [...new Set(req.body.developments.map(String).filter(d => validDevs.has(d)))]
+    : [];
+  if (!developments.length) return res.status(400).json({ error: 'Selecciona al menos un desarrollo.' });
+
+  const db = readDB();
+  const videos = getVideos(db);
+  if (videos.some(v => v.url === normalizedUrl)) {
+    return res.status(409).json({ error: 'Ese enlace de TikTok ya está agregado.' });
+  }
+  videos.push({
+    url: normalizedUrl,
+    title,
+    developments,
+    sharedModel: developments.length > 1,
+    embedEnabled: false,
+    custom: true
+  });
+  db.videos = videos;
+  writeDB(db);
+  res.status(201).json({ ok: true, videos: db.videos });
+});
+
+app.delete('/api/admin/videos/:id', requireAdmin, (req, res) => {
+  const id = String(req.params.id || '').trim();
+  const db = readDB();
+  const videos = getVideos(db);
+  const next = videos.filter(v => String(v.url || '').split('/').pop() !== id);
+  if (next.length === videos.length) return res.status(404).json({ error: 'Video no encontrado.' });
+  db.videos = next;
+  writeDB(db);
+  res.json({ ok: true, videos: db.videos });
 });
 
 // --- ADMIN CMS MUTATIONS (Content-Only: no layout changes) ---

@@ -1769,6 +1769,31 @@ html[data-app="admin"] .btn-map-info-tour {display:none;}
 .cms-proto-horizontal { padding: 24px; }
 .cms-proto-card-header { display:grid; grid-template-columns: 1fr auto; align-items:center; gap:8px 20px; padding-bottom:18px; border-bottom:1px solid var(--border); margin-bottom:22px; }
 .cms-proto-card-header h3 { margin:0; font-size:20px; }
+
+.cms-social-checks {
+  display: flex; flex-wrap: wrap; gap: 10px 16px;
+}
+.cms-social-checks label {
+  display: inline-flex; flex-direction: row; align-items: center; gap: 6px;
+  font-size: 13px; color: var(--text); cursor: pointer;
+}
+.cms-social-checks input[type="checkbox"] { width: auto; min-width: auto; margin: 0; }
+.cms-videos-list { display: flex; flex-direction: column; gap: 12px; }
+.cms-video-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap;
+}
+.cms-video-meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; flex: 1; }
+.cms-video-meta strong { font-size: 15px; color: var(--text); }
+.cms-video-meta small { font-size: 12px; color: var(--muted); word-break: break-all; }
+.cms-video-meta small a { color: var(--accent); text-decoration: none; }
+.cms-video-badges { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+.cms-video-badges span {
+  font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 999px;
+  background: var(--surface); border: 1px solid var(--border); color: var(--text);
+}
+html[data-theme="dark"] .btn-danger-outline {
+  background: rgba(220, 38, 38, 0.14); color: #fca5a5; border-color: rgba(248, 113, 113, 0.4);
+}
 .cms-proto-card-header .cms-location-pill { margin:0; }
 .cms-proto-card-header .cms-proto-location-title { grid-column:1/-1; margin:2px 0 0; }
 .cms-proto-card-header .cms-proto-location-chips { grid-column:1/-1; margin:0; }

@@ -81,11 +81,12 @@ async function openAdminCms() {
   state.lots = data.lots;
   state.prototypes = data.prototypes;
   state.developments = data.developments;
+  state.videos = data.videos || [];
   state.counts = data.counts;
   await renderAdminCms();
   showOnlyView('admin');
   const section = new URLSearchParams(location.search).get('seccion');
-  if (['lots', 'prototypes', 'site'].includes(section)) document.querySelector(`.cms-tab[data-cmstab="${section}"]`)?.click();
+  if (['lots', 'prototypes', 'site', 'social'].includes(section)) document.querySelector(`.cms-tab[data-cmstab="${section}"]`)?.click();
 }
 
 // --- INTERACTIVE SVG MAP (REDRAWN PER DEVELOPMENT + FULLSCREEN) ---
@@ -447,6 +448,8 @@ function bindAdminEvents() {
       $('cmsTabLots').classList.toggle('hidden', target !== 'lots');
       $('cmsTabPrototypes').classList.toggle('hidden', target !== 'prototypes');
       $('cmsTabSite').classList.toggle('hidden', target !== 'site');
+      $('cmsTabSocial')?.classList.toggle('hidden', target !== 'social');
+      if (target === 'social') renderCmsSocialVideos();
     });
   });
 
@@ -629,6 +632,61 @@ function bindAdminEvents() {
     renderCmsCarouselOverview();
     showToast(`Desarrollo ${id} guardado`);
   }));
+
+  $('addTiktokBtn')?.addEventListener('click', handleAsync(async () => {
+    const url = $('newTiktokUrl')?.value.trim() || '';
+    const title = $('newTiktokTitle')?.value.trim() || '';
+    const developments = Array.from(document.querySelectorAll('.tiktok-dev-check:checked')).map(c => c.value);
+    const res = await api('/api/admin/videos', {
+      method: 'POST',
+      body: JSON.stringify({ url, title, developments })
+    });
+    state.videos = res.videos || [];
+    if ($('newTiktokUrl')) $('newTiktokUrl').value = '';
+    if ($('newTiktokTitle')) $('newTiktokTitle').value = '';
+    renderCmsSocialVideos();
+    showToast('Enlace de TikTok añadido');
+  }));
+
+  $('cmsVideosList')?.addEventListener('click', handleAsync(async (e) => {
+    const btn = e.target.closest('.delete-video-btn');
+    if (!btn) return;
+    const id = btn.dataset.deleteVideo;
+    const res = await api(`/api/admin/videos/${encodeURIComponent(id)}`, { method: 'DELETE' });
+    state.videos = res.videos || [];
+    renderCmsSocialVideos();
+    showToast('Enlace de TikTok eliminado');
+  }));
+}
+
+function renderCmsSocialVideos() {
+  const listEl = $('cmsVideosList');
+  if (!listEl) return;
+  const videos = state.videos || [];
+  if (!videos.length) {
+    listEl.innerHTML = '<div class="cms-form-card" style="text-align:center;color:var(--muted);">No hay enlaces de TikTok configurados.</div>';
+    return;
+  }
+  listEl.innerHTML = videos.map(v => {
+    const id = String(v.url || '').split('/').pop();
+    const handleMatch = /tiktok\.com\/(@[^/]+)/.exec(v.url || '');
+    const handle = handleMatch ? handleMatch[1] : '@tiktok';
+    return `
+      <div class="cms-form-card cms-video-row">
+        <div class="cms-video-meta">
+          <strong>${escapeHtml(v.title || 'Recorrido en TikTok')}</strong>
+          <small>${escapeHtml(handle)} · <a href="${escapeHtml(v.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(v.url)} ↗</a></small>
+          <div class="cms-video-badges">
+            ${(v.developments || []).map(slug => {
+              const dev = (state.developments || []).find(d => d.id === slug);
+              return `<span>${escapeHtml(dev?.name || slug)}</span>`;
+            }).join('')}
+          </div>
+        </div>
+        <button type="button" class="btn-danger-outline delete-video-btn" data-delete-video="${escapeHtml(id)}">Eliminar</button>
+      </div>
+    `;
+  }).join('');
 }
 async function initAdminApp() {
   initThemeScheduler(); bindAdminEvents(); bindMapEvents();
