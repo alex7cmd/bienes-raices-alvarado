@@ -2112,6 +2112,22 @@ html[data-theme="dark"] .mobile-drawer-icon {
     white-space: nowrap;
   }
 
+  /* Footer mobile spacing above floating CTAs & centered social links */
+  .site-footer {
+    padding: 44px 20px 108px;
+  }
+  .footer-col:has(.footer-socials) {
+    text-align: center;
+  }
+  .footer-socials {
+    justify-content: center;
+  }
+  .footer-bottom {
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+  }
+
   /* Single-row horizontally swipeable development pills on mobile */
   .dev-tabs-swipe-hint {
     display: flex; align-items: center; justify-content: flex-end; gap: 6px;
