@@ -2178,11 +2178,13 @@ html[data-theme="dark"] .mobile-drawer-icon {
     border-right: none !important;
   }
 
-  /* Larger map zoom icons (+, -, reset) on mobile */
+  /* Larger & centered map zoom icons (+, -, reset) on mobile */
   .dev-inline-zoom-bar {
+    left: 0;
+    right: 0;
     gap: 6px;
     padding: 6px;
-    margin: 10px 0 -58px 10px;
+    margin: 10px auto -58px;
   }
   .dev-iz-btn,
   .map-zoom-controls button {

@@ -889,7 +889,7 @@ function updateMapResolution(svg, zoom) {
   const hd = HD_MAP_BACKGROUNDS[image.dataset.mapBackground];
   if (!hd) return;
   image.dataset.previewSrc ||= image.getAttribute('href');
-  const target = zoom >= 2 ? hd : image.dataset.previewSrc;
+  const target = zoom > 1 ? hd : image.dataset.previewSrc;
   if (image.getAttribute('href') === target) return;
   image.onerror = () => { image.onerror = null; image.setAttribute('href', image.dataset.previewSrc); };
   image.setAttribute('href', target);
