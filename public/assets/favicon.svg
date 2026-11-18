@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="8 10 192 220" role="img" aria-label="Bienes Raíces Alvarado">
+  <polygon
+    points="104,14 196,67 196,173 104,226 12,173 12,67"
+    fill="#10243b"
+    stroke="#E3D3B9"
+    stroke-width="8"
+    stroke-linejoin="miter"
+  />
+  <g fill="none" stroke="#E08B63" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter">
+    <polyline points="26,165 26,75 104,30 144,53" />
+    <polyline points="38,172 38,82 104,44 144,67" />
+    <polyline points="50,179 50,89 104,57 144,80" />
+  </g>
+  <g fill="none" stroke="#F8FAFC" stroke-width="9" stroke-linecap="butt" stroke-linejoin="miter">
+    <polyline points="148,57 148,145 104,170 64,147" />
+    <polyline points="160,64 160,152 104,184 64,161" />
+    <polyline points="172,71 172,159 104,198 64,175" />
+  </g>
+  <g transform="translate(104, 120)">
+    <path d="M-24,-6 L0,-25 L24,-6 L24,20 L16,20 L16,-2 L0,-15 L-16,-2 L-16,20 L-24,20 Z" fill="#F2B89B" />
+    <rect x="-9" y="0" width="7" height="7" fill="#F2B89B" />
+    <rect x="2" y="0" width="7" height="7" fill="#F2B89B" />
+    <rect x="-9" y="10" width="7" height="7" fill="#F2B89B" />
+    <rect x="2" y="10" width="7" height="7" fill="#F2B89B" />
+  </g>
+</svg>
