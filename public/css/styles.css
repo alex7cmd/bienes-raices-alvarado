@@ -2210,6 +2210,22 @@ html[data-theme="dark"] .mobile-drawer-icon {
     justify-content: center;
     text-align: center;
   }
+  .smart-features {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+  .smart-feature {
+    padding: 12px 14px;
+    border-radius: 14px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    gap: 10px;
+  }
+  .smart-feature:last-child {
+    grid-column: 1 / -1;
+    justify-content: center;
+  }
   .unified-dev-tabs::-webkit-scrollbar,
   .hero-dev-dock .unified-dev-tabs::-webkit-scrollbar {
     display: none;
