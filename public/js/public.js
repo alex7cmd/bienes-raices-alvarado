@@ -683,6 +683,19 @@ function bindPublicEvents() {
   });
 
   // Inline map pan + two-finger pinch zoom (mouse + touch)
+  const applyInlineMapTransform = (vpInline, wrap, svg, sc, px, py) => {
+    if (!wrap) return;
+    updateMapResolution(svg, sc);
+    wrap.dataset.scale = String(sc);
+    wrap.dataset.panX = String(px);
+    wrap.dataset.panY = String(py);
+    wrap.style.width = `${sc * 100}%`;
+    wrap.style.height = `${sc * 100}%`;
+    wrap.style.left = `${-((sc - 1) * 50)}%`;
+    wrap.style.top = `${-((sc - 1) * 50)}%`;
+    wrap.style.transform = `translate(${px}px, ${py}px)`;
+    if (vpInline) vpInline.classList.toggle('is-zoomed', sc > 1);
+  };
   let inlineDrag = null;
   let inlinePinch = null;
   const getTouchDist = (t0, t1) => Math.hypot(t1.clientX - t0.clientX, t1.clientY - t0.clientY);
@@ -694,7 +707,9 @@ function bindPublicEvents() {
     const sc = Number(wrap.dataset.scale || 1);
     if (sc <= 1) return null;
     return {
+      vpInline,
       wrap,
+      svg: vpInline.querySelector('.dev-inline-svg'),
       sc,
       startX: clientX - Number(wrap.dataset.panX || 0),
       startY: clientY - Number(wrap.dataset.panY || 0),
@@ -709,9 +724,7 @@ function bindPublicEvents() {
     const px = e.clientX - inlineDrag.startX;
     const py = e.clientY - inlineDrag.startY;
     inlineDrag.moved = true;
-    inlineDrag.wrap.dataset.panX = String(px);
-    inlineDrag.wrap.dataset.panY = String(py);
-    inlineDrag.wrap.style.transform = `translate(${px}px, ${py}px) scale(${inlineDrag.sc})`;
+    applyInlineMapTransform(inlineDrag.vpInline, inlineDrag.wrap, inlineDrag.svg, inlineDrag.sc, px, py);
   });
   window.addEventListener('mouseup', () => { inlineDrag = null; });
   $('developmentAccordion').addEventListener('touchstart', (e) => {
@@ -745,21 +758,14 @@ function bindPublicEvents() {
       const sc = limitMapZoom(+(inlinePinch.startScale * (dist / inlinePinch.startDist)).toFixed(2), 1);
       const px = sc === 1 ? 0 : inlinePinch.startPanX;
       const py = sc === 1 ? 0 : inlinePinch.startPanY;
-      updateMapResolution(inlinePinch.svg, sc);
-      inlinePinch.wrap.dataset.scale = String(sc);
-      inlinePinch.wrap.dataset.panX = String(px);
-      inlinePinch.wrap.dataset.panY = String(py);
-      inlinePinch.wrap.style.transform = `translate(${px}px, ${py}px) scale(${sc})`;
-      inlinePinch.vpInline.classList.toggle('is-zoomed', sc > 1);
+      applyInlineMapTransform(inlinePinch.vpInline, inlinePinch.wrap, inlinePinch.svg, sc, px, py);
       return;
     }
     if (!inlineDrag || e.touches.length !== 1) return;
     e.preventDefault();
     const px = e.touches[0].clientX - inlineDrag.startX;
     const py = e.touches[0].clientY - inlineDrag.startY;
-    inlineDrag.wrap.dataset.panX = String(px);
-    inlineDrag.wrap.dataset.panY = String(py);
-    inlineDrag.wrap.style.transform = `translate(${px}px, ${py}px) scale(${inlineDrag.sc})`;
+    applyInlineMapTransform(inlineDrag.vpInline, inlineDrag.wrap, inlineDrag.svg, inlineDrag.sc, px, py);
   }, { passive: false });
   $('developmentAccordion').addEventListener('touchend', (e) => {
     if (e.touches.length < 2) inlinePinch = null;
@@ -910,12 +916,7 @@ function bindPublicEvents() {
       else if (act === 'out') sc = Math.max(1, +(sc - 0.35).toFixed(2));
       else { sc = 1; px = 0; py = 0; }
       if (sc === 1) { px = 0; py = 0; }
-      updateMapResolution(mapSec.querySelector('.dev-inline-svg'), sc);
-      wrap.dataset.scale = String(sc);
-      wrap.dataset.panX = String(px);
-      wrap.dataset.panY = String(py);
-      wrap.style.transform = `translate(${px}px, ${py}px) scale(${sc})`;
-      if (vpInline) vpInline.classList.toggle('is-zoomed', sc > 1);
+      applyInlineMapTransform(vpInline, wrap, mapSec.querySelector('.dev-inline-svg'), sc, px, py);
       return;
     }
 
