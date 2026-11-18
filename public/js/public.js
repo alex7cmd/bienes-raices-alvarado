@@ -109,6 +109,8 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
   const gallery = getProtoGallery(p);
   const activeIdx = Math.max(0, Math.min(slideIdx, gallery.length - 1));
   const isDepto = p.type === 'departamento' || (Array.isArray(p.developments) && p.developments.length === 1 && p.developments[0] === 'torres-qavalta');
+  const devSlug = state.currentView === 'map' ? state.mapDevSlug : (state.publicDevSlug || (Array.isArray(p.developments) && p.developments[0]) || 'sorento');
+  const amenPhotos = AMENITIES_GALLERY[devSlug] || AMENITIES_GALLERY.vittoria;
   return `
     <div class="proto-tab-panel" data-active-proto="${escapeHtml(p.id)}" data-slide-idx="${activeIdx}">
       <div class="proto-panel-media">
@@ -164,13 +166,54 @@ function renderPrototypeDetailPanel(p, slideIdx = 0) {
         </div>
 
         <div class="proto-panel-features">
-          <span class="proto-panel-subtitle">Características y amenidades</span>
+          <span class="proto-panel-subtitle">Características y amenidades · Toca para ver fotos</span>
           <div class="proto-features-chips">
-            ${(p.features || []).map(f => `<span class="proto-chip">${featureIcon(f)} ${escapeHtml(f)}</span>`).join('')}
+            ${(p.features || []).map((f, i) => `
+              <button type="button" class="proto-chip proto-chip-interactive" data-amen-feature-idx="${i}" data-amen-label="${escapeHtml(f)}" aria-expanded="false">
+                <span class="proto-chip-main">${featureIcon(f)} <span>${escapeHtml(f)}</span></span>
+                <img class="proto-chip-thumb" src="${escapeHtml(amenPhotos[i % amenPhotos.length])}" alt="${escapeHtml(f)}" loading="lazy" />
+              </button>
+            `).join('')}
           </div>
+          <div class="inline-amen-gallery hidden" data-dev-slug="${escapeHtml(devSlug)}"></div>
         </div>
       </div>
     </div>
+  `;
+}
+
+function renderInlineAmenitiesGallery(container, devSlug, activeIdx = 0, activeLabel = '') {
+  if (!container) return;
+  const photos = AMENITIES_GALLERY[devSlug] || AMENITIES_GALLERY.vittoria;
+  if (!photos.length) return;
+  const dev = state.developments.find(d => d.id === devSlug) || { name: devSlug };
+  const idx = ((activeIdx % photos.length) + photos.length) % photos.length;
+  container.dataset.amenIdx = String(idx);
+  container.dataset.amenLabel = activeLabel;
+  container.classList.remove('hidden');
+  container.innerHTML = `
+    <div class="inline-amen-stage">
+      <img src="${escapeHtml(photos[idx])}" alt="${escapeHtml(dev.name)} - ${escapeHtml(activeLabel || 'Amenidad')}" />
+      <div class="amen-stage-overlay">
+        <span class="amen-kicker">AMENIDADES · ${escapeHtml(dev.name.toUpperCase())}</span>
+        ${activeLabel ? `<h4>${escapeHtml(activeLabel)}</h4>` : ''}
+      </div>
+      <span class="proto-photo-counter">${idx + 1} / ${photos.length}</span>
+      <button type="button" class="inline-amen-close" aria-label="Cerrar galería de amenidades">✕</button>
+      ${photos.length > 1 ? `
+        <button type="button" class="proto-photo-arrow proto-photo-prev inline-amen-prev" aria-label="Foto anterior">‹</button>
+        <button type="button" class="proto-photo-arrow proto-photo-next inline-amen-next" aria-label="Foto siguiente">›</button>
+      ` : ''}
+    </div>
+    ${photos.length > 1 ? `
+      <div class="amen-filmstrip inline-amen-filmstrip">
+        ${photos.map((src, i) => `
+          <button type="button" class="amen-thumb inline-amen-thumb ${i === idx ? 'active' : ''}" data-inline-amen-idx="${i}" aria-label="Ver foto de amenidad ${i + 1}">
+            <img src="${escapeHtml(src)}" alt="${escapeHtml(dev.name)} amenidad ${i + 1}" loading="lazy" />
+          </button>
+        `).join('')}
+      </div>
+    ` : ''}
   `;
 }
 
@@ -754,6 +797,56 @@ function bindPublicEvents() {
       if (e.target.closest('.proto-panel-main-img')) {
         openFullscreenGallery(protoId, cur);
         return;
+      }
+      const amenChip = e.target.closest('.proto-chip-interactive');
+      if (amenChip) {
+        const featBox = panel.querySelector('.proto-panel-features');
+        const inlineGal = featBox?.querySelector('.inline-amen-gallery');
+        const wasActive = amenChip.classList.contains('active') && inlineGal && !inlineGal.classList.contains('hidden');
+        featBox?.querySelectorAll('.proto-chip-interactive').forEach(btn => {
+          btn.classList.remove('active');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+        if (wasActive) {
+          inlineGal.classList.add('hidden');
+        } else if (inlineGal) {
+          amenChip.classList.add('active');
+          amenChip.setAttribute('aria-expanded', 'true');
+          renderInlineAmenitiesGallery(
+            inlineGal,
+            inlineGal.dataset.devSlug || 'sorento',
+            Number(amenChip.dataset.amenFeatureIdx || 0),
+            amenChip.dataset.amenLabel || ''
+          );
+        }
+        return;
+      }
+      const inlineGal = panel.querySelector('.inline-amen-gallery');
+      if (inlineGal && !inlineGal.classList.contains('hidden')) {
+        const curAmenIdx = Number(inlineGal.dataset.amenIdx || 0);
+        const curAmenLabel = inlineGal.dataset.amenLabel || '';
+        const amenSlug = inlineGal.dataset.devSlug || 'sorento';
+        if (e.target.closest('.inline-amen-close')) {
+          inlineGal.classList.add('hidden');
+          panel.querySelectorAll('.proto-chip-interactive').forEach(btn => {
+            btn.classList.remove('active');
+            btn.setAttribute('aria-expanded', 'false');
+          });
+          return;
+        }
+        if (e.target.closest('.inline-amen-prev')) {
+          renderInlineAmenitiesGallery(inlineGal, amenSlug, curAmenIdx - 1, curAmenLabel);
+          return;
+        }
+        if (e.target.closest('.inline-amen-next')) {
+          renderInlineAmenitiesGallery(inlineGal, amenSlug, curAmenIdx + 1, curAmenLabel);
+          return;
+        }
+        const amenThumb = e.target.closest('.inline-amen-thumb');
+        if (amenThumb) {
+          renderInlineAmenitiesGallery(inlineGal, amenSlug, Number(amenThumb.dataset.inlineAmenIdx || 0), curAmenLabel);
+          return;
+        }
       }
     }
     const fsMapBtn = e.target.closest('[data-open-fs-map]');
