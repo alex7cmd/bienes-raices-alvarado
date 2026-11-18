@@ -125,7 +125,7 @@ test('los videos son solo la selección Qavalta y aparecen en la pestaña correc
   const { run, context, element } = setup();
   context.videos = JSON.parse(fs.readFileSync(path.join(__dirname, '../public/assets/qavalta-videos.json')));
   run('state.videos = videos');
-  const counts = { sorento: 3, oporto: 2, ardenza: 1, montalese: 2, vittoria: 2, 'torres-qavalta': 0 };
+  const counts = { sorento: 3, oporto: 2, ardenza: 1, montalese: 3, vittoria: 2, 'torres-qavalta': 0 };
   for (const [slug, count] of Object.entries(counts)) {
     const html = run(`renderDevelopmentVideos(state.developments.find(d => d.id === ${JSON.stringify(slug)}))`);
     assert.equal((html.match(/<article class="qavalta-video-card"/g) || []).length, count, slug);

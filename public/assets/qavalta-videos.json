@@ -72,5 +72,14 @@
     ],
     "sharedModel": true,
     "embedEnabled": false
+  },
+  {
+    "url": "https://www.tiktok.com/@bienes.races57/video/7697496993328925973",
+    "title": "Recorrido en Montalese",
+    "developments": [
+      "montalese"
+    ],
+    "sharedModel": false,
+    "embedEnabled": false
   }
 ]

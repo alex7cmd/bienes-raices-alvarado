@@ -194,7 +194,7 @@ function setPanelSlide(panel, protoId, nextIdx) {
 function renderDevelopmentVideos(development) {
   const videos = (state.videos || []).filter(video =>
     Array.isArray(video.developments) && video.developments.includes(development.id)
-    && /^https:\/\/www\.tiktok\.com\/@itzealva\/video\/[0-9]{19}$/.test(video.url)
+    && /^https:\/\/www\.tiktok\.com\/@(?:itzealva|bienes\.races57)\/video\/[0-9]{19}$/.test(video.url)
   ).slice(0, 3);
   if (!videos.length) return '';
   return `<section class="qavalta-videos" aria-label="Videos de Qavalta: ${escapeHtml(development.name)}">

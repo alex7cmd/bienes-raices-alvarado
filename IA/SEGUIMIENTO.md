@@ -203,3 +203,9 @@ Transporte: indicador circular44x44sincontracción, chevronSVGcentrado ydistribu
 Verificación:52pruebas existentes aprobadas, JS válido ydiffcheckcorrecto. Chrome local320/390sin desbordes, mapa contacto100%, controles52/círculo44, tarjetas60px(63en320paraTorres), tipografíaformularios16px. Admininfoabre/cierraalrepetir,fuera/Escape;desktop1440conservafichahorizontal.
 
 Revisión visual final: detalles del desarrollo en una columna hasta480px para mantener precios/capacidad legibles con la nueva escala, sin partir números. CSSv24.
+
+## Ajustes 18 noviembre
+- Corregido `Qvalta` -> `Qavalta` en el título de `public/index.html` y en el mensaje predeterminado de WhatsApp (`Hola, me interesa información sobre Bienes Raíces Alvarado / Qavalta`).
+- Verificado número de WhatsApp `525537560931` (`+52 55 3756 0931`) en toda la aplicación.
+- Integrado el video de TikTok `https://www.tiktok.com/@bienes.races57/video/7697496993328925973` en `public/assets/qavalta-videos.json` (desarrollo `montalese`) y ampliada la validación de cuentas oficiales en `public/js/public.js` (`@itzealva` y `@bienes.races57`).
+- **Pendientes por confirmar con el cliente:** enlace exacto del perfil de Facebook (actualmente apunta a `https://www.facebook.com/`) y datos/fotos propias de **Ruche en Montalese** (actualmente marcado con `pending: true` en `data/sales-catalog.js`).
