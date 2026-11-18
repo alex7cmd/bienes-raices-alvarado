@@ -2288,6 +2288,15 @@ html[data-theme="dark"] .mobile-drawer-icon {
   .header-actions { justify-content: flex-end; }
 }
 
+.hero-qavalta-logo {
+  width: clamp(132px, 18vw, 186px);
+  height: auto;
+  display: block;
+  margin: 0 auto 14px;
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.38));
+  pointer-events: none;
+}
+
 /* INTERACTIVE AMENITY CHIPS WITH THUMBNAIL + INLINE GALLERY */
 .proto-chip-interactive {
   width: 100%;
