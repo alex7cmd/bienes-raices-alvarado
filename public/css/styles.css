@@ -1626,8 +1626,18 @@ html[data-theme="dark"] .toast.toast-sync-success {
   .dev-inline-map-viewport { height: 520px; }
   .map-topbar { height: auto; padding: 10px 14px; flex-wrap: wrap; gap: 8px; }
   .map-topbar-left, .map-topbar-right { width: 100%; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
-  .map-dev-pills { width: 100%; max-width: 100%; flex-wrap: wrap; overflow-x: visible; }
-  .map-dev-pill { padding: 5px 10px; font-size: 11.5px; }
+  .map-dev-pills {
+    width: 100%; max-width: 100%;
+    flex-wrap: nowrap; overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none;
+    scroll-snap-type: x proximity; padding: 2px 2px 4px;
+  }
+  .map-dev-pills::-webkit-scrollbar { display: none; }
+  .map-dev-pill {
+    flex: 0 0 auto; scroll-snap-align: start;
+    padding: 6px 12px; font-size: 12px;
+    animation: swipeTabsNudge 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.35s 1;
+  }
   .svg-viewport { width: 100%; height: 67vh; padding: 12px; touch-action: none; }
   .map-floor-bar { left: 50%; max-width: calc(100% - 24px); flex-wrap: wrap; justify-content: center; border-radius: 16px; }
   .map-mode-tabs { order: 3; width: 100%; justify-content: center; }
