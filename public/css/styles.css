@@ -80,11 +80,27 @@ html[data-theme="dark"] .map-dev-pill,
 html[data-theme="dark"] .map-legend-pill,
 html[data-theme="dark"] .map-hint-pill,
 html[data-theme="dark"] .map-zoom-controls,
+html[data-theme="dark"] .dev-inline-zoom-bar,
+html[data-theme="dark"] .dev-iz-btn,
+html[data-theme="dark"] .proto-gallery-btn,
+html[data-theme="dark"] .proto-photo-arrow,
+html[data-theme="dark"] .map-floor-bar,
+html[data-theme="dark"] .floor-pill,
+html[data-theme="dark"] .transport-card,
+html[data-theme="dark"] .map-admin-edit-box select,
 html[data-theme="dark"] .lot-spec-box,
 html[data-theme="dark"] .lot-detail-card {
   background: var(--card-bg);
   color: var(--text);
   border-color: var(--border);
+}
+html[data-theme="dark"] .dev-iz-btn:hover,
+html[data-theme="dark"] .proto-gallery-btn:hover,
+html[data-theme="dark"] .proto-photo-arrow:hover,
+html[data-theme="dark"] .dev-proto-tab:hover {
+  background: var(--surface);
+  color: var(--text);
+  border-color: var(--accent);
 }
 html[data-theme="dark"] .unified-dev-tab.active,
 html[data-theme="dark"] .dev-proto-tab.active,
