@@ -233,6 +233,12 @@ function applyTheme(theme) {
     btn.innerHTML = iconSvg;
     btn.title = titleText;
   });
+  const mobileThemeIcon = $('mobileThemeIcon');
+  const mobileThemeLabel = $('mobileThemeLabel');
+  if (mobileThemeIcon) mobileThemeIcon.innerHTML = iconSvg;
+  if (mobileThemeLabel) {
+    mobileThemeLabel.textContent = theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro';
+  }
 }
 
 function initThemeScheduler() {
@@ -250,6 +256,7 @@ function initThemeScheduler() {
   };
   $('themeToggleBtn')?.addEventListener('click', toggleTheme);
   $('cmsThemeToggleBtn')?.addEventListener('click', toggleTheme);
+  $('mobileThemeToggleBtn')?.addEventListener('click', toggleTheme);
 }
 
 // Keep the overlapping menu aligned when badges, names, or row counts change.

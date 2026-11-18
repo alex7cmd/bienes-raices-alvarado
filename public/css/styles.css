@@ -1968,3 +1968,147 @@ body { font-size:1rem; line-height:1.5; }
   .dev-overview-details { grid-template-columns:1fr; }
   .dev-overview-details .spec-text-wrap { flex-direction:row; flex-wrap:wrap; justify-content:flex-start; align-items:baseline; gap:4px 8px; }
 }
+
+/* MOBILE HAMBURGER MENU & RIGHT-TO-LEFT SLIDE DRAWER */
+.mobile-menu-btn { display: none; }
+.dev-tabs-swipe-hint { display: none; }
+
+.mobile-drawer-backdrop {
+  position: fixed; inset: 0; z-index: 95;
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+  transition: opacity 0.28s ease;
+}
+.mobile-drawer-backdrop.hidden { display: none; }
+
+.mobile-drawer {
+  position: fixed; top: 0; right: 0; bottom: 0; z-index: 100;
+  width: min(320px, 86vw);
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-left: 1px solid var(--border);
+  box-shadow: -12px 0 36px rgba(10, 22, 40, 0.16);
+  padding: 20px 18px 28px;
+  display: flex; flex-direction: column; gap: 18px;
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.32s ease;
+}
+.mobile-drawer.open {
+  transform: translateX(0);
+  visibility: visible;
+}
+html[data-theme="dark"] .mobile-drawer {
+  background: rgba(15, 23, 42, 0.96);
+  border-left-color: rgba(255, 255, 255, 0.12);
+  box-shadow: -12px 0 36px rgba(0, 0, 0, 0.45);
+}
+.mobile-drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding-bottom: 14px; border-bottom: 1px solid var(--border);
+}
+.mobile-drawer-title {
+  font-size: 16px; font-weight: 700; color: var(--text); letter-spacing: 0.01em;
+}
+.mobile-drawer-close {
+  width: 40px; height: 40px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  cursor: pointer;
+}
+.mobile-drawer-nav {
+  display: flex; flex-direction: column; gap: 10px;
+}
+.mobile-drawer-item {
+  display: flex; align-items: center; gap: 14px;
+  width: 100%; padding: 13px 14px; border-radius: 14px;
+  border: 1px solid var(--border); background: var(--surface); color: var(--text);
+  font-size: 15px; font-weight: 600; text-decoration: none; text-align: left;
+  cursor: pointer; transition: transform 0.18s ease, border-color 0.18s ease, background 0.18s ease;
+}
+.mobile-drawer-item:hover, .mobile-drawer-item:active {
+  border-color: var(--accent); transform: translateX(-2px);
+}
+.mobile-drawer-item.hidden { display: none; }
+.mobile-drawer-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #fff; color: var(--text); border: 1px solid var(--border); flex-shrink: 0;
+}
+html[data-theme="dark"] .mobile-drawer-icon {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+@keyframes swipeArrowSlide {
+  0%, 100% { transform: translateX(0); opacity: 0.75; }
+  50% { transform: translateX(5px); opacity: 1; }
+}
+@keyframes swipeTabsNudge {
+  0% { transform: translateX(0); }
+  35% { transform: translateX(-18px); }
+  70% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+@media (max-width: 768px) {
+  .site-header .main-nav {
+    flex: 1; justify-content: flex-end; gap: 8px;
+  }
+  .site-header .main-nav .dock-link:not([href="#transporte"]) {
+    display: none;
+  }
+  .site-header .header-actions {
+    gap: 8px; flex: 0 0 auto;
+  }
+  .site-header .header-actions > [data-install-app],
+  .site-header .header-actions > #themeToggleBtn,
+  .site-header .header-actions > .admin-menu-wrap {
+    display: none !important;
+  }
+  .site-header .mobile-menu-btn {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: var(--mobile-control-height); height: var(--mobile-control-height);
+    border-radius: 50%;
+  }
+
+  /* Single-row horizontally swipeable development pills on mobile */
+  .dev-tabs-swipe-hint {
+    display: flex; align-items: center; justify-content: flex-end; gap: 6px;
+    padding: 4px 12px 2px;
+    font-size: 11px; font-weight: 600; color: var(--muted);
+    letter-spacing: 0.02em;
+  }
+  .dev-tabs-swipe-hint svg {
+    color: var(--accent);
+    animation: swipeArrowSlide 1.6s ease-in-out infinite;
+  }
+  .unified-dev-tabs,
+  .hero-dev-dock .unified-dev-tabs {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 8px;
+    padding: 8px 12px 10px;
+  }
+  .unified-dev-tabs::-webkit-scrollbar,
+  .hero-dev-dock .unified-dev-tabs::-webkit-scrollbar {
+    display: none;
+  }
+  .unified-dev-tab {
+    flex: 0 0 auto;
+    min-width: 148px;
+    scroll-snap-align: start;
+    animation: swipeTabsNudge 1.1s cubic-bezier(0.22, 1, 0.36, 1) 0.35s 1;
+  }
+}
+
+@media (max-width: 359px) {
+  .header-inner { display: flex; align-items: center; justify-content: space-between; }
+  .main-nav { justify-content: flex-end; }
+  .header-actions { justify-content: flex-end; }
+}

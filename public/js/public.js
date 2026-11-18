@@ -280,6 +280,10 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
 
   const dockEl = $('heroDevDock');
   const tabsHtml = `
+    <div class="dev-tabs-swipe-hint" aria-hidden="true">
+      <span>Desliza para ver desarrollos</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>
+    </div>
     <div class="unified-dev-tabs" role="tablist" aria-label="Desarrollos residenciales">
       ${state.developments.map(dev => {
         const count = getDevelopmentPrototypes(dev.id).filter(p => p.salesStatus !== 'sold-out').length;
@@ -920,8 +924,44 @@ function bindPublicEvents() {
 
 
 }
+function initMobileDrawer() {
+  const menuBtn = $('mobileMenuBtn');
+  const drawer = $('mobileNavDrawer');
+  const backdrop = $('mobileDrawerBackdrop');
+  const closeBtn = $('mobileDrawerClose');
+  if (!menuBtn || !drawer || !backdrop) return;
+
+  const openDrawer = () => {
+    drawer.classList.add('open');
+    drawer.setAttribute('aria-hidden', 'false');
+    backdrop.classList.remove('hidden');
+    menuBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeDrawer = () => {
+    drawer.classList.remove('open');
+    drawer.setAttribute('aria-hidden', 'true');
+    backdrop.classList.add('hidden');
+    menuBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  };
+
+  menuBtn.addEventListener('click', () => {
+    if (drawer.classList.contains('open')) closeDrawer();
+    else openDrawer();
+  });
+  closeBtn?.addEventListener('click', closeDrawer);
+  backdrop.addEventListener('click', closeDrawer);
+  drawer.querySelectorAll('[data-drawer-close]').forEach(el => {
+    el.addEventListener('click', closeDrawer);
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
+}
+
 async function initPublicApp() {
-  initThemeScheduler(); bindPublicEvents(); bindMapEvents(); initDevelopmentDockLayout();
+  initThemeScheduler(); initMobileDrawer(); bindPublicEvents(); bindMapEvents(); initDevelopmentDockLayout();
   await loadPublicData();
   initInventoryAutoSync();
   const slug = new URLSearchParams(location.search).get('desarrollo');
