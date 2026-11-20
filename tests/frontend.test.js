@@ -121,19 +121,34 @@ test('Ruche y Malvasia resaltan las asignaciones oficiales del plano Sorento', (
   }
 });
 
-test('los videos son solo la selección Qavalta y aparecen en la pestaña correcta antes del plano', () => {
+test('los recorridos siguen el modelo seleccionado sin mezclar Arveto y Belat', () => {
   const { run, context, element } = setup();
   context.videos = JSON.parse(fs.readFileSync(path.join(__dirname, '../public/assets/qavalta-videos.json')));
   run('state.videos = videos');
-  const counts = { sorento: 3, oporto: 2, ardenza: 1, montalese: 3, vittoria: 2, 'torres-qavalta': 0 };
-  for (const [slug, count] of Object.entries(counts)) {
-    const html = run(`renderDevelopmentVideos(state.developments.find(d => d.id === ${JSON.stringify(slug)}))`);
-    assert.equal((html.match(/<article class="qavalta-video-card"/g) || []).length, count, slug);
-    assert.equal((html.match(/<iframe /g) || []).length, 0, 'La inserción está suspendida mientras TikTok la rechaza.');
+  const cases = [
+    ['vittoria','arveto',['7574163128146038034']],
+    ['vittoria','belat',['7621695933620768020']],
+    ['vittoria','brachetto',[]],
+    ['montalese','arveto',['7574163128146038034']],
+    ['montalese','belat',['7621695933620768020']],
+    ['montalese','ruche',[]],
+    ['oporto','areni-3r',[]],
+    ['oporto','belora',['7604688571139706119']],
+    ['sorento','ruche',['7605332429020171538','7641341087017225492']],
+    ['sorento','loureira',['7606539250288315656','7641341087017225492']],
+    ['ardenza','moscatel',['7608434676860046612']],
+    ['torres-qavalta','flat-1',[]]
+  ];
+  for (const [slug, id, expected] of cases) {
+    const html = run(`renderDevelopmentVideos(state.developments.find(d => d.id === ${JSON.stringify(slug)}), state.prototypes.find(p => p.id === ${JSON.stringify(id)}))`);
     const ids = [...html.matchAll(/data-video-id="(\d+)"/g)].map(m => m[1]);
-    const expected = context.videos.filter(v => v.developments.includes(slug)).map(v => v.url.split('/').pop());
-    assert.deepEqual(ids, expected);
+    assert.deepEqual(ids, expected, `${slug}/${id}`);
+    assert.equal((html.match(/<iframe /g) || []).length, 0);
+    assert.ok(!html.includes('7697496993328925973'), 'No se publica un recorrido cuyo modelo no está identificado.');
   }
+  const privateVideo = run("renderDevelopmentVideos({id:'ardenza',name:'Ardenza'},{id:'moscatel',name:'Moscatel'})");
+  assert.ok(privateVideo.includes('Video general del desarrollo'));
+  assert.ok(privateVideo.includes('No hay un recorrido verificado de Moscatel'));
   run("renderDevelopmentAccordion('sorento')");
   const html = element('developmentAccordion').innerHTML;
   assert.ok(html.indexOf('class="qavalta-videos"') < html.indexOf('class="dev-inline-map-section"'));
@@ -146,7 +161,7 @@ test('el reproductor rechaza URLs ajenas a los videos de Itzel y escapa títulos
     { url: 'https://evil.example/@itzealva/video/7605332429020171538', developments: ['sorento'] },
     { url: 'https://www.tiktok.com/@other/video/7605332429020171538', developments: ['sorento'] },
     { url: 'https://www.tiktok.com/@itzealva/photo/7605332429020171538', developments: ['sorento'] },
-    { url: 'https://www.tiktok.com/@itzealva/video/7605332429020171538', title: '<img src=x onerror=alert(1)>', developments: ['sorento'] }
+    { url: 'https://www.tiktok.com/@itzealva/video/7605332429020171538', title: '<img src=x onerror=alert(1)>', developments: ['sorento'], scope:'development' }
   ];
   run('state.videos = videos');
   const html = run("renderDevelopmentVideos({id:'sorento', name:'Sorento'})");

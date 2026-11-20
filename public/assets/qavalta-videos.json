@@ -6,7 +6,10 @@
       "sorento"
     ],
     "sharedModel": false,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "development",
+    "prototypeIds": [],
+    "verificationStatus": "verified"
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7605332429020171538",
@@ -15,7 +18,12 @@
       "sorento"
     ],
     "sharedModel": false,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "model",
+    "prototypeIds": [
+      "ruche"
+    ],
+    "verificationStatus": "verified"
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7606539250288315656",
@@ -24,7 +32,12 @@
       "sorento"
     ],
     "sharedModel": false,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "model",
+    "prototypeIds": [
+      "loureira"
+    ],
+    "verificationStatus": "verified"
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7520069670469160210",
@@ -33,7 +46,12 @@
       "oporto"
     ],
     "sharedModel": false,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "model",
+    "prototypeIds": [
+      "areni"
+    ],
+    "verificationStatus": "verified"
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7604688571139706119",
@@ -42,7 +60,12 @@
       "oporto"
     ],
     "sharedModel": false,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "model",
+    "prototypeIds": [
+      "belora"
+    ],
+    "verificationStatus": "verified"
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7608434676860046612",
@@ -51,7 +74,10 @@
       "ardenza"
     ],
     "sharedModel": false,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "development",
+    "prototypeIds": [],
+    "verificationStatus": "verified"
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7574163128146038034",
@@ -61,7 +87,12 @@
       "vittoria"
     ],
     "sharedModel": true,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "model",
+    "prototypeIds": [
+      "arveto"
+    ],
+    "verificationStatus": "verified"
   },
   {
     "url": "https://www.tiktok.com/@itzealva/video/7621695933620768020",
@@ -71,15 +102,23 @@
       "vittoria"
     ],
     "sharedModel": true,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "model",
+    "prototypeIds": [
+      "belat"
+    ],
+    "verificationStatus": "verified"
   },
   {
     "url": "https://www.tiktok.com/@bienes.races57/video/7697496993328925973",
-    "title": "Recorrido en Montalese",
+    "title": "Recorrido Qavalta · modelo por confirmar",
     "developments": [
       "montalese"
     ],
     "sharedModel": false,
-    "embedEnabled": false
+    "embedEnabled": false,
+    "scope": "unverified",
+    "prototypeIds": [],
+    "verificationStatus": "pending"
   }
 ]

@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-40" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-42" />
   <meta name="theme-color" content="#10243b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Alvarado Studio" />
@@ -33,7 +33,7 @@
           <small>DESDE</small>
           <strong id="mapStartingPrice">$1,382,000</strong>
         </div>
-        <button class="btn-back-home" id="exitMapBtn">← Volver al administrador</button>
+        <button class="btn-back-home" id="exitMapBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m12 5-7 7 7 7M5 12h14"/></svg><span>Volver al administrador</span></button>
       </div>
     </div>
 
@@ -280,11 +280,12 @@
       <div class="cms-panel hidden" id="cmsTabSocial">
         <div class="cms-form-card">
           <h3>Añadir video de TikTok</h3>
-          <p class="cms-field-help cms-card-location">Pega cualquier enlace público de TikTok; se mostrará en las privadas seleccionadas.</p>
+          <p class="cms-field-help cms-card-location">Indica el modelo que aparece en el video y selecciona sus desarrollos. Usa «Video general» solo para recorridos de la privada.</p>
           <div class="form-grid">
             <label>Enlace de TikTok<input type="url" id="newTiktokUrl" placeholder="https://www.tiktok.com/@usuario/video/..." /></label>
             <label>Título del video<input type="text" id="newTiktokTitle" placeholder="Ej. Recorrido en Montalese" maxlength="160" /></label>
           </div>
+          <label style="margin-bottom:14px;">Contenido del video<select id="newTiktokPrototype"><option value="development">Video general del desarrollo</option></select></label>
           <p class="cms-field-help" style="margin-bottom:8px;">Desarrollos donde aparece:</p>
           <div class="cms-social-checks" id="newTiktokDevs">
             <label><input type="checkbox" class="tiktok-dev-check" value="sorento" /> Sorento</label>
@@ -326,7 +327,7 @@
 
 <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
   <script src="/js/shared.js?v=1.0.0-20" defer></script>
-  <script src="/js/admin.js?v=1.0.0-24" defer></script>
+  <script src="/js/admin.js?v=1.0.0-26" defer></script>
   <script src="/js/install.js?v=1.0.0-14" defer></script>
 </body>
 </html>

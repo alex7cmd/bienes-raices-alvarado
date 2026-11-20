@@ -335,7 +335,12 @@ function loadDefaultVideos() {
   }
 }
 function getVideos(db) {
-  return Array.isArray(db.videos) ? db.videos : loadDefaultVideos();
+  const defaults = loadDefaultVideos();
+  const known = new Map(defaults.map(video => [video.url, video]));
+  return (Array.isArray(db.videos) ? db.videos : defaults).map(video => {
+    const identity = known.get(video.url);
+    return identity ? { ...video, scope:identity.scope, prototypeIds:identity.prototypeIds, verificationStatus:identity.verificationStatus } : video;
+  });
 }
 function normalizeTiktokUrl(raw) {
   const clean = String(raw || '').trim().split('?')[0].replace(/\/+$/, '');
@@ -412,6 +417,10 @@ app.post('/api/admin/videos', requireAdmin, (req, res) => {
   if (!developments.length) return res.status(400).json({ error: 'Selecciona al menos un desarrollo.' });
 
   const db = readDB();
+  const prototypeId = String(req.body?.prototypeId || 'development');
+  if (prototypeId !== 'development' && !db.prototypes.some(p => p.id === prototypeId)) {
+    return res.status(400).json({ error:'Selecciona un modelo válido o un video general del desarrollo.' });
+  }
   const videos = getVideos(db);
   if (videos.some(v => v.url === normalizedUrl)) {
     return res.status(409).json({ error: 'Ese enlace de TikTok ya está agregado.' });
@@ -422,7 +431,10 @@ app.post('/api/admin/videos', requireAdmin, (req, res) => {
     developments,
     sharedModel: developments.length > 1,
     embedEnabled: false,
-    custom: true
+    custom: true,
+    scope:prototypeId === 'development' ? 'development' : 'model',
+    prototypeIds:prototypeId === 'development' ? [] : [prototypeId],
+    verificationStatus:'assigned'
   });
   db.videos = videos;
   writeDB(db);

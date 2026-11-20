@@ -258,3 +258,31 @@ test('la oferta comercial y Ruche por desarrollo se aplican sin escribir el inve
   assert.equal(data.developments.find(d=>d.id==='sorento').startingPrice,3200000);
   assert.equal(fs.readFileSync(file,'utf8'),before);
 });
+
+
+test('los videos guardados reciben la identidad verificada sin reescribir la base', async () => {
+  const file=path.join(fixture,'data/db.json');
+  const db=JSON.parse(fs.readFileSync(file));
+  db.videos=[{url:'https://www.tiktok.com/@itzealva/video/7574163128146038034',title:'Mi título guardado',developments:['vittoria']},
+    {url:'https://www.tiktok.com/@bienes.races57/video/7697496993328925973',title:'Recorrido antiguo',developments:['montalese']}];
+  fs.writeFileSync(file,JSON.stringify(db));
+  const before=fs.readFileSync(file,'utf8');
+  const data=await (await request('/api/public/site')).json();
+  assert.equal(data.videos.length,2);
+  assert.deepEqual(data.videos[0].prototypeIds,['arveto']);
+  assert.equal(data.videos[0].title,'Mi título guardado');
+  assert.equal(data.videos[1].verificationStatus,'pending');
+  assert.equal(fs.readFileSync(file,'utf8'),before);
+});
+
+test('el administrador puede asociar un nuevo enlace a su modelo y rechaza modelos inexistentes', async () => {
+  const login=await request('/api/auth/login',{method:'POST',body:{email:'admin@bienesraicesalvarado.com.mx',password}});
+  cookie=login.headers.get('set-cookie').split(';')[0];
+  const url='https://www.tiktok.com/@itzealva/video/7000000000000000123';
+  let res=await request('/api/admin/videos',{method:'POST',authenticated:true,body:{url,title:'Arveto nuevo',developments:['vittoria'],prototypeId:'inventado'}});
+  assert.equal(res.status,400);
+  res=await request('/api/admin/videos',{method:'POST',authenticated:true,body:{url,title:'Arveto nuevo',developments:['vittoria'],prototypeId:'arveto'}});
+  assert.equal(res.status,201);
+  const video=(await res.json()).videos.find(v=>v.url===url);
+  assert.equal(video.scope,'model'); assert.deepEqual(video.prototypeIds,['arveto']);
+});

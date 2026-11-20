@@ -209,3 +209,9 @@ Revisión visual final: detalles del desarrollo en una columna hasta480px para m
 - Verificado número de WhatsApp `525537560931` (`+52 55 3756 0931`) en toda la aplicación.
 - Integrado el video de TikTok `https://www.tiktok.com/@bienes.races57/video/7697496993328925973` en `public/assets/qavalta-videos.json` (desarrollo `montalese`) y ampliada la validación de cuentas oficiales en `public/js/public.js` (`@itzealva` y `@bienes.races57`).
 - **Pendientes por confirmar con el cliente:** enlace exacto del perfil de Facebook (actualmente apunta a `https://www.facebook.com/`) y datos/fotos propias de **Ruche en Montalese** (actualmente marcado con `pending: true` en `data/sales-catalog.js`).
+
+## Plano adaptable y videos por modelo · 20 noviembre
+Encabezado del plano en grid con alto automático, botón regresar sin contracción ni saltos, controles44px, diseño alternativo hasta1399 y768px y altura de lienzo flexible. Protege detalles del lote contra truncado. Se revisa la matriz de breakpoints antes del despliegue.
+TikTok: 8 publicaciones contrastadas con sus descripciones originales (6modelos y2privadas); el noveno enlace no identifica modelo/privada y queda pendiente/oculto conservando el registro. Arveto yBelat tienen destinos correctos, pero la interfaz filtraba solo desarrollo: ahora los videos se filtran por ID de modelo al cambiar pestaña. Areni no se equipara con Areni3R. Los recorridos generales se presentan separados con etiqueta explícita. API proyecta identidad de enlaces conocidos sin reescribir DB/lista/orden/eliminaciones, admin permite clasificar nuevos videos por modelo.
+
+Validación:54pruebasPASS; matrizChrome42anchos320–1920enplano y42enpúblicosin overflow/gruposencimados/deformación/botóncortado;4tamañoshorizontalesconlienzo>0yregresar44px. Vistaescritoriocomprobada. Metadatosde9publicacionesauditadas:8asociacionesconfirmadasenpostoriginaly1ocultaporidentidadpendiente.

@@ -240,21 +240,22 @@ function isAllowedTiktokVideo(video) {
 }
 
 // Curated Qavalta posts only; never embed the personal profile feed.
-function renderDevelopmentVideos(development) {
-  const videos = (state.videos || []).filter(video =>
+function renderDevelopmentVideos(development, prototype = null) {
+  if (!development) return '';
+  const related = (state.videos || []).filter(video =>
     Array.isArray(video.developments) && video.developments.includes(development.id)
     && isAllowedTiktokVideo(video)
-  ).slice(0, 3);
-  if (!videos.length) return '';
-  return `<section class="qavalta-videos" aria-label="Videos de Qavalta: ${escapeHtml(development.name)}">
-    <div class="qavalta-videos-head">
-      <div><span class="dev-overview-kicker">RECORRIDOS CON ITZEL</span>
-        <h4>Conoce ${escapeHtml(development.name)} en video</h4>
-        <p>Recorridos de Qavalta y de sus modelos de casa.</p>
-      </div>
-      <a href="https://www.tiktok.com/@itzealva" target="_blank" rel="noopener noreferrer">@itzealva ↗</a>
-    </div>
-    <div class="qavalta-video-grid">${videos.map(video => {
+  );
+  if (!related.length) return '';
+  const verified = related.filter(video => video.verificationStatus !== 'pending');
+  const modelVideos = verified.filter(video => video.scope === 'model' && Array.isArray(video.prototypeIds) && video.prototypeIds.includes(prototype?.id));
+  const generalVideos = verified.filter(video => video.scope === 'development');
+  const renderGroup = (group, heading, description, scope) => group.length ? `<section class="qavalta-videos" data-video-scope="${scope}" aria-label="${escapeHtml(heading)}">
+    <div class="qavalta-videos-head"><div>
+      <span class="dev-overview-kicker">RECORRIDOS EN VIDEO</span>
+      <h4>${escapeHtml(heading)}</h4><p>${escapeHtml(description)}</p>
+    </div></div>
+    <div class="qavalta-video-grid">${group.map(video => {
       const id = video.url.split('/').pop();
       const embedEnabled = video.embedEnabled !== false;
       return `<article class="qavalta-video-card" data-video-id="${id}">
@@ -267,12 +268,15 @@ function renderDevelopmentVideos(development) {
           </div>
         </div>
         <div class="qavalta-video-info"><h5>${escapeHtml(video.title)}</h5>
-          ${video.sharedModel ? '<p>Modelo disponible en esta privada y en otros desarrollos Qavalta.</p>' : ''}
+          ${video.sharedModel ? '<p>Recorrido del mismo modelo en Qavalta.</p>' : ''}
           <a href="${escapeHtml(video.url)}" target="_blank" rel="noopener noreferrer">Ver en TikTok ↗</a>
         </div>
       </article>`;
     }).join('')}</div>
-  </section>`;
+  </section>` : '';
+  return `${renderGroup(modelVideos, `Recorrido de ${prototype?.name || ''}`, 'Video del modelo seleccionado.', 'model')}
+    ${prototype && !modelVideos.length ? `<p class="qavalta-video-empty">No hay un recorrido verificado de ${escapeHtml(prototype.name)} por ahora.</p>` : ''}
+    ${renderGroup(generalVideos, `Sobre la privada ${development.name}`, 'Video general del desarrollo, independiente del modelo seleccionado.', 'development')}`;
 }
 
 function showVideoFallback(frame) {
@@ -391,7 +395,7 @@ function renderDevelopmentAccordion(openDevId = 'sorento') {
             ${firstProto ? renderPrototypeDetailPanel(firstProto, 0) : '<p class="muted">Sin prototipos disponibles.</p>'}
           </div>
 
-          ${renderDevelopmentVideos(activeDev)}
+          <div class="dev-videos-wrap">${renderDevelopmentVideos(activeDev, firstProto)}</div>
 
           <div class="dev-inline-map-section" data-inline-map="${escapeHtml(activeDev.id)}">
             <div class="dev-inline-map-head">
@@ -642,7 +646,7 @@ async function loadInlineDevMap(slug, floorId = null) {
 
 
 async function loadPublicData() {
-  const [data, videos] = await Promise.all([api('/api/public/site'), api('/assets/qavalta-videos.json?v=1.0.0-6').catch(() => [])]);
+  const [data, videos] = await Promise.all([api('/api/public/site'), api('/assets/qavalta-videos.json?v=1.0.0-7').catch(() => [])]);
   Object.assign(state, {site:data.site, developments:data.developments, prototypes:data.prototypes, videos:Array.isArray(data.videos)?data.videos:(Array.isArray(videos)?videos:[])});
   renderPublicSite();
 }
@@ -810,6 +814,10 @@ function bindPublicEvents() {
       });
       const wrap = pill.querySelector('.dev-proto-panel-wrap');
       if (wrap) wrap.innerHTML = renderPrototypeDetailPanel(proto, 0);
+      const videoWrap = pill.querySelector('.dev-videos-wrap');
+      const development = state.developments.find(d => d.id === pill.dataset.devPill);
+      if (videoWrap) videoWrap.innerHTML = renderDevelopmentVideos(development, proto);
+      initDevelopmentVideoPlayers();
       return;
     }
 

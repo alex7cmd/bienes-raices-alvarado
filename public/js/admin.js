@@ -639,7 +639,7 @@ function bindAdminEvents() {
     const developments = Array.from(document.querySelectorAll('.tiktok-dev-check:checked')).map(c => c.value);
     const res = await api('/api/admin/videos', {
       method: 'POST',
-      body: JSON.stringify({ url, title, developments })
+      body: JSON.stringify({ url, title, developments, prototypeId:$('newTiktokPrototype')?.value || 'development' })
     });
     state.videos = res.videos || [];
     if ($('newTiktokUrl')) $('newTiktokUrl').value = '';
@@ -662,6 +662,12 @@ function bindAdminEvents() {
 function renderCmsSocialVideos() {
   const listEl = $('cmsVideosList');
   if (!listEl) return;
+  const selector = $('newTiktokPrototype');
+  if (selector) {
+    const selected = selector.value || 'development';
+    selector.innerHTML = '<option value="development">Video general del desarrollo</option>' + (state.prototypes || []).map(p => `<option value="${escapeHtml(p.id)}">Modelo ${escapeHtml(p.name)}</option>`).join('');
+    selector.value = selected;
+  }
   const videos = state.videos || [];
   if (!videos.length) {
     listEl.innerHTML = '<div class="cms-form-card" style="text-align:center;color:var(--muted);">No hay enlaces de TikTok configurados.</div>';
@@ -677,6 +683,7 @@ function renderCmsSocialVideos() {
           <strong>${escapeHtml(v.title || 'Recorrido en TikTok')}</strong>
           <small>${escapeHtml(handle)} · <a href="${escapeHtml(v.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(v.url)} ↗</a></small>
           <div class="cms-video-badges">
+            <span>${v.verificationStatus === 'pending' || !v.scope ? 'Por verificar · oculto en el sitio' : v.scope === 'development' ? 'Video general de la privada' : escapeHtml((v.prototypeIds || []).map(id => state.prototypes.find(p => p.id === id)?.name || id).join(', '))}</span>
             ${(v.developments || []).map(slug => {
               const dev = (state.developments || []).find(d => d.id === slug);
               return `<span>${escapeHtml(dev?.name || slug)}</span>`;
