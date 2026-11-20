@@ -326,176 +326,172 @@ function getMapCounts(lots) {
   return c;
 }
 
-// Four independent streets keep traffic geographically separated across each development.
+// Positions use the same 9000 × 6600 coordinates as the outdoor plans.
 const MAP_LIFE_CONFIG = {
-  "sorento": {
-    "cars": [
-      {
-        "color": "#ffffff",
-        "dur": "22s",
-        "begin": "-3s",
-        "path": "M 2500 675 L 4150 675"
-      },
-      {
-        "color": "#1e3a5f",
-        "dur": "24s",
-        "begin": "-9s",
-        "path": "M 6500 1855 L 7500 1855"
-      },
-      {
-        "color": "#d6b68a",
-        "dur": "26s",
-        "begin": "-15s",
-        "path": "M 2150 4900 L 4300 4900"
-      },
-      {
-        "color": "#a42d48",
-        "dur": "28s",
-        "begin": "-21s",
-        "path": "M 6100 4890 L 8050 4890"
-      }
-    ]
+  sorento: {
+    roads: [
+      'M 2500 675 L 4150 675',
+      'M 6500 1890 L 7500 1890',
+      'M 2150 4900 L 4300 4900',
+      'M 6100 4890 L 8050 4890'
+    ],
+    walks: ['M 2560 3070 L 3270 3070', 'M 7500 745 L 6820 745'],
+    trees: [[2440, 4180, .9], [3550, 4080, .86], [4290, 3820, .86], [7880, 3675, .94]],
+    lawns: [[2490, 4040, 135, 230], [3490, 4080, 140, 130], [4290, 3840, 100, 110], [7840, 3780, 150, 100]],
+    dogs: [[2510, 3900, -30], [2655, 3945, 18], [7800, 3840, 42], [7915, 3920, -28]]
   },
-  "oporto": {
-    "cars": [
-      {
-        "color": "#ffffff",
-        "dur": "22s",
-        "begin": "-3s",
-        "path": "M 1200 1565 L 3200 1565"
-      },
-      {
-        "color": "#1e3a5f",
-        "dur": "24s",
-        "begin": "-9s",
-        "path": "M 4050 2445 L 5900 2445"
-      },
-      {
-        "color": "#d6b68a",
-        "dur": "26s",
-        "begin": "-15s",
-        "path": "M 1200 4490 L 2800 4490"
-      },
-      {
-        "color": "#a42d48",
-        "dur": "28s",
-        "begin": "-21s",
-        "path": "M 3620 5350 L 4930 5350"
-      }
-    ]
+  oporto: {
+    roads: [
+      'M 1200 1565 L 3200 1565',
+      'M 4050 2445 L 5900 2445',
+      'M 1200 4435 L 2800 4435',
+      'M 3620 5370 L 4930 5370'
+    ],
+    walks: ['M 1350 710 L 1920 710', 'M 4800 3490 L 4250 3490'],
+    trees: [[3500, 930, .85], [3300, 3110, 1], [3210, 3820, .94], [3000, 5200, .72]],
+    lawns: [[3530, 960, 112, 150], [3250, 3020, 220, 170], [3160, 3830, 175, 150], [3000, 5190, 72, 61]],
+    dogs: [[3485, 1290, -24], [3555, 1350, 35]]
   },
-  "ardenza": {
-    "cars": [
-      {
-        "color": "#ffffff",
-        "dur": "22s",
-        "begin": "-3s",
-        "path": "M 1510 2470 L 1830 2570 L 2080 2700"
-      },
-      {
-        "color": "#1e3a5f",
-        "dur": "24s",
-        "begin": "-9s",
-        "path": "M 3420 3900 L 3420 4700"
-      },
-      {
-        "color": "#d6b68a",
-        "dur": "26s",
-        "begin": "-15s",
-        "path": "M 900 5740 L 3100 5695"
-      },
-      {
-        "color": "#a42d48",
-        "dur": "28s",
-        "begin": "-21s",
-        "path": "M 5900 5720 L 7600 5755"
-      }
-    ]
+  ardenza: {
+    roads: [
+      'M 492 3110 L 1050 3110',
+      'M 3420 3900 L 3420 4700',
+      'M 900 5740 L 3100 5695',
+      'M 5900 5720 L 7600 5755'
+    ],
+    walks: ['M 565 4510 L 1040 4510', 'M 1030 3810 L 520 3810'],
+    trees: [[1620, 3315, .86], [2410, 5275, 1], [2940, 5140, .92], [4140, 5280, .8]],
+    lawns: [[1620, 3280, 57, 215], [2450, 5300, 140, 90], [2950, 5160, 130, 111], [4050, 5295, 125, 85]],
+    dogs: [[3740, 5260, -20], [4025, 5250, 28]]
   },
-  "montalese": {
-    "cars": [
-      {
-        "color": "#ffffff",
-        "dur": "22s",
-        "begin": "-3s",
-        "path": "M 1200 1510 L 2700 1480"
-      },
-      {
-        "color": "#1e3a5f",
-        "dur": "24s",
-        "begin": "-9s",
-        "path": "M 4100 2530 L 5650 2530"
-      },
-      {
-        "color": "#d6b68a",
-        "dur": "26s",
-        "begin": "-15s",
-        "path": "M 1200 4380 L 2600 4380"
-      },
-      {
-        "color": "#a42d48",
-        "dur": "28s",
-        "begin": "-21s",
-        "path": "M 4100 5380 L 5750 5345"
-      }
-    ]
+  montalese: {
+    roads: [
+      'M 1200 1510 L 2700 1480',
+      'M 4100 2530 L 5650 2530',
+      'M 1200 4380 L 2600 4380',
+      'M 4100 5380 L 5750 5345'
+    ],
+    walks: ['M 1150 2640 L 1750 2640', 'M 4830 3430 L 4200 3430'],
+    trees: [[3335, 2135, 1], [3245, 2850, .9], [3280, 4050, .96], [2490, 2010, .86]],
+    lawns: [[3325, 2080, 90, 110], [3220, 2840, 150, 130], [3280, 4070, 115, 135], [2460, 2040, 220, 75]],
+    dogs: [[3300, 1895, -27], [3350, 1970, 35]]
   },
-  "vittoria": {
-    "cars": [
-      {
-        "color": "#ffffff",
-        "dur": "22s",
-        "begin": "-3s",
-        "path": "M 1750 1445 L 3250 1445"
-      },
-      {
-        "color": "#1e3a5f",
-        "dur": "24s",
-        "begin": "-9s",
-        "path": "M 4900 2520 L 6170 2520"
-      },
-      {
-        "color": "#d6b68a",
-        "dur": "26s",
-        "begin": "-15s",
-        "path": "M 1600 4270 L 3250 4270"
-      },
-      {
-        "color": "#a42d48",
-        "dur": "28s",
-        "begin": "-21s",
-        "path": "M 4820 5370 L 6020 5370"
-      }
-    ]
+  vittoria: {
+    roads: [
+      'M 1750 1445 L 3250 1445',
+      'M 4900 2520 L 6170 2520',
+      'M 1600 4270 L 3250 4270',
+      'M 4820 5370 L 6020 5370'
+    ],
+    walks: ['M 1610 3360 L 2230 3360', 'M 3060 4340 L 2480 4340'],
+    trees: [[3980, 2910, 1], [4395, 2940, .87], [4080, 3850, .94], [2475, 1960, .87]],
+    lawns: [[4045, 2900, 205, 80], [4285, 2935, 157, 62], [4110, 3830, 225, 100], [2390, 1970, 160, 70]],
+    dogs: [[4030, 2470, -32], [4125, 2530, 26]]
   }
 };
 
+const MAP_CAR_COLORS = ['#19568b', '#a13d29', '#554382', '#206661'];
+const MAP_WALKER_COLORS = ['#9b3e50', '#156284'];
+
 function buildMapLifeOverlay(mapData) {
   if (mapData.isTowerFloors || !mapData.bg) return '';
-  const cfg = MAP_LIFE_CONFIG[mapData.slug];
-  if (!cfg) return '';
-  // Inline and full-screen maps coexist: each SVG must resolve its own motion paths.
-  const routePrefix = `car-route-${++mapRenderSequence}`;
+  const config = MAP_LIFE_CONFIG[mapData.slug];
+  if (!config) return '';
+
+  // The inline and fullscreen plans can coexist, so every SVG owns its definitions.
+  const prefix = 'map-life-' + ++mapRenderSequence;
+  const actors = [
+    ...config.roads.map((path, index) => ({
+      path, symbol: 'car', color: MAP_CAR_COLORS[index], duration: 22 + index * 2, start: -3 - index * 6
+    })),
+    ...config.walks.map((path, index) => ({
+      path, symbol: 'walker', color: MAP_WALKER_COLORS[index], duration: 19 + index * 3, start: -5 - index * 6
+    }))
+  ];
+
   return `
-    <g class="qmap-life-layer" pointer-events="none">
+    <g class="qmap-life-layer" pointer-events="none" aria-hidden="true">
       <defs>
-        ${cfg.cars.map((car, index) => `<path class="qmap-car-route" id="${routePrefix}-${index}" d="${car.path}" />`).join('')}
-        <g id="${routePrefix}-car" transform="scale(1.15)">
-          <ellipse cx="3" cy="6" rx="56" ry="27" fill="rgba(15,23,42,0.24)" />
-          <rect x="-54" y="-23" width="108" height="46" rx="15" fill="currentColor" stroke="#0f172a" stroke-width="3" />
-          <rect x="-24" y="-17" width="52" height="34" rx="9" fill="#e2e8f0" opacity="0.92" />
-          <rect x="-12" y="-13" width="26" height="26" rx="6" fill="currentColor" />
-          <circle cx="46" cy="-13" r="4" fill="#fef08a" /><circle cx="46" cy="13" r="4" fill="#fef08a" />
-          <rect x="-52" y="-15" width="4" height="8" rx="1.5" fill="#ef4444" /><rect x="-52" y="7" width="4" height="8" rx="1.5" fill="#ef4444" />
+        ${actors.map(({ path }, index) => `<path id="${prefix}-route-${index}" d="${path}" />`).join('')}
+        <radialGradient id="${prefix}-crown" cx="35%" cy="28%" r="74%">
+          <stop stop-color="#c5da75" /><stop offset=".46" stop-color="#82a751" /><stop offset="1" stop-color="#406c39" />
+        </radialGradient>
+        <radialGradient id="${prefix}-leaf" cx="34%" cy="28%" r="72%">
+          <stop stop-color="#cbdc84" /><stop offset=".58" stop-color="#84a957" /><stop offset="1" stop-color="#50773e" />
+        </radialGradient>
+        <radialGradient id="${prefix}-grass">
+          <stop stop-color="#6f984a" stop-opacity=".38" /><stop offset="1" stop-color="#6f984a" stop-opacity="0" />
+        </radialGradient>
+        <pattern id="${prefix}-blades" width="83" height="71" patternUnits="userSpaceOnUse">
+          <path d="M 6 10 l -3 -5 m 4 5 l 3 -7 M 37 24 l -5 -6 m 6 6 l 2 -8 M 64 56 l -4 -7 M 19 59 l 3 -8"
+            fill="none" stroke="#345b2d" stroke-width="1.6" stroke-linecap="round" opacity=".24" />
+          <path d="M 18 37 l 4 -7 M 57 16 l 2 -6 m 13 16 l 2 -6 M 45 62 l 4 -7"
+            fill="none" stroke="#d7df90" stroke-width="1.8" stroke-linecap="round" opacity=".48" />
+        </pattern>
+        <g id="${prefix}-tree">
+          <ellipse cx="14" cy="18" rx="64" ry="49" fill="#273d28" opacity=".24" />
+          <path d="M -49 23 Q -74 13 -62 -10 Q -71 -37 -44 -47 Q -36 -63 -16 -57 Q 4 -72 26 -55
+            Q 55 -57 60 -32 Q 76 -17 62 4 Q 64 30 40 36 Q 26 57 5 47 Q -20 56 -30 37 Q -44 41 -49 23 Z"
+            fill="url(#${prefix}-crown)" stroke="#527344" stroke-width="2" />
+          <g fill="url(#${prefix}-leaf)" stroke="#54723e" stroke-width="1">
+            <ellipse cx="-34" cy="-23" rx="22" ry="20" /><ellipse cx="-10" cy="-39" rx="22" ry="17" />
+            <ellipse cx="20" cy="-35" rx="23" ry="22" /><ellipse cx="43" cy="-12" rx="21" ry="18" />
+            <ellipse cx="-29" cy="11" rx="23" ry="20" /><ellipse cx="2" cy="15" rx="24" ry="22" />
+            <ellipse cx="33" cy="17" rx="21" ry="19" /><ellipse cx="0" cy="-13" rx="21" ry="22" />
+          </g>
+          <path d="M -38 -29 q 9 -7 19 -4 M -12 -46 q 10 -5 18 0 M 17 -43 q 12 0 17 7 M -11 -19 q 12 -7 21 4 M 21 14 q 8 -9 17 -6"
+            fill="none" stroke="#dae9a1" stroke-linecap="round" stroke-width="2.5" opacity=".52" />
+        </g>
+        <g id="${prefix}-car" transform="scale(1.15)">
+          <ellipse cx="3" cy="6" rx="56" ry="26" fill="#182438" opacity=".24" />
+          <path d="M -41 -24 h 73 q 22 0 22 15 v 18 q 0 15 -22 15 h -73 q -13 0 -13 -12 v -24 q 0 -12 13 -12 Z"
+            fill="currentColor" stroke="#152638" stroke-width="3" />
+          <rect x="-27" y="-17" width="55" height="34" rx="9" fill="#172c41" />
+          <path d="M 23 -13 v 26 M -22 -11 v 22" stroke="#9fc2d1" stroke-width="4" stroke-linecap="round" />
+          <rect x="-13" y="-13" width="26" height="26" rx="5" fill="currentColor" />
+          <path d="M -39 -20 H 30 M 35 18 H 44" stroke="#fff" stroke-width="2" opacity=".6" stroke-linecap="round" />
+          <path d="M 48 -16 v 7 m 0 18 v 7" stroke="#fff2bb" stroke-width="5" stroke-linecap="round" />
+          <path d="M -50 -15 v 6 m 0 18 v 6" stroke="#fca5a5" stroke-width="4" stroke-linecap="round" />
+        </g>
+        <g id="${prefix}-walker" transform="scale(1.05)">
+          <ellipse cx="0" cy="10" rx="31" ry="19" fill="#20293d" opacity=".22" />
+          <path d="M 3 -7 l -20 -11 m 17 24 l 19 13" stroke="#273744" stroke-width="10" stroke-linecap="round">
+            <animate attributeName="d" dur=".85s" repeatCount="indefinite"
+              values="M 3 -7 l -20 -11 m 17 24 l 19 13; M 3 -7 l 15 -10 m -18 23 l -19 12; M 3 -7 l -20 -11 m 17 24 l 19 13" />
+          </path>
+          <path d="M -1 -12 q -17 -4 -23 -3 m 26 26 q 14 4 23 1" stroke="#704531" stroke-width="6" stroke-linecap="round" />
+          <ellipse cx="1" cy="0" rx="15" ry="19" fill="currentColor" stroke="#253139" stroke-width="2" />
+          <path d="M -4 -12 q -4 10 -1 19" fill="none" stroke="#fff" stroke-width="2" opacity=".5" />
+          <circle cx="14" cy="-1" r="10" fill="#c99470" stroke="#693f32" stroke-width="2" />
+          <path d="M 10 -9 q -5 3 -4 9 q 3 -5 11 -8 q -3 -2 -7 -1" fill="#392e2c" />
+        </g>
+        <g id="${prefix}-dog">
+          <ellipse cx="4" cy="7" rx="33" ry="15" fill="#233829" opacity=".25" />
+          <path d="M -17 -4 Q -35 -20 -38 -10 M -14 2 l -10 11 M 12 4 l 8 9"
+            fill="none" stroke="#684434" stroke-width="5" stroke-linecap="round" />
+          <path d="M -20 0 Q -21 -12 -6 -12 L 13 -10 Q 22 -7 17 4 Q 7 12 -10 9 Q -20 8 -20 0 Z"
+            fill="currentColor" stroke="#684434" stroke-width="2.5" />
+          <path d="M -13 -7 q 5 -2 13 0" fill="none" stroke="#fff2db" stroke-width="3" stroke-linecap="round" opacity=".75" />
+          <path d="M 12 -9 l 0 16" stroke="#346b73" stroke-width="4" />
+          <ellipse cx="23" cy="-4" rx="11" ry="8" fill="currentColor" stroke="#684434" stroke-width="2" />
+          <ellipse cx="19" cy="-12" rx="5" ry="6" fill="#684434" transform="rotate(23 19 -12)" />
+          <circle cx="32" cy="-4" r="2.8" fill="#332827" />
         </g>
       </defs>
-      ${cfg.cars.map((car, index) => `
-        <g color="${car.color}">
-          <use href="#${routePrefix}-car" />
-          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.02;0.98;1" dur="${car.dur}" begin="${car.begin}" repeatCount="indefinite" />
-          <animateMotion dur="${car.dur}" begin="${car.begin}" calcMode="paced" repeatCount="indefinite" rotate="auto"><mpath href="#${routePrefix}-${index}" /></animateMotion>
-        </g>
-      `).join('')}
+      ${config.lawns.map(([cx, cy, rx, ry]) => `
+        <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${prefix}-grass)" />
+        <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${prefix}-blades)" />`).join('')}
+      ${config.trees.map(([x, y, scale]) => `<use href="#${prefix}-tree" transform="translate(${x} ${y}) scale(${scale})" />`).join('')}
+      ${config.dogs.map(([x, y, angle], index) => `
+        <use href="#${prefix}-dog" color="${index % 2 ? '#efd9b3' : '#bf895f'}" transform="translate(${x} ${y}) rotate(${angle})" />`).join('')}
+      ${actors.map(({ symbol, color, duration, start }, index) => `
+        <g color="${color}">
+          <use href="#${prefix}-${symbol}" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.04;0.96;1" dur="${duration}s" begin="${start}s" repeatCount="indefinite" />
+          <animateMotion dur="${duration}s" begin="${start}s" calcMode="paced" rotate="auto" repeatCount="indefinite">
+            <mpath href="#${prefix}-route-${index}" />
+          </animateMotion>
+        </g>`).join('')}
     </g>
   `;
 }

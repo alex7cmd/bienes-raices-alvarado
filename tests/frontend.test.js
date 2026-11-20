@@ -94,15 +94,20 @@ test('las seis fotos se seleccionan en un mismo editor sin cambiar el catálogo 
 });
 
 
-test('mapas simultáneos usan referencias propias para los autos y Torres no tiene tráfico', () => {
+test('el plano exterior incluye autos visibles, peatones, árboles y perros con referencias SVG propias', () => {
   const { run } = setup();
   const a = run("buildMapLifeOverlay({slug:'ardenza', bg:'map.webp'})");
   const b = run("buildMapLifeOverlay({slug:'ardenza', bg:'map.webp'})");
   const ids = html => [...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]);
   assert.ok(ids(a).every(id => !ids(b).includes(id)));
   for (const html of [a, b]) {
-    assert.equal((html.match(/<animateMotion /g) || []).length, 4);
-    for (const match of html.matchAll(/href="#([^"]+)"/g)) assert.ok(ids(html).includes(match[1]));
+    assert.equal((html.match(/<animateMotion /g) || []).length, 6);
+    assert.equal((html.match(/<use href="#[^"]+-car"/g) || []).length, 4);
+    assert.equal((html.match(/<use href="#[^"]+-walker"/g) || []).length, 2);
+    assert.match(html, /<use href="#[^"]+-tree"/);
+    assert.match(html, /<use href="#[^"]+-dog"/);
+    assert.doesNotMatch(html, /<g color="#(?:fff|ffffff)"/i);
+    for (const match of html.matchAll(/href="#([^"]+)"|url\(#([^)]+)\)/g)) assert.ok(ids(html).includes(match[1] || match[2]));
   }
   assert.equal(run("buildMapLifeOverlay({slug:'torres-qavalta', bg:'map.webp', isTowerFloors:true})"), '');
 });

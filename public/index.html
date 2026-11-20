@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-42" />
+  <link rel="stylesheet" href="/css/styles.css?v=1.0.0-44" />
   <meta name="theme-color" content="#10243b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="Alvarado" />
@@ -382,8 +382,9 @@
       </div>
     </div>
 
+    <div class="map-floor-bar hidden" id="mapFloorBar" role="group" aria-label="Pisos de Torres Qavalta"></div>
+
     <div class="map-canvas-area" id="mapCanvasArea">
-      <div class="map-floor-bar hidden" id="mapFloorBar"></div>
       <div class="map-hint-pill">🖱️ Toca un lote · Arrastra para mover · Rueda o botones para zoom</div>
 
       <!-- Zoom controls -->
@@ -433,55 +434,57 @@
   </section>
 
   <!-- ALVARADO STUDIO (GESTIÓN RESIDENCIAL) -->
-  <div class="modal-backdrop hidden" id="protoModal">
+  <div class="modal-backdrop hidden" id="protoModal" role="dialog" aria-modal="true" aria-label="Detalles del prototipo">
     <div class="modal-card proto-modal-card">
-      <button class="modal-close" id="closeProtoModal">✕</button>
-      <div id="protoModalContent"></div>
+      <button class="modal-close" id="closeProtoModal" type="button" aria-label="Cerrar">✕</button>
+      <div id="protoModalContent" class="modal-scroll-content"></div>
     </div>
   </div>
 
   <div class="toast hidden" id="toast" role="status" aria-live="polite"></div>
 
   <!-- MODAL REQUEST INFO & SCHEDULE A TOUR -->
-  <div class="modal-backdrop hidden" id="inquiryModal">
+  <div class="modal-backdrop hidden" id="inquiryModal" role="dialog" aria-modal="true" aria-label="Información y visitas">
     <div class="modal-card inquiry-modal-card">
-      <button class="modal-close" id="closeInquiryModal">✕</button>
-      <div class="inquiry-tabs">
-        <button class="inquiry-tab active" data-itab="info">Solicitar Info</button>
-        <button class="inquiry-tab" data-itab="tour">Agendar Visita</button>
-      </div>
-      <div class="advisors-row">
-        <div class="advisor-pill">👩‍💼 Leilani Alvarado Angeles</div>
-        <div class="advisor-pill">👩‍💼 Itzel Alvarado Angeles</div>
-      </div>
-      <form id="inquiryForm" class="inquiry-form">
-        <div class="tour-fields hidden" id="tourDateFields">
-          <div class="tour-datetime-grid">
-            <label>Fecha preferida<input type="date" id="inqDate" /></label>
-            <label>Horario
-              <select id="inqTime">
-                <option value="10:00 AM">10:00 AM</option>
-                <option value="12:00 PM">12:00 PM</option>
-                <option value="02:00 PM">02:00 PM</option>
-                <option value="04:00 PM">04:00 PM</option>
-              </select>
-            </label>
-          </div>
-          <div class="tour-modality-row" role="group" aria-label="Modalidad de visita">
-            <button type="button" class="modality-btn active" data-modality="Presencial">👤 En Persona</button>
-            <button type="button" class="modality-btn" data-modality="Video Chat">📹 Video Chat</button>
-          </div>
+      <button class="modal-close" id="closeInquiryModal" type="button" aria-label="Cerrar">✕</button>
+      <div class="modal-scroll-content">
+        <div class="inquiry-tabs">
+          <button class="inquiry-tab active" data-itab="info">Solicitar Info</button>
+          <button class="inquiry-tab" data-itab="tour">Agendar Visita</button>
         </div>
-        <input type="text" id="inqName" placeholder="Tu Nombre *" required />
-        <input type="email" id="inqEmail" placeholder="Tu Email *" required />
-        <input type="tel" id="inqPhone" placeholder="Tu Teléfono *" required />
-        <textarea id="inqMessage" rows="3" placeholder="Estoy interesado en... (ej. BELORA, recorrido en Vittoria)"></textarea>
-        <button type="submit" class="btn-primary full-width" id="inqSubmitBtn">Enviar solicitud</button>
-        <p class="contact-status hidden" id="inqStatus"></p>
-      </form>
-      <div class="inquiry-quick-actions">
-        <a href="tel:+525537560931" class="btn-outline-action">📞 Llamar</a>
-        <a href="https://wa.me/525537560931" target="_blank" rel="noopener" class="btn-outline-action wa">💬 WhatsApp</a>
+        <div class="advisors-row">
+          <div class="advisor-pill">👩‍💼 Leilani Alvarado Angeles</div>
+          <div class="advisor-pill">👩‍💼 Itzel Alvarado Angeles</div>
+        </div>
+        <form id="inquiryForm" class="inquiry-form">
+          <div class="tour-fields hidden" id="tourDateFields">
+            <div class="tour-datetime-grid">
+              <label>Fecha preferida<input type="date" id="inqDate" /></label>
+              <label>Horario
+                <select id="inqTime">
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="02:00 PM">02:00 PM</option>
+                  <option value="04:00 PM">04:00 PM</option>
+                </select>
+              </label>
+            </div>
+            <div class="tour-modality-row" role="group" aria-label="Modalidad de visita">
+              <button type="button" class="modality-btn active" data-modality="Presencial">👤 En Persona</button>
+              <button type="button" class="modality-btn" data-modality="Video Chat">📹 Video Chat</button>
+            </div>
+          </div>
+          <input type="text" id="inqName" placeholder="Tu Nombre *" required />
+          <input type="email" id="inqEmail" placeholder="Tu Email *" required />
+          <input type="tel" id="inqPhone" placeholder="Tu Teléfono *" required />
+          <textarea id="inqMessage" rows="3" placeholder="Estoy interesado en... (ej. BELORA, recorrido en Vittoria)"></textarea>
+          <button type="submit" class="btn-primary full-width" id="inqSubmitBtn">Enviar solicitud</button>
+          <p class="contact-status hidden" id="inqStatus"></p>
+        </form>
+        <div class="inquiry-quick-actions">
+          <a href="tel:+525537560931" class="btn-outline-action">📞 Llamar</a>
+          <a href="https://wa.me/525537560931" target="_blank" rel="noopener" class="btn-outline-action wa">💬 WhatsApp</a>
+        </div>
       </div>
     </div>
   </div>
@@ -533,7 +536,7 @@
     </a>
   </div>
 
-  <script src="/js/shared.js?v=1.0.0-23" defer></script>
+  <script src="/js/shared.js?v=1.0.0-25" defer></script>
   <script src="/js/public.js?v=1.0.0-26" defer></script>
   <script src="/js/install.js?v=1.0.0-14" defer></script>
 </body>

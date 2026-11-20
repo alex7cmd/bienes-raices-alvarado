@@ -2425,3 +2425,120 @@ html[data-theme="dark"] .inline-amen-gallery {
   .map-topbar { max-height:45dvh; overflow-y:auto; overscroll-behavior:contain; }
 }
 .qavalta-video-empty { color:var(--muted); font-size:1rem; line-height:1.6; }
+
+
+/* Keep controls accessible when the viewport is narrow or short. */
+.mobile-drawer {
+  overflow: hidden;
+  padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+.mobile-drawer-head, .mobile-drawer-item { flex-shrink: 0; }
+.mobile-drawer-nav {
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 2px 2px 12px;
+}
+
+.modal-backdrop {
+  padding: max(12px, env(safe-area-inset-top)) 16px max(12px, env(safe-area-inset-bottom));
+  grid-template-rows: minmax(0, 1fr);
+}
+.modal-card:has(> .modal-scroll-content) {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  max-height: 100%;
+  padding: 62px 0 0;
+  overflow: hidden;
+}
+.modal-scroll-content {
+  padding: 4px clamp(16px, 4vw, 28px) 22px;
+  min-height: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.modal-close, .mobile-drawer-close, .fs-gallery-close {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+}
+.inquiry-tab, .inquiry-form input, .inquiry-form textarea, .inquiry-form select {
+  min-height: 44px;
+}
+.inquiry-form input, .inquiry-form textarea, .inquiry-form select { font-size: 1rem; }
+
+.fs-gallery {
+  padding: max(10px, env(safe-area-inset-top)) clamp(8px, 2vw, 24px)
+    max(12px, env(safe-area-inset-bottom));
+}
+.fs-gallery-topbar { flex-wrap: wrap; gap: 8px; }
+.fs-gallery-info { flex: 1 1 160px; min-width: 0; gap: 4px 10px; }
+.fs-gallery-actions { flex: 0 0 auto; margin-inline-start: auto; }
+.fs-gallery-detail-btn { min-height: 44px; white-space: nowrap; }
+.fs-gallery-thumbs { justify-content: safe center; }
+.fs-gallery-stage { padding: 6px 42px; }
+.fs-gallery-prev { left: 0; }
+.fs-gallery-next { right: 0; }
+
+.fullscreen-map-view > .map-floor-bar {
+  position: static;
+  transform: none;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: none;
+  border-radius: 0;
+  border-bottom: 1px solid var(--border);
+  box-shadow: none;
+  scrollbar-width: thin;
+}
+.fullscreen-map-view:has(.mode-tab[data-maptab="amenidades"].active) > .map-floor-bar {
+  display: none;
+}
+.fullscreen-map-view > .map-floor-bar > * { flex: 0 0 auto; }
+.fullscreen-map-view > .map-floor-bar .floor-pill { min-height: 44px; }
+.map-mode-tabs .mode-tab { min-width: 0; flex: 1 1 auto; white-space: normal; }
+
+@media (max-width: 768px) {
+  .floating-stack { bottom: max(16px, env(safe-area-inset-bottom)); }
+  .floating-stack .stack-btn {
+    height: auto;
+    padding: 6px 8px;
+    gap: 6px;
+    white-space: normal;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .floating-stack .stack-btn span { min-width: 0; }
+  .map-canvas-area .svg-viewport { height: 65%; padding: 58px 12px 8px; }
+  .map-canvas-area .map-side-panel { height: 34%; min-height: 0; }
+}
+@media (min-width: 540px) and (max-width: 768px) and (max-height: 600px) {
+  .map-topbar {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: "status actions" "developments modes";
+  }
+  .map-topbar .map-mode-tabs { width: auto; }
+  .map-canvas-area .svg-viewport { width: calc(100% - 224px); height: 100%; }
+  .map-canvas-area .map-side-panel {
+    left: auto;
+    top: 10px;
+    width: 204px;
+    height: auto;
+    max-height: none;
+  }
+  .map-canvas-area .map-zoom-controls { right: 228px; }
+  .map-side-panel .panel-proto-filters { grid-template-columns: 1fr; }
+}
+@media (max-height: 600px) {
+  .fs-gallery-thumb { height: 44px; width: 64px; }
+  .map-canvas-area .svg-viewport { padding-top: 56px; padding-bottom: 6px; }
+}
+
+.map-canvas-area:has(.amenities-overlay:not(.hidden)) :is(.map-side-panel, .map-zoom-controls, .map-hint-pill, .map-legend-pill, .svg-viewport) {
+  visibility: hidden;
+}
+.amenities-overlay { z-index: 18; padding: clamp(8px, 3vw, 20px); }
+.amenities-showcase { min-width: 0; overscroll-behavior: contain; }
