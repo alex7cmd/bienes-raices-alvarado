@@ -94,18 +94,22 @@ test('las seis fotos se seleccionan en un mismo editor sin cambiar el catálogo 
 });
 
 
-test('el plano exterior incluye autos visibles, peatones, árboles y perros con referencias SVG propias', () => {
+test('el plano exterior mantiene referencias SVG propias para personas, autos, perros y bicicletas', () => {
   const { run } = setup();
   const a = run("buildMapLifeOverlay({slug:'ardenza', bg:'map.webp'})");
   const b = run("buildMapLifeOverlay({slug:'ardenza', bg:'map.webp'})");
   const ids = html => [...html.matchAll(/id="([^"]+)"/g)].map(match => match[1]);
   assert.ok(ids(a).every(id => !ids(b).includes(id)));
-  for (const html of [a, b]) {
+  const outdoors = ['sorento', 'oporto', 'ardenza', 'montalese', 'vittoria'];
+  for (const slug of outdoors) {
+    const html = run(`buildMapLifeOverlay({slug:'${slug}', bg:'map.webp'})`);
     assert.equal((html.match(/<animateMotion /g) || []).length, 6);
     assert.equal((html.match(/<use href="#[^"]+-car"/g) || []).length, 4);
     assert.equal((html.match(/<use href="#[^"]+-walker"/g) || []).length, 2);
     assert.match(html, /<use href="#[^"]+-tree"/);
     assert.match(html, /<use href="#[^"]+-dog"/);
+    assert.match(html, /<animateTransform [^>]*type="rotate"/);
+    assert.equal((html.match(/<use href="#[^"]+-bike" transform="translate\(/g) || []).length, 1);
     assert.doesNotMatch(html, /<g color="#(?:fff|ffffff)"/i);
     for (const match of html.matchAll(/href="#([^"]+)"|url\(#([^)]+)\)/g)) assert.ok(ids(html).includes(match[1] || match[2]));
   }

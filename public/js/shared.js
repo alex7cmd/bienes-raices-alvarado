@@ -326,7 +326,7 @@ function getMapCounts(lots) {
   return c;
 }
 
-// Positions use the same 9000 × 6600 coordinates as the outdoor plans.
+// Walks follow the pale strips between the curbs and lawns in plan coordinates.
 const MAP_LIFE_CONFIG = {
   sorento: {
     roads: [
@@ -335,7 +335,8 @@ const MAP_LIFE_CONFIG = {
       'M 2150 4900 L 4300 4900',
       'M 6100 4890 L 8050 4890'
     ],
-    walks: ['M 2560 3070 L 3270 3070', 'M 7500 745 L 6820 745'],
+    walks: ['M 2550 3149 L 3250 3144', 'M 7480 791 L 6830 796'],
+    bike: [4040, 4200, -12],
     trees: [[2440, 4180, .9], [3550, 4080, .86], [4290, 3820, .86], [7880, 3675, .94]],
     lawns: [[2490, 4040, 135, 230], [3490, 4080, 140, 130], [4290, 3840, 100, 110], [7840, 3780, 150, 100]],
     dogs: [[2510, 3900, -30], [2655, 3945, 18], [7800, 3840, 42], [7915, 3920, -28]]
@@ -347,7 +348,8 @@ const MAP_LIFE_CONFIG = {
       'M 1200 4435 L 2800 4435',
       'M 3620 5370 L 4930 5370'
     ],
-    walks: ['M 1350 710 L 1920 710', 'M 4800 3490 L 4250 3490'],
+    walks: ['M 1460 773 L 1940 773', 'M 4800 3459 L 4330 3463'],
+    bike: [3010, 4900, 12],
     trees: [[3500, 930, .85], [3300, 3110, 1], [3210, 3820, .94], [3000, 5200, .72]],
     lawns: [[3530, 960, 112, 150], [3250, 3020, 220, 170], [3160, 3830, 175, 150], [3000, 5190, 72, 61]],
     dogs: [[3485, 1290, -24], [3555, 1350, 35]]
@@ -359,7 +361,8 @@ const MAP_LIFE_CONFIG = {
       'M 900 5740 L 3100 5695',
       'M 5900 5720 L 7600 5755'
     ],
-    walks: ['M 565 4510 L 1040 4510', 'M 1030 3810 L 520 3810'],
+    walks: ['M 580 4420 L 960 4413', 'M 960 3873 L 540 3882'],
+    bike: [1610, 5300, -10],
     trees: [[1620, 3315, .86], [2410, 5275, 1], [2940, 5140, .92], [4140, 5280, .8]],
     lawns: [[1620, 3280, 57, 215], [2450, 5300, 140, 90], [2950, 5160, 130, 111], [4050, 5295, 125, 85]],
     dogs: [[3740, 5260, -20], [4025, 5250, 28]]
@@ -371,7 +374,8 @@ const MAP_LIFE_CONFIG = {
       'M 1200 4380 L 2600 4380',
       'M 4100 5380 L 5750 5345'
     ],
-    walks: ['M 1150 2640 L 1750 2640', 'M 4830 3430 L 4200 3430'],
+    walks: ['M 1160 2529 L 1740 2516', 'M 4820 3325 L 4530 3332'],
+    bike: [3393, 5010, 14],
     trees: [[3335, 2135, 1], [3245, 2850, .9], [3280, 4050, .96], [2490, 2010, .86]],
     lawns: [[3325, 2080, 90, 110], [3220, 2840, 150, 130], [3280, 4070, 115, 135], [2460, 2040, 220, 75]],
     dogs: [[3300, 1895, -27], [3350, 1970, 35]]
@@ -383,7 +387,8 @@ const MAP_LIFE_CONFIG = {
       'M 1600 4270 L 3250 4270',
       'M 4820 5370 L 6020 5370'
     ],
-    walks: ['M 1610 3360 L 2230 3360', 'M 3060 4340 L 2480 4340'],
+    walks: ['M 1600 3299 L 2210 3299', 'M 3070 4410 L 2480 4410'],
+    bike: [4110, 4990, -11],
     trees: [[3980, 2910, 1], [4395, 2940, .87], [4080, 3850, .94], [2475, 1960, .87]],
     lawns: [[4045, 2900, 205, 80], [4285, 2935, 157, 62], [4110, 3830, 225, 100], [2390, 1970, 160, 70]],
     dogs: [[4030, 2470, -32], [4125, 2530, 26]]
@@ -400,6 +405,7 @@ function buildMapLifeOverlay(mapData) {
 
   // The inline and fullscreen plans can coexist, so every SVG owns its definitions.
   const prefix = 'map-life-' + ++mapRenderSequence;
+  const [bikeX, bikeY, bikeAngle] = config.bike;
   const actors = [
     ...config.roads.map((path, index) => ({
       path, symbol: 'car', color: MAP_CAR_COLORS[index], duration: 22 + index * 2, start: -3 - index * 6
@@ -453,7 +459,7 @@ function buildMapLifeOverlay(mapData) {
           <path d="M 48 -16 v 7 m 0 18 v 7" stroke="#fff2bb" stroke-width="5" stroke-linecap="round" />
           <path d="M -50 -15 v 6 m 0 18 v 6" stroke="#fca5a5" stroke-width="4" stroke-linecap="round" />
         </g>
-        <g id="${prefix}-walker" transform="scale(1.05)">
+        <g id="${prefix}-walker" transform="scale(.88 .46)">
           <ellipse cx="0" cy="10" rx="31" ry="19" fill="#20293d" opacity=".22" />
           <path d="M 3 -7 l -20 -11 m 17 24 l 19 13" stroke="#273744" stroke-width="10" stroke-linecap="round">
             <animate attributeName="d" dur=".85s" repeatCount="indefinite"
@@ -465,9 +471,26 @@ function buildMapLifeOverlay(mapData) {
           <circle cx="14" cy="-1" r="10" fill="#c99470" stroke="#693f32" stroke-width="2" />
           <path d="M 10 -9 q -5 3 -4 9 q 3 -5 11 -8 q -3 -2 -7 -1" fill="#392e2c" />
         </g>
+        <g id="${prefix}-bike" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <ellipse cx="1" cy="15" rx="44" ry="9" fill="#263943" opacity=".25" />
+          <g stroke="#243744" stroke-width="4">
+            <circle cx="-27" cy="6" r="14" /><circle cx="27" cy="6" r="14" />
+          </g>
+          <path d="M -38 6 h 22 m -11 -11 v 22 M 16 6 h 22 m -11 -11 v 22"
+            stroke="#eff0e5" stroke-width="1.4" opacity=".9" />
+          <path d="M -27 6 L -16 -13 L 0 8 Z M 0 8 L 16 -13 H -16 M 27 6 L 16 -14 L 13 -23 h 8"
+            stroke="#162b39" stroke-width="6" />
+          <path d="M -27 6 L -16 -13 L 0 8 Z M 0 8 L 16 -13 H -16 M 27 6 L 16 -14 L 13 -23 h 8"
+            stroke="#35b9b0" stroke-width="3.2" />
+          <path d="M -16 -13 L -20 -20 m -5 0 h 11 M 0 8 l 6 5" stroke="#243744" stroke-width="3.5" />
+        </g>
         <g id="${prefix}-dog">
           <ellipse cx="4" cy="7" rx="33" ry="15" fill="#233829" opacity=".25" />
-          <path d="M -17 -4 Q -35 -20 -38 -10 M -14 2 l -10 11 M 12 4 l 8 9"
+          <path d="M -17 -4 Q -32 -18 -39 -10" fill="none" stroke="#684434" stroke-width="5" stroke-linecap="round">
+            <animateTransform attributeName="transform" type="rotate" values="-22 -17 -4;22 -17 -4;-22 -17 -4"
+              dur=".7s" repeatCount="indefinite" />
+          </path>
+          <path d="M -14 2 l -10 11 M 12 4 l 8 9"
             fill="none" stroke="#684434" stroke-width="5" stroke-linecap="round" />
           <path d="M -20 0 Q -21 -12 -6 -12 L 13 -10 Q 22 -7 17 4 Q 7 12 -10 9 Q -20 8 -20 0 Z"
             fill="currentColor" stroke="#684434" stroke-width="2.5" />
@@ -482,6 +505,7 @@ function buildMapLifeOverlay(mapData) {
         <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${prefix}-grass)" />
         <ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${prefix}-blades)" />`).join('')}
       ${config.trees.map(([x, y, scale]) => `<use href="#${prefix}-tree" transform="translate(${x} ${y}) scale(${scale})" />`).join('')}
+      <use href="#${prefix}-bike" transform="translate(${bikeX} ${bikeY}) rotate(${bikeAngle})" />
       ${config.dogs.map(([x, y, angle], index) => `
         <use href="#${prefix}-dog" color="${index % 2 ? '#efd9b3' : '#bf895f'}" transform="translate(${x} ${y}) rotate(${angle})" />`).join('')}
       ${actors.map(({ symbol, color, duration, start }, index) => `
